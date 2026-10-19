@@ -28,13 +28,17 @@ LevelParams paramsForIndex(int index) {
               ? 5
               : n <= 30
                   ? 6
-                  : 7;
+                  : n <= 45
+                      ? 7
+                      : 8;
+  // 31面目から空容器1本の面(3面に1回)を混ぜて難しくする。
+  final empties = n > 30 && n % 3 == 0 ? 1 : 2;
   var steps = 20 + n * 3;
   if (n % 7 == 0) {
     colors = max(3, colors - 1);
     steps = 15;
   }
-  return LevelParams(colors: colors, empties: 2, scrambleSteps: steps);
+  return LevelParams(colors: colors, empties: empties, scrambleSteps: steps);
 }
 
 /// 完成状態から単位を1つずつ動かしてばらす。

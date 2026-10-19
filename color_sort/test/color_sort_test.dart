@@ -55,14 +55,23 @@ void main() {
     expect(a.seed, b.seed);
   });
 
-  test('生成した20面はすべて解け、最短手数が基準以上', () {
-    for (var i = 0; i < 20; i++) {
+  test('生成した60面はすべて解け、最短手数が基準以上', () {
+    for (var i = 0; i < 60; i++) {
       final g = generateLevel(i);
       expect(g.result.solvable, isTrue, reason: 'level $i');
       expect(g.result.minMoves, greaterThanOrEqualTo(6), reason: 'level $i');
       expect(replayWins(rules, g.spec, g.result.solution!), isTrue,
           reason: 'level $i');
     }
+  });
+
+  test('難易度カーブ: 31面目以降は7〜8色で、空容器1本の面が混ざる', () {
+    expect(paramsForIndex(35).colors, 7);
+    expect(paramsForIndex(50).colors, 8);
+    expect([for (var i = 30; i < 60; i++) paramsForIndex(i).empties].toSet(),
+        {1, 2});
+    expect(
+        [for (var i = 0; i < 30; i++) paramsForIndex(i).empties].toSet(), {2});
   });
 
   test('難易度カーブ: 色数は単調(ご褒美面を除く)で、ご褒美面は易しい', () {

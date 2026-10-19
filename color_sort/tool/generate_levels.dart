@@ -1,5 +1,5 @@
 // 色ソートの面を生成し、ソルバーで検証して JSON に書き出す。
-// 使い方: dart run tool/generate_levels.dart [面数=20] [出力パス]
+// 使い方: dart run tool/generate_levels.dart [面数=60] [出力パス]
 import 'dart:convert';
 import 'dart:io';
 
@@ -7,7 +7,7 @@ import 'package:color_sort/color_sort.dart';
 import 'package:puzzle_core/puzzle_core.dart';
 
 void main(List<String> args) {
-  final count = args.isNotEmpty ? int.parse(args[0]) : 20;
+  final count = args.isNotEmpty ? int.parse(args[0]) : 60;
   final out = args.length > 1 ? args[1] : 'assets/levels/pack_main.json';
 
   final levels = <LevelEntry>[];
@@ -23,7 +23,7 @@ void main(List<String> args) {
   // 生成時の解とは独立に、パック全体を改めて検証して verified を書く。
   final pack = const LevelVerifier(ColorSortRules(), solverVersion: 'bfs-1')
       .verifyPack(LevelPack(
-          game: 'color_sort', packId: 'main', packVersion: 1, levels: levels));
+          game: 'color_sort', packId: 'main', packVersion: 2, levels: levels));
   final issues = pack.validate();
   if (issues.isNotEmpty) {
     stderr.writeln(issues.join('\n'));
