@@ -68,10 +68,8 @@ void main() {
   test('難易度カーブ: 31面目以降は7〜8色で、空容器1本の面が混ざる', () {
     expect(paramsForIndex(35).colors, 7);
     expect(paramsForIndex(50).colors, 8);
-    expect([for (var i = 30; i < 60; i++) paramsForIndex(i).empties].toSet(),
-        {1, 2});
-    expect(
-        [for (var i = 0; i < 30; i++) paramsForIndex(i).empties].toSet(), {2});
+    expect({for (var i = 30; i < 60; i++) paramsForIndex(i).empties}, {1, 2});
+    expect({for (var i = 0; i < 30; i++) paramsForIndex(i).empties}, {2});
   });
 
   test('難易度カーブ: 色数は単調(ご褒美面を除く)で、ご褒美面は易しい', () {
