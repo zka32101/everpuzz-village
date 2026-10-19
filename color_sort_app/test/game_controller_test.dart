@@ -1,4 +1,3 @@
-import 'package:color_sort/color_sort.dart';
 import 'package:color_sort_app/game/game_controller.dart';
 import 'package:puzzle_core/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';

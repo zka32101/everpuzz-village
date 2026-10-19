@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:puzzle_core/foundation.dart';
 
 import '../game/app_state.dart';
 import '../l10n/strings.dart';

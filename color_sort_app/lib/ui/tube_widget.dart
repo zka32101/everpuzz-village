@@ -1,6 +1,5 @@
 import 'package:color_sort/color_sort.dart';
 import 'package:flutter/material.dart';
-import 'package:puzzle_core/foundation.dart';
 
 import '../l10n/strings.dart';
 import 'symbols.dart';
