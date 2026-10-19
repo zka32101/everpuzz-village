@@ -21,7 +21,8 @@ void main(List<String> args) {
     final pack = LevelPack.fromJson(
         jsonDecode(File(path).readAsStringSync()) as Map<String, Object?>);
     final issues = pack.validate();
-    final redo = const LevelVerifier(ColorSortRules(), solverVersion: 'bfs-1')
+    final redo = const LevelVerifier(ColorSortRules(),
+            solverVersion: 'bfs-1', maxStates: levelSolveMaxStates)
         .verifyPack(pack);
     for (var i = 0; i < pack.levels.length; i++) {
       final a = pack.levels[i].verified!;

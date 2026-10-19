@@ -21,9 +21,10 @@ void main(List<String> args) {
     ));
   }
   // 生成時の解とは独立に、パック全体を改めて検証して verified を書く。
-  final pack = const LevelVerifier(ColorSortRules(), solverVersion: 'bfs-1')
+  final pack = const LevelVerifier(ColorSortRules(),
+          solverVersion: 'bfs-1', maxStates: levelSolveMaxStates)
       .verifyPack(LevelPack(
-          game: 'color_sort', packId: 'main', packVersion: 2, levels: levels));
+          game: 'color_sort', packId: 'main', packVersion: 3, levels: levels));
   final issues = pack.validate();
   if (issues.isNotEmpty) {
     stderr.writeln(issues.join('\n'));

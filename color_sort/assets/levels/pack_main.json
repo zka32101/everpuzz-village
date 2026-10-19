@@ -2,7 +2,7 @@
  "schemaVersion": 1,
  "game": "color_sort",
  "packId": "main",
- "packVersion": 2,
+ "packVersion": 3,
  "levels": [
   {
    "id": "main-001",
@@ -1405,62 +1405,74 @@
   },
   {
    "id": "main-031",
-   "seed": 20291019,
+   "seed": 20291020,
    "difficulty": 7.0,
    "spec": {
     "capacity": 4,
     "tubes": [
      [
+      2,
       3,
-      0,
+      5,
       0
      ],
      [
+      3,
+      0,
       1,
+      4
+     ],
+     [
       2,
       6,
+      2,
+      4
+     ],
+     [
+      4,
       3
      ],
      [
-      2,
-      5,
-      2
-     ],
-     [
-      5,
-      1,
-      1,
-      5
-     ],
-     [
-      3,
-      0,
-      4
-     ],
-     [
-      3,
-      5,
-      4
-     ],
-     [
-      2,
-      0,
-      6
-     ],
-     [
       6,
-      4,
+      2,
+      5,
       1
      ],
      [
       6,
-      4
-     ]
+      3,
+      1,
+      6
+     ],
+     [
+      4,
+      5
+     ],
+     [
+      5,
+      1,
+      0,
+      0
+     ],
+     []
+    ],
+    "locks": [
+     null,
+     null,
+     {
+      "kind": "frozen"
+     },
+     null,
+     null,
+     null,
+     null,
+     null,
+     null
     ]
    },
    "verified": {
     "solvable": true,
-    "minMoves": 21,
+    "minMoves": 22,
     "solverVersion": "bfs-1"
    }
   },
@@ -1527,55 +1539,70 @@
   },
   {
    "id": "main-033",
-   "seed": 20293024,
+   "seed": 20293021,
    "difficulty": 7.0,
    "spec": {
     "capacity": 4,
     "tubes": [
      [
-      0,
-      0,
-      6
+      6,
+      5,
+      4,
+      3
      ],
      [
-      1,
-      4,
       3,
+      6,
+      0
+     ],
+     [
+      0,
+      4,
+      1,
+      1
+     ],
+     [],
+     [
+      5,
+      1,
+      1,
       2
      ],
      [
       6,
+      5
+     ],
+     [
       3,
-      6
-     ],
-     [
-      2,
-      2,
-      1
-     ],
-     [
-      4,
-      2,
-      1,
-      3
-     ],
-     [
-      5,
-      5,
-      5
-     ],
-     [
-      4,
-      1,
-      4,
-      5
-     ],
-     [
+      3,
       0,
-      3,
+      4
+     ],
+     [
+      4,
+      0,
       6,
-      0
+      2
+     ],
+     [
+      2,
+      2,
+      5
      ]
+    ],
+    "locks": [
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     {
+      "kind": "key",
+      "color": 6
+     },
+     null,
+     null
     ]
    },
    "verified": {
@@ -1812,6 +1839,20 @@
       5,
       1
      ]
+    ],
+    "locks": [
+     null,
+     null,
+     {
+      "kind": "key",
+      "color": 3
+     },
+     null,
+     null,
+     null,
+     null,
+     null,
+     null
     ]
    },
    "verified": {
@@ -1883,60 +1924,75 @@
   },
   {
    "id": "main-039",
-   "seed": 20299050,
+   "seed": 20299019,
    "difficulty": 7.0,
    "spec": {
     "capacity": 4,
     "tubes": [
      [
-      1,
-      0,
+      6,
       5,
-      5
-     ],
-     [
-      1,
-      4,
-      3
-     ],
-     [
-      2,
-      3,
-      0,
-      6
-     ],
-     [
-      2,
-      0,
-      6,
       1
      ],
      [
-      2,
-      6,
-      1
-     ],
-     [
-      4,
-      5
-     ],
-     [
-      6,
-      4,
       3,
       4
      ],
      [
-      5,
+      6,
       0,
+      1
+     ],
+     [
       2,
+      5
+     ],
+     [
+      4,
+      0,
+      4,
+      6
+     ],
+     [
+      3,
+      5,
+      3,
+      2
+     ],
+     [
+      2,
+      0,
       3
+     ],
+     [
+      0,
+      5,
+      1
+     ],
+     [
+      6,
+      2,
+      1,
+      4
      ]
+    ],
+    "locks": [
+     null,
+     {
+      "kind": "frozen"
+     },
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null
     ]
    },
    "verified": {
     "solvable": true,
-    "minMoves": 22,
+    "minMoves": 23,
     "solverVersion": "bfs-1"
    }
   },
@@ -2003,62 +2059,76 @@
   },
   {
    "id": "main-041",
-   "seed": 20301019,
+   "seed": 20301020,
    "difficulty": 7.0,
    "spec": {
     "capacity": 4,
     "tubes": [
      [
-      2,
-      6,
+      0,
       5,
-      5
-     ],
-     [
-      0
-     ],
-     [
-      3,
-      3,
-      0,
-      4
-     ],
-     [
-      0,
       4,
-      6,
-      5
-     ],
-     [
-      6,
-      1,
-      2
-     ],
-     [
-      1,
-      3,
-      4,
-      4
-     ],
-     [
-      3,
-      6,
-      5
-     ],
-     [
-      2,
-      2
-     ],
-     [
-      1,
-      0,
       1
+     ],
+     [
+      2
+     ],
+     [
+      6,
+      4
+     ],
+     [
+      0,
+      3,
+      5
+     ],
+     [
+      1,
+      3,
+      2,
+      5
+     ],
+     [
+      5,
+      0,
+      3
+     ],
+     [
+      0,
+      1,
+      3,
+      4
+     ],
+     [
+      6,
+      6,
+      2,
+      6
+     ],
+     [
+      4,
+      1,
+      2
      ]
+    ],
+    "locks": [
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     {
+      "kind": "key",
+      "color": 4
+     },
+     null
     ]
    },
    "verified": {
     "solvable": true,
-    "minMoves": 19,
+    "minMoves": 21,
     "solverVersion": "bfs-1"
    }
   },
@@ -2117,61 +2187,75 @@
   },
   {
    "id": "main-043",
-   "seed": 20303019,
+   "seed": 20303020,
    "difficulty": 7.0,
    "spec": {
     "capacity": 4,
     "tubes": [
      [
-      6,
       0,
-      6
-     ],
-     [],
-     [
-      6,
-      3,
-      5,
-      4
-     ],
-     [
-      3,
-      0,
+      2,
       2,
       3
      ],
      [
-      0,
       4,
+      5,
+      1
+     ],
+     [
+      6,
       1,
-      5
+      3,
+      2
      ],
      [
       3,
+      6
+     ],
+     [
       6,
-      1
-     ],
-     [
-      5,
-      2,
       4,
-      4
+      6,
+      5
      ],
      [
-      5,
+      4,
       2,
-      2,
-      1
+      5
+     ],
+     [
+      5
      ],
      [
       1,
+      0,
+      0
+     ],
+     [
+      1,
+      4,
+      3,
       0
      ]
+    ],
+    "locks": [
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     {
+      "kind": "frozen"
+     },
+     null
     ]
    },
    "verified": {
     "solvable": true,
-    "minMoves": 21,
+    "minMoves": 20,
     "solverVersion": "bfs-1"
    }
   },
@@ -2238,60 +2322,76 @@
   },
   {
    "id": "main-045",
-   "seed": 20305039,
+   "seed": 20305021,
    "difficulty": 7.0,
    "spec": {
     "capacity": 4,
     "tubes": [
      [
       4,
-      5,
+      1,
+      3,
+      3
+     ],
+     [
+      0,
+      3
+     ],
+     [
+      2,
       6,
+      0,
       1
      ],
      [
       0,
-      0,
-      1
+      5
      ],
      [
-      2,
-      4
-     ],
-     [
-      3,
-      3,
-      3,
-      2
-     ],
-     [
-      3,
       5,
-      2,
-      4
-     ],
-     [
-      1,
-      1,
       0,
-      0
+      3
      ],
      [
       6,
-      6,
-      5,
+      6
+     ],
+     [
+      2,
+      2,
+      1,
       5
      ],
      [
       2,
+      5,
+      4
+     ],
+     [
       4,
+      4,
+      1,
       6
      ]
+    ],
+    "locks": [
+     {
+      "kind": "key",
+      "color": 0
+     },
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null
     ]
    },
    "verified": {
     "solvable": true,
-    "minMoves": 16,
+    "minMoves": 19,
     "solverVersion": "bfs-1"
    }
   },
@@ -2364,68 +2464,81 @@
   },
   {
    "id": "main-047",
-   "seed": 20307019,
+   "seed": 20307021,
    "difficulty": 8.0,
    "spec": {
     "capacity": 4,
     "tubes": [
+     [],
      [
-      0,
+      3,
+      5,
       4
      ],
      [
-      2,
-      2,
       1,
-      4
+      3,
+      2,
+      3
      ],
      [
-      0,
-      2,
-      7,
-      5
-     ],
-     [
-      2,
+      6,
+      1,
       7
      ],
      [
       7,
-      4,
-      4,
-      1
-     ],
-     [
-      3,
-      6,
-      0
-     ],
-     [
-      1,
-      3,
-      7,
       6
      ],
      [
-      6,
+      5,
+      2,
+      5,
+      4
+     ],
+     [
+      5,
+      0,
+      7,
+      7
+     ],
+     [
+      4,
+      3,
+      2,
       1
      ],
      [
       0,
-      6,
-      5,
-      3
+      2,
+      1,
+      6
      ],
      [
-      5,
-      5,
-      3
+      6,
+      4,
+      0,
+      0
      ]
+    ],
+    "locks": [
+     null,
+     null,
+     null,
+     {
+      "kind": "frozen"
+     },
+     null,
+     null,
+     null,
+     null,
+     null,
+     null
     ]
    },
    "verified": {
     "solvable": true,
-    "minMoves": 22,
+    "minMoves": 24,
     "solverVersion": "bfs-1"
    }
   },
@@ -2437,60 +2550,79 @@
     "capacity": 4,
     "tubes": [
      [
-      6,
-      6,
-      4
-     ],
-     [
-      1,
+      7,
+      2,
       0
      ],
      [
+      1,
+      5
+     ],
+     [
       3,
-      2,
+      1
+     ],
+     [
+      3,
+      3,
+      5,
+      7
+     ],
+     [
+      6,
+      6,
       0,
       4
      ],
      [
-      3,
-      7,
-      3,
-      0
-     ],
-     [
-      7,
-      7,
-      5,
-      4
-     ],
-     [
-      5,
-      1,
-      1,
-      6
-     ],
-     [
-      1,
-      2,
-      6
-     ],
-     [
-      7,
-      3,
       5,
       0
      ],
      [
+      1,
+      4,
+      2
+     ],
+     [
+      1,
+      7,
+      6,
+      5
+     ],
+     [
       2,
-      5,
-      2,
-      4
+      3,
+      7,
+      0
+     ],
+     [
+      4,
+      4,
+      6,
+      2
      ]
+    ],
+    "locks": [
+     null,
+     null,
+     null,
+     {
+      "kind": "frozen"
+     },
+     null,
+     null,
+     {
+      "kind": "key",
+      "color": 3
+     },
+     null,
+     null,
+     null
     ]
    },
    "verified": {
     "solvable": true,
-    "minMoves": 24,
+    "minMoves": 22,
     "solverVersion": "bfs-1"
    }
   },
@@ -2624,133 +2756,166 @@
   },
   {
    "id": "main-051",
-   "seed": 20311038,
+   "seed": 20311020,
    "difficulty": 8.0,
    "spec": {
     "capacity": 4,
     "tubes": [
      [
-      0,
-      3,
-      3,
-      1
-     ],
-     [
-      7,
-      6,
-      0,
-      6
-     ],
-     [
-      4,
-      1,
-      7,
-      1
-     ],
-     [
-      2,
-      7,
-      5,
       7
      ],
      [
-      4,
-      4,
-      1,
-      0
+      7,
+      0,
+      7,
+      3
+     ],
+     [
+      7,
+      2
      ],
      [
       6,
       3,
       2,
-      2
+      1
      ],
      [
+      3,
+      4,
+      6
+     ],
+     [
+      0,
       2,
+      1
+     ],
+     [
+      4,
+      2,
+      0
+     ],
+     [
+      5,
+      3,
+      0,
+      1
+     ],
+     [
+      6,
+      4,
       5,
       5
      ],
      [
-      5,
-      0,
-      6
-     ],
-     [
-      3,
-      4
-     ]
-    ]
-   },
-   "verified": {
-    "solvable": true,
-    "minMoves": 21,
-    "solverVersion": "bfs-1"
-   }
-  },
-  {
-   "id": "main-052",
-   "seed": 20312019,
-   "difficulty": 8.0,
-   "spec": {
-    "capacity": 4,
-    "tubes": [
-     [
-      0,
-      3,
       1,
-      3
-     ],
-     [
-      2,
-      4,
-      0,
-      7
-     ],
-     [
-      4,
-      3,
-      1
-     ],
-     [
-      4,
-      6,
-      3
-     ],
-     [
       5,
-      0,
-      2
-     ],
-     [
-      5,
-      6,
-      5,
+      4,
       6
-     ],
-     [
-      1,
-      2
-     ],
-     [
-      7,
-      0,
-      2,
-      1
-     ],
-     [
-      6
-     ],
-     [
-      7,
-      5,
-      4,
-      7
      ]
+    ],
+    "locks": [
+     null,
+     null,
+     null,
+     null,
+     {
+      "kind": "frozen"
+     },
+     null,
+     null,
+     null,
+     null,
+     null
     ]
    },
    "verified": {
     "solvable": true,
     "minMoves": 25,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "main-052",
+   "seed": 20312024,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      2,
+      7,
+      7,
+      1
+     ],
+     [
+      4,
+      3,
+      7,
+      6
+     ],
+     [
+      5,
+      2
+     ],
+     [
+      6
+     ],
+     [
+      4,
+      1,
+      6
+     ],
+     [
+      2,
+      3,
+      3,
+      4
+     ],
+     [
+      2,
+      4,
+      5,
+      5
+     ],
+     [
+      6,
+      7,
+      0,
+      5
+     ],
+     [
+      0,
+      0,
+      1,
+      1
+     ],
+     [
+      3,
+      0
+     ]
+    ],
+    "locks": [
+     null,
+     {
+      "kind": "key",
+      "color": 5
+     },
+     {
+      "kind": "frozen"
+     },
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 24,
     "solverVersion": "bfs-1"
    }
   },
@@ -2813,11 +2978,26 @@
       7,
       1
      ]
+    ],
+    "locks": [
+     null,
+     null,
+     null,
+     null,
+     {
+      "kind": "key",
+      "color": 7
+     },
+     null,
+     null,
+     null,
+     null,
+     null
     ]
    },
    "verified": {
     "solvable": true,
-    "minMoves": 25,
+    "minMoves": 26,
     "solverVersion": "bfs-1"
    }
   },
@@ -2888,68 +3068,82 @@
   },
   {
    "id": "main-055",
-   "seed": 20315019,
+   "seed": 20315021,
    "difficulty": 8.0,
    "spec": {
     "capacity": 4,
     "tubes": [
      [
-      3
-     ],
-     [
-      5,
-      4,
-      3
-     ],
-     [
-      6,
-      4,
-      1,
-      0
-     ],
-     [
-      3,
-      2,
-      7
-     ],
-     [
-      2,
-      6,
-      4,
-      3
-     ],
-     [
       5,
       0,
-      6,
-      0
+      3
      ],
      [
-      2,
-      0,
       4,
+      6,
       5
      ],
      [
-      7,
+      3,
+      3,
+      0,
       2
      ],
      [
-      1,
-      1,
+      7,
+      4,
+      3
+     ],
+     [
+      4,
+      2,
       1
      ],
      [
-      5,
-      7,
-      6,
+      4,
+      1,
+      2,
       7
+     ],
+     [
+      5,
+      6,
+      7,
+      0
+     ],
+     [
+      7
+     ],
+     [
+      0,
+      1,
+      6
+     ],
+     [
+      6,
+      5,
+      2,
+      1
      ]
+    ],
+    "locks": [
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     {
+      "kind": "frozen"
+     },
+     null
     ]
    },
    "verified": {
     "solvable": true,
-    "minMoves": 24,
+    "minMoves": 25,
     "solverVersion": "bfs-1"
    }
   },
@@ -3016,61 +3210,78 @@
   },
   {
    "id": "main-057",
-   "seed": 20317026,
+   "seed": 20317019,
    "difficulty": 8.0,
    "spec": {
     "capacity": 4,
     "tubes": [
      [
-      3,
-      6,
       2,
-      2
-     ],
-     [
-      1,
       7,
-      6
-     ],
-     [
-      2,
-      0,
-      5,
-      1
-     ],
-     [
-      6,
       3
      ],
      [
-      4,
-      5,
-      4,
+      2,
+      3
+     ],
+     [
+      1,
+      2,
       0
      ],
      [
-      5,
-      3,
-      7,
-      4
+      6,
+      5
      ],
      [
       4,
       5,
+      3,
+      5
+     ],
+     [
+      0,
+      0,
+      3
+     ],
+     [
+      4,
+      6,
+      2,
+      1
+     ],
+     [
+      7,
       0,
       6
      ],
      [
-      7,
+      5,
       1,
-      7
+      4,
+      6
      ],
      [
-      0,
-      2,
+      7,
+      4,
       1,
-      3
+      7
      ]
+    ],
+    "locks": [
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     {
+      "kind": "key",
+      "color": 4
+     },
+     null,
+     null
     ]
    },
    "verified": {
@@ -3148,132 +3359,166 @@
   },
   {
    "id": "main-059",
-   "seed": 20319019,
+   "seed": 20319021,
    "difficulty": 8.0,
    "spec": {
     "capacity": 4,
     "tubes": [
      [
-      1,
-      3,
-      1,
+      7,
+      5,
       6
      ],
      [
-      0,
-      7,
-      4,
       2
      ],
      [
-      2,
-      5,
-      3,
-      1
-     ],
-     [],
-     [
-      0,
-      3,
-      3
-     ],
-     [
-      7,
       1,
-      6,
-      0
-     ],
-     [
-      6,
-      2,
       4,
-      4
-     ],
-     [
-      6,
-      7,
+      3,
       7
      ],
      [
-      4,
-      5
+      0,
+      2,
+      1
      ],
      [
       5,
       5,
+      2,
+      1
+     ],
+     [
+      6,
+      7,
+      0
+     ],
+     [
+      1,
       0,
-      2
+      2,
+      3
+     ],
+     [
+      0,
+      4,
+      6
+     ],
+     [
+      5,
+      3,
+      6,
+      3
+     ],
+     [
+      4,
+      7,
+      4
      ]
+    ],
+    "locks": [
+     {
+      "kind": "frozen"
+     },
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null
     ]
    },
    "verified": {
     "solvable": true,
-    "minMoves": 21,
+    "minMoves": 25,
     "solverVersion": "bfs-1"
    }
   },
   {
    "id": "main-060",
-   "seed": 20320035,
+   "seed": 20320024,
    "difficulty": 8.0,
    "spec": {
     "capacity": 4,
     "tubes": [
      [
-      0,
-      7,
-      7,
-      6
-     ],
-     [
       1,
-      2,
+      0,
       5
      ],
      [
+      2,
       3,
-      6,
-      3,
+      4,
       0
      ],
      [
+      7,
       2,
+      6,
+      4
+     ],
+     [
+      6,
+      3
+     ],
+     [
+      3,
+      6
+     ],
+     [
+      0,
+      3,
       1
      ],
      [
-      2,
       5,
-      5,
+      4,
+      4,
+      7
+     ],
+     [
+      7,
+      1,
+      6,
       2
      ],
      [
-      4,
-      3,
+      7,
+      5
+     ],
+     [
+      1,
       5,
-      1
-     ],
-     [
-      3,
-      0,
-      4,
-      6
-     ],
-     [
-      7,
-      7,
-      6
-     ],
-     [
-      4,
-      4,
-      0,
-      1
+      2,
+      0
      ]
+    ],
+    "locks": [
+     null,
+     null,
+     null,
+     null,
+     null,
+     {
+      "kind": "key",
+      "color": 5
+     },
+     null,
+     {
+      "kind": "frozen"
+     },
+     null,
+     null
     ]
    },
    "verified": {
     "solvable": true,
-    "minMoves": 22,
+    "minMoves": 25,
     "solverVersion": "bfs-1"
    }
   }

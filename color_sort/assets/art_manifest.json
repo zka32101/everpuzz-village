@@ -298,6 +298,24 @@
    "transparent": true,
    "required": false,
    "note": "ロゴ画像(アプリ内の文字はl10n。ロゴだけは画像)"
+  },
+  {
+   "id": "tube_lock_key",
+   "path": "assets/art/tube_lock_key.png",
+   "width": 256,
+   "height": 640,
+   "transparent": true,
+   "required": false,
+   "note": "鍵付き容器の覆い。解錠色の記号はコードで重ねるので、画像に色・文字は焼き込まない"
+  },
+  {
+   "id": "tube_frozen",
+   "path": "assets/art/tube_frozen.png",
+   "width": 256,
+   "height": 640,
+   "transparent": true,
+   "required": false,
+   "note": "凍結容器の氷の覆い。半透明で中身が透ける(中身が見えないと手が読めない)"
   }
  ]
 }
