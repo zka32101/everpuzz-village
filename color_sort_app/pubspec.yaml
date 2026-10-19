@@ -1,0 +1,24 @@
+name: color_sort_app
+description: "Everpuzz 色ソート(Pastel Village 仮称) — Flutterアプリ"
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.5.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  color_sort:
+    path: ../color_sort
+  puzzle_core:
+    path: ../../puzzle_core
+  shared_preferences: ^2.3.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true

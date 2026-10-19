@@ -13,3 +13,8 @@ dependencies:
 dev_dependencies:
   lints: ^5.0.0
   test: ^1.25.0
+
+# Flutter アプリから packages/color_sort/... で読めるようにする(純Dart側は無視する)
+flutter:
+  assets:
+    - assets/levels/
