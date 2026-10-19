@@ -10,7 +10,7 @@ dependencies:
   puzzle_core:
     git:
       url: https://github.com/zka32101/puzzle_core.git
-      ref: v0.1.0
+      ref: 08e1e41cd9c41e3584ac6c64dc6197f41a5de783 # puzzle_core の固定版(コミット。タグを打ったらタグに置き換えてよい)
 
 dev_dependencies:
   lints: ^5.0.0

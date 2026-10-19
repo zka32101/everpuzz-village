@@ -1,7 +1,7 @@
-# everpuzz-pastel-village
+# everpuzz-village
 
 Everpuzz シリーズ1本目（色ソート・仮称）のアプリ。共通基盤は別リポジトリの
-[puzzle_core](https://github.com/zka32101/puzzle_core)（非公開）を、**タグ固定の git 依存**で使う。
+[puzzle_core](https://github.com/zka32101/puzzle_core)（非公開）を、**版を固定した git 依存**（コミットのハッシュ。タグを打てるようになったらタグ）で使う。
 
 | ディレクトリ | 内容 |
 |---|---|
@@ -17,6 +17,6 @@ Everpuzz シリーズ1本目（色ソート・仮称）のアプリ。共通基�
 
 ## puzzle_core の版を上げるとき
 
-1. puzzle_core 側でタグ（例 `v0.2.0`）を打つ
+1. puzzle_core 側で変更をマージし、そのコミット（またはタグ）を決める
 2. `color_sort/pubspec.yaml` と `color_sort_app/pubspec.yaml` の `ref:` を同じ版にそろえる
 3. テストが通ることを確認してからマージ
