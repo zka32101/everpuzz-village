@@ -1,0 +1,303 @@
+{
+ "version": 1,
+ "note": "コードは画像をIDでのみ参照する。画像未配置の間は描画側が仮の図形で代用する。",
+ "slots": [
+  {
+   "id": "bg_stage_01",
+   "path": "assets/art/bg_stage_01.png",
+   "width": 1080,
+   "height": 1920,
+   "transparent": false,
+   "required": true,
+   "note": "ステージ背景。中央は盤面で隠れるので主役を置かない。文字は入れない"
+  },
+  {
+   "id": "bg_stage_02",
+   "path": "assets/art/bg_stage_02.png",
+   "width": 1080,
+   "height": 1920,
+   "transparent": false,
+   "required": false,
+   "note": "ステージ背景。中央は盤面で隠れるので主役を置かない。文字は入れない"
+  },
+  {
+   "id": "bg_stage_03",
+   "path": "assets/art/bg_stage_03.png",
+   "width": 1080,
+   "height": 1920,
+   "transparent": false,
+   "required": false,
+   "note": "ステージ背景。中央は盤面で隠れるので主役を置かない。文字は入れない"
+  },
+  {
+   "id": "bg_stage_04",
+   "path": "assets/art/bg_stage_04.png",
+   "width": 1080,
+   "height": 1920,
+   "transparent": false,
+   "required": false,
+   "note": "ステージ背景。中央は盤面で隠れるので主役を置かない。文字は入れない"
+  },
+  {
+   "id": "bg_stage_05",
+   "path": "assets/art/bg_stage_05.png",
+   "width": 1080,
+   "height": 1920,
+   "transparent": false,
+   "required": false,
+   "note": "ステージ背景。中央は盤面で隠れるので主役を置かない。文字は入れない"
+  },
+  {
+   "id": "tube_back",
+   "path": "assets/art/tube_back.png",
+   "width": 256,
+   "height": 640,
+   "transparent": true,
+   "required": true,
+   "note": "容器の奥側(ガラスの内側)"
+  },
+  {
+   "id": "tube_front",
+   "path": "assets/art/tube_front.png",
+   "width": 256,
+   "height": 640,
+   "transparent": true,
+   "required": true,
+   "note": "容器の手前側(ガラスの反射・縁)。中身が見えるよう半透明"
+  },
+  {
+   "id": "tube_done",
+   "path": "assets/art/tube_done.png",
+   "width": 256,
+   "height": 640,
+   "transparent": true,
+   "required": false,
+   "note": "1色そろった時の装飾(任意)"
+  },
+  {
+   "id": "building_01",
+   "path": "assets/art/building_01.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくりの建物(全20種。拡張なし)"
+  },
+  {
+   "id": "building_02",
+   "path": "assets/art/building_02.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくりの建物(全20種。拡張なし)"
+  },
+  {
+   "id": "building_03",
+   "path": "assets/art/building_03.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくりの建物(全20種。拡張なし)"
+  },
+  {
+   "id": "building_04",
+   "path": "assets/art/building_04.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくりの建物(全20種。拡張なし)"
+  },
+  {
+   "id": "building_05",
+   "path": "assets/art/building_05.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくりの建物(全20種。拡張なし)"
+  },
+  {
+   "id": "building_06",
+   "path": "assets/art/building_06.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくりの建物(全20種。拡張なし)"
+  },
+  {
+   "id": "building_07",
+   "path": "assets/art/building_07.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくりの建物(全20種。拡張なし)"
+  },
+  {
+   "id": "building_08",
+   "path": "assets/art/building_08.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくりの建物(全20種。拡張なし)"
+  },
+  {
+   "id": "building_09",
+   "path": "assets/art/building_09.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくりの建物(全20種。拡張なし)"
+  },
+  {
+   "id": "building_10",
+   "path": "assets/art/building_10.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくりの建物(全20種。拡張なし)"
+  },
+  {
+   "id": "building_11",
+   "path": "assets/art/building_11.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくりの建物(全20種。拡張なし)"
+  },
+  {
+   "id": "building_12",
+   "path": "assets/art/building_12.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくりの建物(全20種。拡張なし)"
+  },
+  {
+   "id": "building_13",
+   "path": "assets/art/building_13.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくりの建物(全20種。拡張なし)"
+  },
+  {
+   "id": "building_14",
+   "path": "assets/art/building_14.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくりの建物(全20種。拡張なし)"
+  },
+  {
+   "id": "building_15",
+   "path": "assets/art/building_15.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくりの建物(全20種。拡張なし)"
+  },
+  {
+   "id": "building_16",
+   "path": "assets/art/building_16.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくりの建物(全20種。拡張なし)"
+  },
+  {
+   "id": "building_17",
+   "path": "assets/art/building_17.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくりの建物(全20種。拡張なし)"
+  },
+  {
+   "id": "building_18",
+   "path": "assets/art/building_18.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくりの建物(全20種。拡張なし)"
+  },
+  {
+   "id": "building_19",
+   "path": "assets/art/building_19.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくりの建物(全20種。拡張なし)"
+  },
+  {
+   "id": "building_20",
+   "path": "assets/art/building_20.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくりの建物(全20種。拡張なし)"
+  },
+  {
+   "id": "kobito_01",
+   "path": "assets/art/kobito_01.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "こびと(見た目・数・役割は未決。仮に3種)"
+  },
+  {
+   "id": "kobito_02",
+   "path": "assets/art/kobito_02.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "こびと(見た目・数・役割は未決。仮に3種)"
+  },
+  {
+   "id": "kobito_03",
+   "path": "assets/art/kobito_03.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "こびと(見た目・数・役割は未決。仮に3種)"
+  },
+  {
+   "id": "app_icon",
+   "path": "assets/art/app_icon.png",
+   "width": 1024,
+   "height": 1024,
+   "transparent": false,
+   "required": true,
+   "note": "アプリアイコン。角丸は端末側で付くので正方形で作る"
+  },
+  {
+   "id": "logo",
+   "path": "assets/art/logo.png",
+   "width": 1024,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "ロゴ画像(アプリ内の文字はl10n。ロゴだけは画像)"
+  }
+ ]
+}
