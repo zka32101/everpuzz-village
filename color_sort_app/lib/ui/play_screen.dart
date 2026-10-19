@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:puzzle_core/foundation.dart';
 
 import '../game/app_state.dart';
 import '../game/game_controller.dart';
@@ -22,13 +23,17 @@ class _PlayScreenState extends State<PlayScreen> {
   bool _stuckCharged = false; // 行き詰まりでのライフ消費は1回のプレイにつき1回
   bool _lifeLost = false;
   int _reward = 0;
+  late int _attempt; // 何回目の挑戦か(1始まり。やり直しで増える)
 
   @override
   void initState() {
     super.initState();
-    game = GameController(widget.app.pack.levels[widget.index])
-      ..addListener(_onChange);
+    game = GameController(_level)..addListener(_onChange);
+    _attempt = widget.app.progress.recordOf(_level.id).attempts + 1;
+    widget.app.telemetry.log(TelemetryEvent.levelStart(_level.id, _attempt));
   }
+
+  LevelEntry get _level => widget.app.pack.levels[widget.index];
 
   @override
   void dispose() {
@@ -39,6 +44,8 @@ class _PlayScreenState extends State<PlayScreen> {
   void _onChange() {
     if (game.won && !_recorded) {
       _recorded = true;
+      widget.app.telemetry
+          .log(TelemetryEvent.levelWin(_level.id, _attempt, game.moves));
       widget.app
           .recordWin(widget.index, moves: game.moves, stars: game.stars ?? 1)
           .then((reward) {
@@ -47,6 +54,9 @@ class _PlayScreenState extends State<PlayScreen> {
     }
     if (game.stuck && !_stuckCharged) {
       _stuckCharged = true;
+      widget.app.telemetry
+          .log(TelemetryEvent.levelFail(_level.id, _attempt, game.moves));
+      widget.app.recordFail(widget.index);
       widget.app.loseLife().then((lost) {
         if (mounted) setState(() => _lifeLost = lost);
       });
@@ -126,6 +136,9 @@ class _PlayScreenState extends State<PlayScreen> {
                         style: _big,
                         onPressed: () {
                           game.restart();
+                          _attempt++;
+                          widget.app.telemetry.log(
+                              TelemetryEvent.levelStart(_level.id, _attempt));
                           setState(() {
                             _stuckCharged = false;
                             _lifeLost = false;
@@ -180,6 +193,8 @@ class _PlayScreenState extends State<PlayScreen> {
     final ok = await widget.app.buyExtraTube();
     if (!mounted) return;
     if (ok) {
+      widget.app.telemetry
+          .log(TelemetryEvent.boosterUsed(_level.id, extraTubeBooster));
       game.addTube();
     } else {
       messenger.showSnackBar(SnackBar(content: Text(t.tr('notEnoughCoins'))));

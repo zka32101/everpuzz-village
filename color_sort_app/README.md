@@ -31,6 +31,11 @@ flutter run
 - リワード広告: `AdGate` を渡したときだけ「広告を見て回復」が出る(未接続なら非表示)
 - 数値は `lib/game/app_state.dart` の `economyConfig`(設定データ)。保存は版管理つき
 
+## 計測(puzzle_core の Telemetry)
+
+`level_start` / `level_win`(手数)/ `level_fail`(行き詰まり)/ `booster_used` / `ad_shown` を、`AppState.telemetry` に出す。
+実体(analytics 等)は未接続(既定は何もしない)。やり直しで `attempt` が増え、失敗は進行にも試行回数として残る。
+
 ## 未実装・仮
 
 - 広告SDK・課金(広告削除・コインパック)の接続。`AdGate` の実装は未着手

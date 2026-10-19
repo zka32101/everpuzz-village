@@ -9,12 +9,14 @@ Future<AppState> loadApp({
   MemoryKeyValueStore? kv,
   Clock? clock,
   AdGate? adGate,
+  Telemetry? telemetry,
 }) {
   return AppState.load(
     kv ?? MemoryKeyValueStore(),
     bundle: rootBundle,
     clock: clock ?? FakeClock(DateTime.utc(2026, 1, 1, 12)),
     adGate: adGate,
+    telemetry: telemetry ?? const NoopTelemetry(),
   );
 }
 

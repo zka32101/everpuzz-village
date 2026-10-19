@@ -42,6 +42,7 @@ class AppState extends ChangeNotifier {
     required EconomyState economyState,
     this.clock = const SystemClock(),
     this.adGate,
+    this.telemetry = const NoopTelemetry(),
   })  : economy = Economy(economyConfig, clock),
         _eco = economyState,
         _progressStore = KeyValueProgressStore(kv);
@@ -57,6 +58,9 @@ class AppState extends ChangeNotifier {
   /// リワード広告の窓口。未接続(null)なら広告ボタンは出さない。
   final AdGate? adGate;
 
+  /// 計測の窓口。実体(analytics等)は後から差し込む。未接続なら何もしない。
+  final Telemetry telemetry;
+
   final Economy economy;
   final ProgressStore _progressStore;
   Progress progress;
@@ -67,6 +71,7 @@ class AppState extends ChangeNotifier {
     AssetBundle? bundle,
     Clock clock = const SystemClock(),
     AdGate? adGate,
+    Telemetry telemetry = const NoopTelemetry(),
   }) async {
     final raw = await (bundle ?? rootBundle).loadString(packAsset);
     final pack = LevelPack.fromJson(jsonDecode(raw) as Map<String, Object?>);
@@ -79,6 +84,7 @@ class AppState extends ChangeNotifier {
       kv: kv,
       clock: clock,
       adGate: adGate,
+      telemetry: telemetry,
       progress: await KeyValueProgressStore(kv).load(),
       economyState: saved == null
           ? EconomyState.initial(economyConfig, clock.now())
@@ -126,6 +132,13 @@ class AppState extends ChangeNotifier {
     return reward;
   }
 
+  /// 失敗(行き詰まり)を記録する。試行回数が増える。
+  Future<void> recordFail(int index) async {
+    progress = progress.recordFail(pack.levels[index].id);
+    notifyListeners();
+    await _progressStore.save(progress);
+  }
+
   /// 行き詰まりでライフを1つ消費する。消費できたら true(ライフ切れなら false)。
   Future<bool> loseLife() async {
     final next = economy.consumeLife(_eco);
@@ -153,6 +166,7 @@ class AppState extends ChangeNotifier {
     if (gate == null) return false;
     final ok = await gate.showRewarded(RewardedPlacement.restoreLife);
     if (!ok) return false;
+    telemetry.log(TelemetryEvent.adShown('restoreLife'));
     _eco = economy.restoreLife(_eco);
     notifyListeners();
     await _saveEconomy();
