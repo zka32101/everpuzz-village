@@ -18,6 +18,9 @@ class GameController extends ChangeNotifier {
   int? selected;
   bool extraTubeUsed = false;
   MoveError? lastError;
+
+  /// ヒントで示している手(次の操作で消える)。
+  Move? hint;
   final List<Board> _history = [];
 
   bool get won => _rules.isWon(board);
@@ -36,6 +39,7 @@ class GameController extends ChangeNotifier {
   void tap(int i) {
     if (won) return;
     lastError = null;
+    hint = null;
     final from = selected;
     if (from == null) {
       _trySelect(i);
@@ -78,6 +82,13 @@ class GameController extends ChangeNotifier {
     return MoveError.color;
   }
 
+  void showHint(Move m) {
+    hint = m;
+    selected = null;
+    lastError = null;
+    notifyListeners();
+  }
+
   /// 空の容器を1本足す(1回のプレイにつき1回)。足す前には戻せない。
   void addTube() {
     if (extraTubeUsed || won) return;
@@ -86,6 +97,7 @@ class GameController extends ChangeNotifier {
     _history.clear();
     selected = null;
     lastError = null;
+    hint = null;
     notifyListeners();
   }
 
@@ -95,6 +107,7 @@ class GameController extends ChangeNotifier {
     moves--;
     selected = null;
     lastError = null;
+    hint = null;
     notifyListeners();
   }
 
@@ -108,6 +121,7 @@ class GameController extends ChangeNotifier {
     moves = 0;
     selected = null;
     lastError = null;
+    hint = null;
     notifyListeners();
   }
 }

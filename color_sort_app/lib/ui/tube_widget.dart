@@ -6,6 +6,9 @@ import 'symbols.dart';
 
 /// 1本の容器。色玉は「塗り色 + 固有の記号 + 数字」で描く(色だけに頼らない)。
 /// タップ領域は 44pt 以上、文字拡大 200% でも崩れないよう数字は縮小して収める。
+/// ヒントでの役割(色ではなく文字でも示す)。
+enum HintRole { none, from, to }
+
 class TubeWidget extends StatelessWidget {
   const TubeWidget({
     super.key,
@@ -15,6 +18,7 @@ class TubeWidget extends StatelessWidget {
     required this.usable,
     required this.selected,
     required this.onTap,
+    this.hintRole = HintRole.none,
   });
 
   final int index;
@@ -23,6 +27,7 @@ class TubeWidget extends StatelessWidget {
   final bool usable;
   final bool selected;
   final VoidCallback onTap;
+  final HintRole hintRole;
 
   static const unit = 46.0; // 1スロットの大きさ(44pt以上)
   static const pad = 4.0;
@@ -40,6 +45,8 @@ class TubeWidget extends StatelessWidget {
       if (lock != null)
         t.tr(lock!.kind == LockKind.key ? 'lockKey' : 'lockFrozen'),
       if (selected) t.tr('selected'),
+      if (hintRole != HintRole.none)
+        t.tr(hintRole == HintRole.from ? 'hintFrom' : 'hintTo'),
     ].join(' ');
 
     return Semantics(
@@ -54,7 +61,24 @@ class TubeWidget extends StatelessWidget {
             // 特殊容器の種類は容器の上のバッジで示す(中身に重ねない)。
             SizedBox(
               height: badgeHeight,
-              child: lock != null && !usable ? LockBadge(lock: lock!) : null,
+              child: hintRole != HintRole.none
+                  ? Center(
+                      child: FittedBox(
+                        child: Text(
+                          t.tr(hintRole == HintRole.from
+                              ? 'hintFrom'
+                              : 'hintTo'),
+                          key: Key('hint-${hintRole.name}'),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: scheme.tertiary,
+                          ),
+                        ),
+                      ),
+                    )
+                  : lock != null && !usable
+                      ? LockBadge(lock: lock!)
+                      : null,
             ),
             AnimatedContainer(
               duration: const Duration(milliseconds: 120),
@@ -65,8 +89,12 @@ class TubeWidget extends StatelessWidget {
               decoration: BoxDecoration(
                 color: scheme.surfaceContainerHighest,
                 border: Border.all(
-                  color: selected ? scheme.primary : scheme.outline,
-                  width: selected ? 3 : 1.5,
+                  color: selected
+                      ? scheme.primary
+                      : hintRole != HintRole.none
+                          ? scheme.tertiary
+                          : scheme.outline,
+                  width: selected || hintRole != HintRole.none ? 3 : 1.5,
                 ),
                 borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(6), bottom: Radius.circular(unit / 2)),

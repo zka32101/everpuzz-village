@@ -23,6 +23,7 @@ class _PlayScreenState extends State<PlayScreen> {
   bool _stuckCharged = false; // 行き詰まりでのライフ消費は1回のプレイにつき1回
   bool _lifeLost = false;
   int _reward = 0;
+  bool _hinting = false; // ヒントを計算中(二重に押せない)
   late int _attempt; // 何回目の挑戦か(1始まり。やり直しで増える)
 
   @override
@@ -109,6 +110,13 @@ class _PlayScreenState extends State<PlayScreen> {
                               lock: game.board.locks[i],
                               usable: game.board.isUsable(i),
                               selected: game.selected == i,
+                              hintRole: game.hint == null
+                                  ? HintRole.none
+                                  : game.hint!.$1 == i
+                                      ? HintRole.from
+                                      : game.hint!.$2 == i
+                                          ? HintRole.to
+                                          : HintRole.none,
                               onTap: () => game.tap(i),
                             ),
                         ],
@@ -148,6 +156,19 @@ class _PlayScreenState extends State<PlayScreen> {
                         label: Text(t.tr('restart')),
                       ),
                       FilledButton.tonalIcon(
+                        key: const Key('hint'),
+                        style: _big,
+                        onPressed: game.won || game.stuck || _hinting
+                            ? null
+                            : _showHint,
+                        icon: const Icon(Icons.lightbulb_outline),
+                        label: Text(
+                          '${t.tr('hint')} (${t.tr('extraTubeCost', {
+                                'n': widget.app.hintCost
+                              })})',
+                        ),
+                      ),
+                      FilledButton.tonalIcon(
                         key: const Key('extraTube'),
                         style: _big,
                         onPressed: game.extraTubeUsed || game.won
@@ -185,6 +206,32 @@ class _PlayScreenState extends State<PlayScreen> {
         );
       },
     );
+  }
+
+  /// 先に手を探し、見つかったときだけコインを払う(見つからなければ課金しない)。
+  Future<void> _showHint() async {
+    final t = L10n.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    if (!widget.app.canAffordHint) {
+      messenger.showSnackBar(SnackBar(content: Text(t.tr('notEnoughCoins'))));
+      return;
+    }
+    setState(() => _hinting = true);
+    final move = await widget.app.hintSolver(game.board);
+    if (!mounted) return;
+    setState(() => _hinting = false);
+    if (move == null) {
+      messenger.showSnackBar(SnackBar(content: Text(t.tr('hintNone'))));
+      return;
+    }
+    if (!await widget.app.buyHint() || !mounted) return;
+    widget.app.telemetry
+        .log(TelemetryEvent.boosterUsed(_level.id, hintBooster));
+    game.showHint(move);
+    // 読み上げ・色以外の手がかりとして、文でも示す。
+    messenger.showSnackBar(SnackBar(
+      content: Text(t.tr('hintText', {'from': move.$1 + 1, 'to': move.$2 + 1})),
+    ));
   }
 
   Future<void> _buyExtraTube() async {

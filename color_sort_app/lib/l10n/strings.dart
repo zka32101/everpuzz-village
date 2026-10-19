@@ -36,6 +36,11 @@ const bundles = <String, Map<String, String>>{
     'notEnoughCoins': 'コインが足りません。',
     'stuckLifeLost': '動かせる手がありません。ライフを1つ失いました。戻すかやり直してください。',
     'reward': 'コイン +{n}',
+    'hint': 'ヒント',
+    'hintFrom': 'ここから',
+    'hintTo': 'ここへ',
+    'hintNone': '手が見つかりませんでした。コインは減りません。',
+    'hintText': '容器 {from} から 容器 {to} へ',
   },
   'en': {
     'appTitle': 'Everpuzz',
@@ -69,6 +74,11 @@ const bundles = <String, Map<String, String>>{
     'notEnoughCoins': 'Not enough coins.',
     'stuckLifeLost': 'No moves left. You lost a life. Undo or restart.',
     'reward': '+{n} coins',
+    'hint': 'Hint',
+    'hintFrom': 'From here',
+    'hintTo': 'To here',
+    'hintNone': 'No move found. Coins were not spent.',
+    'hintText': 'Tube {from} to tube {to}',
   },
 };
 

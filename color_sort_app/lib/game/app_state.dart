@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:puzzle_core/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'hint.dart';
+
 /// SharedPreferences を puzzle_core の保存窓口に合わせるアダプタ。
 class PrefsKeyValueStore implements KeyValueStore {
   PrefsKeyValueStore(this._prefs);
@@ -23,6 +25,7 @@ class PrefsKeyValueStore implements KeyValueStore {
 
 /// ブースターID。
 const extraTubeBooster = 'extraTube';
+const hintBooster = 'hint';
 
 /// 経済の設定データ(数値はここだけ。価格・商品IDはストア側でゲームが持つ)。
 /// 通貨は1種類、報酬は固定のみ(確率報酬なし)。
@@ -30,7 +33,7 @@ const economyConfig = EconomyConfig(
   maxLives: 5,
   lifeRegenInterval: Duration(minutes: 30),
   winReward: 10,
-  boosterCosts: {extraTubeBooster: 40},
+  boosterCosts: {extraTubeBooster: 40, hintBooster: 20},
 );
 
 /// アプリ全体の状態(レベルパック・進行・ライフとコイン)。
@@ -43,6 +46,7 @@ class AppState extends ChangeNotifier {
     this.clock = const SystemClock(),
     this.adGate,
     this.telemetry = const NoopTelemetry(),
+    this.hintSolver = isolateHintSolver,
   })  : economy = Economy(economyConfig, clock),
         _eco = economyState,
         _progressStore = KeyValueProgressStore(kv);
@@ -61,6 +65,9 @@ class AppState extends ChangeNotifier {
   /// 計測の窓口。実体(analytics等)は後から差し込む。未接続なら何もしない。
   final Telemetry telemetry;
 
+  /// ヒントを解く関数(既定は別isolate。テストでは同期版に差し替える)。
+  final HintSolver hintSolver;
+
   final Economy economy;
   final ProgressStore _progressStore;
   Progress progress;
@@ -72,6 +79,7 @@ class AppState extends ChangeNotifier {
     Clock clock = const SystemClock(),
     AdGate? adGate,
     Telemetry telemetry = const NoopTelemetry(),
+    HintSolver hintSolver = isolateHintSolver,
   }) async {
     final raw = await (bundle ?? rootBundle).loadString(packAsset);
     final pack = LevelPack.fromJson(jsonDecode(raw) as Map<String, Object?>);
@@ -85,6 +93,7 @@ class AppState extends ChangeNotifier {
       clock: clock,
       adGate: adGate,
       telemetry: telemetry,
+      hintSolver: hintSolver,
       progress: await KeyValueProgressStore(kv).load(),
       economyState: saved == null
           ? EconomyState.initial(economyConfig, clock.now())
@@ -103,6 +112,9 @@ class AppState extends ChangeNotifier {
   Duration? get timeToNextLife => economy.timeToNextLife(_eco);
 
   int get extraTubeCost => economyConfig.boosterCosts[extraTubeBooster]!;
+  int get hintCost => economyConfig.boosterCosts[hintBooster]!;
+
+  bool get canAffordHint => coins >= hintCost;
 
   /// 順番にだけ進める(現在レベルまで遊べる)。
   bool isUnlocked(int index) => index <= progress.currentLevelIndex;
@@ -155,6 +167,17 @@ class AppState extends ChangeNotifier {
     if (next == null) return false;
     // その場で使うので在庫には積まない。
     _eco = economy.useBooster(next, extraTubeBooster)!;
+    notifyListeners();
+    await _saveEconomy();
+    return true;
+  }
+
+  /// ヒントの購入(その場で使う)。コイン不足なら false。
+  /// 手が見つかってから呼ぶこと(見つからない時は課金しない)。
+  Future<bool> buyHint() async {
+    final next = economy.buyBooster(current, hintBooster);
+    if (next == null) return false;
+    _eco = economy.useBooster(next, hintBooster)!;
     notifyListeners();
     await _saveEconomy();
     return true;

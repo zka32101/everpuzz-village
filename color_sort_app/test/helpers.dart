@@ -1,4 +1,5 @@
 import 'package:color_sort_app/game/app_state.dart';
+import 'package:color_sort_app/game/hint.dart';
 import 'package:color_sort_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,6 +11,7 @@ Future<AppState> loadApp({
   Clock? clock,
   AdGate? adGate,
   Telemetry? telemetry,
+  HintSolver? hintSolver,
 }) {
   return AppState.load(
     kv ?? MemoryKeyValueStore(),
@@ -17,6 +19,8 @@ Future<AppState> loadApp({
     clock: clock ?? FakeClock(DateTime.utc(2026, 1, 1, 12)),
     adGate: adGate,
     telemetry: telemetry ?? const NoopTelemetry(),
+    // テストでは isolate を使わず同期で解く。
+    hintSolver: hintSolver ?? (b) async => solveHint(b),
   );
 }
 
