@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+# puzzle_core は非公開リポジトリ。取得用のトークン(読み取り権限)を
+# リポジトリの Secrets に PUZZLE_CORE_TOKEN として登録しておく。
+env:
+  GIT_AUTH_URL: https://x-access-token:${{ secrets.PUZZLE_CORE_TOKEN }}@github.com/
+
+jobs:
+  logic:
+    name: color_sort (ルール・面生成・レベル検証)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: color_sort
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+      - run: git config --global url."$GIT_AUTH_URL".insteadOf https://github.com/
+      - run: dart pub get
+      - run: dart format --output=none --set-exit-if-changed .
+      - run: dart analyze --fatal-infos
+      - run: dart run tool/check_levels.dart
+      - run: dart run tool/check_assets.dart
+      - run: dart test
+
+  app:
+    name: color_sort_app (Flutter)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: color_sort_app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: git config --global url."$GIT_AUTH_URL".insteadOf https://github.com/
+      - run: flutter pub get
+      - run: dart format --output=none --set-exit-if-changed lib test
+      - run: flutter analyze
+      - run: flutter test

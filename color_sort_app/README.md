@@ -1,6 +1,6 @@
 # color_sort_app
 
-Everpuzz 1本目(色ソート・仮称)の Flutter アプリ。ルール・面生成は `../color_sort`、基盤は `../../puzzle_core`。
+Everpuzz 1本目(色ソート・仮称)の Flutter アプリ。ルール・面生成は `../color_sort`、基盤は別リポジトリの puzzle_core（タグ固定の git 依存）。
 
 ## 構成
 
