@@ -1,7 +1,6 @@
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
-import 'package:puzzle_core/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'game/app_state.dart';
@@ -11,9 +10,7 @@ import 'ui/level_select_screen.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
-  final app = await AppState.load(
-    KeyValueProgressStore(PrefsKeyValueStore(prefs)),
-  );
+  final app = await AppState.load(PrefsKeyValueStore(prefs));
   runApp(ColorSortApp(app: app));
 }
 

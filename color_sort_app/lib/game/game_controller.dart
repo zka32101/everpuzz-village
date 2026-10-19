@@ -16,6 +16,7 @@ class GameController extends ChangeNotifier {
   Board board;
   int moves = 0;
   int? selected;
+  bool extraTubeUsed = false;
   MoveError? lastError;
   final List<Board> _history = [];
 
@@ -27,7 +28,9 @@ class GameController extends ChangeNotifier {
   int? get stars {
     if (!won) return null;
     final min = level.verified?.minMoves;
-    return min == null ? 1 : starsFor(moves, min);
+    final base = min == null ? 1 : starsFor(moves, min);
+    // 空き容器ブースターを使った場合、星は最大2。
+    return extraTubeUsed && base > 2 ? 2 : base;
   }
 
   void tap(int i) {
@@ -75,6 +78,17 @@ class GameController extends ChangeNotifier {
     return MoveError.color;
   }
 
+  /// 空の容器を1本足す(1回のプレイにつき1回)。足す前には戻せない。
+  void addTube() {
+    if (extraTubeUsed || won) return;
+    board = Board([...board.tubes, <int>[]], [...board.locks, null]);
+    extraTubeUsed = true;
+    _history.clear();
+    selected = null;
+    lastError = null;
+    notifyListeners();
+  }
+
   void undo() {
     if (_history.isEmpty) return;
     board = _history.removeLast();
@@ -86,6 +100,10 @@ class GameController extends ChangeNotifier {
 
   void restart() {
     board = _rules.initial(level.spec);
+    // 買った空き容器は、このプレイの間は持ち越す(やり直しで無駄にしない)。
+    if (extraTubeUsed) {
+      board = Board([...board.tubes, <int>[]], [...board.locks, null]);
+    }
     _history.clear();
     moves = 0;
     selected = null;

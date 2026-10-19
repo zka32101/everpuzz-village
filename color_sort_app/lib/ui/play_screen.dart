@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../game/app_state.dart';
 import '../game/game_controller.dart';
 import '../l10n/strings.dart';
+import 'economy_bar.dart';
 import 'tube_widget.dart';
 
 class PlayScreen extends StatefulWidget {
@@ -18,6 +19,9 @@ class PlayScreen extends StatefulWidget {
 class _PlayScreenState extends State<PlayScreen> {
   late final GameController game;
   bool _recorded = false;
+  bool _stuckCharged = false; // 行き詰まりでのライフ消費は1回のプレイにつき1回
+  bool _lifeLost = false;
+  int _reward = 0;
 
   @override
   void initState() {
@@ -35,11 +39,17 @@ class _PlayScreenState extends State<PlayScreen> {
   void _onChange() {
     if (game.won && !_recorded) {
       _recorded = true;
-      widget.app.recordWin(
-        widget.index,
-        moves: game.moves,
-        stars: game.stars ?? 1,
-      );
+      widget.app
+          .recordWin(widget.index, moves: game.moves, stars: game.stars ?? 1)
+          .then((reward) {
+        if (mounted) setState(() => _reward = reward);
+      });
+    }
+    if (game.stuck && !_stuckCharged) {
+      _stuckCharged = true;
+      widget.app.loseLife().then((lost) {
+        if (mounted) setState(() => _lifeLost = lost);
+      });
     }
   }
 
@@ -68,6 +78,10 @@ class _PlayScreenState extends State<PlayScreen> {
           body: SafeArea(
             child: Column(
               children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
+                  child: EconomyBar(app: widget.app),
+                ),
                 Expanded(
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.all(16),
@@ -92,7 +106,7 @@ class _PlayScreenState extends State<PlayScreen> {
                     ),
                   ),
                 ),
-                _Message(game: game),
+                _Message(game: game, lifeLost: _lifeLost),
                 Padding(
                   padding: const EdgeInsets.all(12),
                   child: Wrap(
@@ -110,9 +124,28 @@ class _PlayScreenState extends State<PlayScreen> {
                       FilledButton.tonalIcon(
                         key: const Key('restart'),
                         style: _big,
-                        onPressed: game.restart,
+                        onPressed: () {
+                          game.restart();
+                          setState(() {
+                            _stuckCharged = false;
+                            _lifeLost = false;
+                          });
+                        },
                         icon: const Icon(Icons.refresh),
                         label: Text(t.tr('restart')),
+                      ),
+                      FilledButton.tonalIcon(
+                        key: const Key('extraTube'),
+                        style: _big,
+                        onPressed: game.extraTubeUsed || game.won
+                            ? null
+                            : _buyExtraTube,
+                        icon: const Icon(Icons.add_box_outlined),
+                        label: Text(
+                          '${t.tr('extraTube')} (${t.tr('extraTubeCost', {
+                                'n': widget.app.extraTubeCost
+                              })})',
+                        ),
                       ),
                     ],
                   ),
@@ -120,7 +153,8 @@ class _PlayScreenState extends State<PlayScreen> {
                 if (game.won)
                   _WinPanel(
                     stars: game.stars ?? 1,
-                    onNext: hasNext
+                    reward: _reward,
+                    onNext: hasNext && widget.app.canPlay
                         ? () => Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
                                 builder: (_) => PlayScreen(
@@ -140,22 +174,35 @@ class _PlayScreenState extends State<PlayScreen> {
     );
   }
 
+  Future<void> _buyExtraTube() async {
+    final t = L10n.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    final ok = await widget.app.buyExtraTube();
+    if (!mounted) return;
+    if (ok) {
+      game.addTube();
+    } else {
+      messenger.showSnackBar(SnackBar(content: Text(t.tr('notEnoughCoins'))));
+    }
+  }
+
   /// タップ領域 44pt 以上。
   static final _big = FilledButton.styleFrom(minimumSize: const Size(48, 48));
 }
 
 /// 失敗の理由・行き詰まりを短い文で見せる。
 class _Message extends StatelessWidget {
-  const _Message({required this.game});
+  const _Message({required this.game, required this.lifeLost});
 
   final GameController game;
+  final bool lifeLost;
 
   @override
   Widget build(BuildContext context) {
     final t = L10n.of(context);
     String? text;
     if (game.stuck) {
-      text = t.tr('stuck');
+      text = t.tr(lifeLost ? 'stuckLifeLost' : 'stuck');
     } else if (game.lastError != null) {
       text = t.tr(switch (game.lastError!) {
         MoveError.locked => 'errLocked',
@@ -185,11 +232,13 @@ class _Message extends StatelessWidget {
 class _WinPanel extends StatelessWidget {
   const _WinPanel({
     required this.stars,
+    required this.reward,
     required this.onNext,
     required this.onBack,
   });
 
   final int stars;
+  final int reward;
   final VoidCallback? onNext;
   final VoidCallback onBack;
 
@@ -218,6 +267,8 @@ class _WinPanel extends StatelessWidget {
               ],
             ),
           ),
+          if (reward > 0)
+            Text(t.tr('reward', {'n': reward}), key: const Key('reward')),
           Wrap(
             spacing: 12,
             children: [
