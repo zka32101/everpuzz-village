@@ -1,0 +1,215 @@
+{
+ "schemaVersion": 1,
+ "grid": {
+  "columns": 4,
+  "maxCells": 24,
+  "spareCells": 4
+ },
+ "dailyGift": 10,
+ "dwellers": {
+  "pointsPerDweller": 6,
+  "max": 10
+ },
+ "buildings": [
+  {
+   "id": "small_house",
+   "category": "home",
+   "unlockAfterLevels": 0,
+   "costs": [
+    15,
+    25,
+    35
+   ]
+  },
+  {
+   "id": "mushroom_house",
+   "category": "home",
+   "unlockAfterLevels": 3,
+   "costs": [
+    15,
+    25,
+    35
+   ]
+  },
+  {
+   "id": "windmill_house",
+   "category": "home",
+   "unlockAfterLevels": 6,
+   "costs": [
+    15,
+    25,
+    35
+   ]
+  },
+  {
+   "id": "treehouse",
+   "category": "home",
+   "unlockAfterLevels": 9,
+   "costs": [
+    15,
+    25,
+    35
+   ]
+  },
+  {
+   "id": "flower_house",
+   "category": "home",
+   "unlockAfterLevels": 12,
+   "costs": [
+    15,
+    25,
+    35
+   ]
+  },
+  {
+   "id": "flower_field",
+   "category": "nature",
+   "unlockAfterLevels": 15,
+   "costs": [
+    15,
+    25,
+    35
+   ]
+  },
+  {
+   "id": "big_tree",
+   "category": "nature",
+   "unlockAfterLevels": 18,
+   "costs": [
+    15,
+    25,
+    35
+   ]
+  },
+  {
+   "id": "gourd_pond",
+   "category": "nature",
+   "unlockAfterLevels": 21,
+   "costs": [
+    15,
+    25,
+    35
+   ]
+  },
+  {
+   "id": "log_bridge",
+   "category": "nature",
+   "unlockAfterLevels": 24,
+   "costs": [
+    15,
+    25,
+    35
+   ]
+  },
+  {
+   "id": "bench",
+   "category": "nature",
+   "unlockAfterLevels": 27,
+   "costs": [
+    15,
+    25,
+    35
+   ]
+  },
+  {
+   "id": "bakery",
+   "category": "life",
+   "unlockAfterLevels": 30,
+   "costs": [
+    15,
+    25,
+    35
+   ]
+  },
+  {
+   "id": "cafe",
+   "category": "life",
+   "unlockAfterLevels": 33,
+   "costs": [
+    15,
+    25,
+    35
+   ]
+  },
+  {
+   "id": "general_store",
+   "category": "life",
+   "unlockAfterLevels": 36,
+   "costs": [
+    15,
+    25,
+    35
+   ]
+  },
+  {
+   "id": "vegetable_field",
+   "category": "life",
+   "unlockAfterLevels": 39,
+   "costs": [
+    15,
+    25,
+    35
+   ]
+  },
+  {
+   "id": "ranch",
+   "category": "life",
+   "unlockAfterLevels": 42,
+   "costs": [
+    15,
+    25,
+    35
+   ]
+  },
+  {
+   "id": "lighthouse",
+   "category": "landmark",
+   "unlockAfterLevels": 45,
+   "costs": [
+    15,
+    25,
+    35
+   ]
+  },
+  {
+   "id": "balloon",
+   "category": "landmark",
+   "unlockAfterLevels": 48,
+   "costs": [
+    15,
+    25,
+    35
+   ]
+  },
+  {
+   "id": "water_mill",
+   "category": "landmark",
+   "unlockAfterLevels": 51,
+   "costs": [
+    15,
+    25,
+    35
+   ]
+  },
+  {
+   "id": "clock_tower",
+   "category": "landmark",
+   "unlockAfterLevels": 54,
+   "costs": [
+    15,
+    25,
+    35
+   ]
+  },
+  {
+   "id": "rainbow_arch",
+   "category": "landmark",
+   "unlockAfterLevels": 57,
+   "costs": [
+    15,
+    25,
+    35
+   ]
+  }
+ ]
+}
