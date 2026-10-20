@@ -16,7 +16,7 @@ class EconomyBar extends StatelessWidget {
     return ListenableBuilder(
       listenable: app,
       builder: (context, _) {
-        final next = app.timeToNextLife;
+        final next = app.nextLifeAt;
         return Semantics(
           container: true,
           child: Wrap(
@@ -31,7 +31,7 @@ class EconomyBar extends StatelessWidget {
               ),
               if (next != null)
                 Text(
-                  t.tr('nextLife', {'n': (next.inSeconds / 60).ceil()}),
+                  t.tr('nextLife', {'time': _hhmm(next)}),
                   key: const Key('nextLife'),
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
@@ -114,4 +114,11 @@ Future<void> showNoLivesDialog(BuildContext context, AppState app) {
       ],
     ),
   );
+}
+
+/// 「次のライフは12:30ごろ」の時刻部分(急かさない言い方にするため時刻で示す)。
+String _hhmm(DateTime d) {
+  final l = d.toLocal();
+  return '${l.hour.toString().padLeft(2, '0')}:'
+      '${l.minute.toString().padLeft(2, '0')}';
 }
