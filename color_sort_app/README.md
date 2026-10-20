@@ -85,4 +85,4 @@ flutter run
 ## 画像素材の組み込み
 - `color_sort/assets/art/<ID>.png` を置くだけで反映される(台帳 `art_manifest.json` のID)。無いIDは図形+文字で代用する。
 - 町の建物は `<建物ID>_s1〜s3.png`(マスの下端にそろえて表示)。プレイ画面の背景は `bg_stage_01.png`。
-- 容器(`tube_back` / `tube_front`)、アイコン(`app_icon`)の組み込みは、画像が届いてから別PRで行う。
+- 容器は `tube_back` / `tube_front` があれば画像で描く(ガラスの内側に色玉の積みが収まる大きさ)。アイコン(`app_icon`)の組み込みは、画像が届いてから別PRで行う。

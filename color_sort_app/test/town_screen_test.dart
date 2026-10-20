@@ -1,6 +1,9 @@
 import 'package:color_sort_app/game/app_state.dart';
 import 'package:color_sort_app/game/art.dart';
+import 'package:color_sort_app/l10n/strings.dart';
+import 'package:color_sort_app/ui/play_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:puzzle_core/foundation.dart';
 
@@ -20,6 +23,7 @@ Future<AppState> appWithCoins(WidgetTester tester, int coins) async {
 }
 
 void main() {
+  realArtTests();
   artTests();
   townMetaTests();
   testWidgets('起動すると町。最初は5マス(解放1+4)で、あそぶ/面を選ぶがある', (tester) async {
@@ -225,9 +229,40 @@ void artTests() {
     await tester.pumpWidget(appWidget(withArt, town: true));
     await tester.pump();
     expect(find.byKey(const Key('art-small_house_s1')), findsOneWidget);
-    // 読み込みに失敗しても(テストには実画像が無い)文字の代用に戻り、崩れない
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
-    expect(find.text('Small house'), findsWidgets);
+    // 名前・段階は画像でも文字(Semantics)で示す
+    expect(find.bySemanticsLabel(RegExp('Small house')), findsWidgets);
+  });
+}
+
+void realArtTests() {
+  testWidgets('同梱の画像(63枚)が読め、容器の画像描画でも崩れない', (tester) async {
+    final art = (await tester.runAsync(() => ArtCatalog.load(rootBundle)))!;
+    expect(
+        art.has('bg_stage_01') && art.has('tube_back') && art.has('tube_front'),
+        isTrue);
+    expect(art.has('small_house_s1') && art.has('rainbow_arch_s3'), isTrue);
+    final real = (await tester.runAsync(() => loadApp()))!;
+    final app = AppState(
+      pack: real.pack,
+      kv: real.kv,
+      progress: real.progress,
+      economyState: real.current,
+      townConfig: real.townConfig,
+      art: art,
+    );
+    await tester.binding.setSurfaceSize(const Size(430, 900));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    await tester.pumpWidget(L10n(
+      translator: translatorFor('en'),
+      child: MaterialApp(home: PlayScreen(app: app, index: 40)),
+    ));
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+    expect(find.byKey(const Key('tube-0')), findsOneWidget);
+    await tester.tap(find.byKey(const Key('tube-0')));
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
   });
 }
