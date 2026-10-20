@@ -15,14 +15,16 @@ void main() {
     final bad = <String>[];
     for (final f
         in Directory('lib').listSync(recursive: true).whereType<File>()) {
-      if (!f.path.endsWith('.dart') || f.path.endsWith('l10n/strings.dart')) {
+      // Windows の区切り(\)でも同じに扱う。
+      final path = f.path.replaceAll(r'\', '/');
+      if (!path.endsWith('.dart') || path.endsWith('l10n/strings.dart')) {
         continue;
       }
       final lines = f.readAsLinesSync();
       for (var i = 0; i < lines.length; i++) {
         // コメント(///, //)は対象外
         final code = lines[i].split('//').first;
-        if (cjk.hasMatch(code)) bad.add('${f.path}:${i + 1}');
+        if (cjk.hasMatch(code)) bad.add('$path:${i + 1}');
       }
     }
     expect(bad, isEmpty);
