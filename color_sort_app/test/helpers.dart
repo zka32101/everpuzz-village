@@ -27,8 +27,9 @@ Future<AppState> loadApp({
   );
 }
 
-Widget appWidget(AppState app, {String lang = 'en', double textScale = 1}) =>
+Widget appWidget(AppState app,
+        {String lang = 'en', double textScale = 1, bool town = false}) =>
     MediaQuery(
       data: MediaQueryData(textScaler: TextScaler.linear(textScale)),
-      child: ColorSortApp(app: app, languageTag: lang),
+      child: ColorSortApp(app: app, languageTag: lang, startOnLevels: !town),
     );

@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:color_sort/color_sort.dart'
+    show TownConfig, TownError, TownResult, TownRules, TownState, TownStore;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:puzzle_core/foundation.dart';
@@ -92,9 +94,12 @@ class AppState extends ChangeNotifier {
     this.telemetry = const NoopTelemetry(),
     this.hintSolver = isolateHintSolver,
     this.purchaseGate,
+    required this.townConfig,
+    this.townState = TownState.empty,
     this.catalog = ShopCatalog.empty,
     PurchaseState purchaseState = const PurchaseState(),
   })  : economy = Economy(economyConfig, clock),
+        townRules = TownRules(townConfig),
         _eco = economyState,
         _purchases = purchaseState,
         _progressStore = KeyValueProgressStore(kv);
@@ -104,6 +109,7 @@ class AppState extends ChangeNotifier {
   static const economySchema = 1;
   static const purchasesKey = 'purchases';
   static const purchasesSchema = 1;
+  static const townAsset = 'packages/color_sort/assets/town/buildings.json';
   static const catalogAsset = 'assets/shop/products.json';
 
   final LevelPack pack;
@@ -122,6 +128,10 @@ class AppState extends ChangeNotifier {
   /// 課金の窓口。未接続(null)なら店は出さない。
   final PurchaseGate? purchaseGate;
   final ShopCatalog catalog;
+
+  final TownConfig townConfig;
+  final TownRules townRules;
+  TownState townState;
 
   final Economy economy;
   final ProgressStore _progressStore;
@@ -159,7 +169,16 @@ class AppState extends ChangeNotifier {
         // 取れない時は保存済みの値で続ける。
       }
     }
+    final townConfig = TownConfig.fromJson(await b.loadString(townAsset));
+    assert(townConfig.validate(levelCount: pack.levels.length).isEmpty);
+    final progress = await KeyValueProgressStore(kv).load();
+    final clearedNow =
+        pack.levels.where((l) => progress.recordOf(l.id).cleared).length;
     return AppState(
+      townConfig: townConfig,
+      townState: await TownStore(kv, townConfig,
+              cellLimit: TownRules(townConfig).cellCount(clearedNow))
+          .load(),
       purchaseGate: purchaseGate,
       catalog: catalog,
       purchaseState: purchases,
@@ -169,7 +188,7 @@ class AppState extends ChangeNotifier {
       adGate: adGate,
       telemetry: telemetry,
       hintSolver: hintSolver,
-      progress: await KeyValueProgressStore(kv).load(),
+      progress: progress,
       economyState: saved == null
           ? EconomyState.initial(economyConfig, clock.now())
           : EconomyState.fromJson(saved),
@@ -197,6 +216,45 @@ class AppState extends ChangeNotifier {
   int get hintCost => economyConfig.boosterCosts[hintBooster]!;
 
   bool get canAffordHint => coins >= hintCost;
+
+  /// クリア済みの面数(町の解放・マス数の元)。
+  int get clearedLevels =>
+      pack.levels.where((l) => progress.recordOf(l.id).cleared).length;
+
+  /// 次に遊ぶ面(最初の未クリア。全クリア済みなら最後の面)。
+  int get nextLevelIndex =>
+      progress.currentLevelIndex.clamp(0, pack.levels.length - 1);
+
+  /// 次のライフが回復する見込みの時刻。満タンなら null。
+  DateTime? get nextLifeAt {
+    final d = timeToNextLife;
+    return d == null ? null : clock.now().add(d);
+  }
+
+  /// 町に建物を置く。成功なら null、失敗なら理由。
+  Future<TownError?> placeBuilding(String id, int cell) async {
+    final r = townRules.place(townState, id, cell,
+        clearedLevels: clearedLevels, coins: coins);
+    return _applyTown(r);
+  }
+
+  Future<TownError?> upgradeBuilding(String id) async =>
+      _applyTown(townRules.upgrade(townState, id, coins: coins));
+
+  Future<TownError?> moveBuilding(String id, int cell) async => _applyTown(
+      townRules.move(townState, id, cell, clearedLevels: clearedLevels));
+
+  Future<TownError?> _applyTown(TownResult r) async {
+    if (!r.ok) return r.error;
+    if (r.cost > 0) {
+      _eco = economy.spendCoins(current, r.cost)!;
+    }
+    townState = r.state!;
+    notifyListeners();
+    await TownStore(kv, townConfig).save(townState);
+    if (r.cost > 0) await _saveEconomy();
+    return null;
+  }
 
   /// 順番にだけ進める(現在レベルまで遊べる)。
   bool isUnlocked(int index) => index <= progress.currentLevelIndex;

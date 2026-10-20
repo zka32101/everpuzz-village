@@ -10,6 +10,7 @@ import 'game/purchases.dart';
 import 'game/revenuecat_gate.dart';
 import 'l10n/strings.dart';
 import 'ui/level_select_screen.dart';
+import 'ui/town_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,12 +30,20 @@ Future<void> main() async {
 }
 
 class ColorSortApp extends StatelessWidget {
-  const ColorSortApp({super.key, required this.app, this.languageTag});
+  const ColorSortApp({
+    super.key,
+    required this.app,
+    this.languageTag,
+    this.startOnLevels = false,
+  });
 
   final AppState app;
 
   /// テスト用の言語指定。null なら端末の言語。
   final String? languageTag;
+
+  /// テスト用。true なら町を飛ばして面選択から始める。
+  final bool startOnLevels;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +58,8 @@ class ColorSortApp extends StatelessWidget {
           colorSchemeSeed: const Color(0xFF7FB8F0),
           useMaterial3: true,
         ),
-        home: LevelSelectScreen(app: app),
+        home:
+            startOnLevels ? LevelSelectScreen(app: app) : TownScreen(app: app),
       ),
     );
   }
