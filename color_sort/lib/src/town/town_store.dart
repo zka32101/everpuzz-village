@@ -42,6 +42,9 @@ class TownStore {
       return TownState(
         placements: placements,
         lastGiftDay: j['lastGiftDay'] as String?,
+        seenUnlocked: (j['seenUnlocked'] as int?) ?? 1,
+        completeShown: (j['completeShown'] as bool?) ?? false,
+        bloomShown: (j['bloomShown'] as bool?) ?? false,
       );
     } on Object {
       return TownState.empty;

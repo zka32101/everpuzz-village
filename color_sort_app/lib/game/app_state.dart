@@ -276,6 +276,50 @@ class AppState extends ChangeNotifier {
   Future<TownError?> moveBuilding(String id, int cell) async => _applyTown(
       townRules.move(townState, id, cell, clearedLevels: clearedLevels));
 
+  /// まだ知らせていない新しい建物の名前ID(静かに知らせる)。
+  List<String> get newBuildingIds => [
+        for (final b in townRules.newlyUnlocked(townState, clearedLevels)) b.id,
+      ];
+
+  Future<void> acknowledgeNewBuildings() async {
+    townState = townRules.markUnlocksSeen(townState, clearedLevels);
+    notifyListeners();
+    await TownStore(kv, townConfig).save(townState);
+  }
+
+  /// 今日の「町の贈り物」を受け取れるか(1日1回。連続は問わない)。
+  bool get canClaimGift => townRules.canClaimGift(townState, clock.now());
+
+  /// 贈り物を受け取り、得たコインを返す(受け取れない時は0)。
+  Future<int> claimGift() async {
+    final r = townRules.claimGift(townState, clock.now());
+    if (r == null) return 0;
+    townState = r.state!;
+    _eco = economy.addCoins(current, townConfig.dailyGift);
+    notifyListeners();
+    await TownStore(kv, townConfig).save(townState);
+    await _saveEconomy();
+    return townConfig.dailyGift;
+  }
+
+  /// 町の住人(こびと)の人数。演出のみ。
+  int get dwellers => townRules.dwellers(townState);
+
+  /// 出すべき知らせ: 'complete'(完成)/'bloom'(満開)/null。1回ずつ。
+  String? get pendingTownMilestone {
+    if (townRules.shouldShowComplete(townState)) return 'complete';
+    if (townRules.shouldShowBloom(townState)) return 'bloom';
+    return null;
+  }
+
+  Future<void> acknowledgeMilestone(String which) async {
+    townState = which == 'complete'
+        ? townState.copyWith(completeShown: true)
+        : townState.copyWith(bloomShown: true);
+    notifyListeners();
+    await TownStore(kv, townConfig).save(townState);
+  }
+
   Future<TownError?> _applyTown(TownResult r) async {
     if (!r.ok) return r.error;
     if (r.cost > 0) {

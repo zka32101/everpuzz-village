@@ -39,6 +39,18 @@ class TownRules {
           if (b.unlockAfterLevels <= clearedLevels) b,
       ];
 
+  /// まだ知らせていない新しい建物(静かに知らせる用)。
+  List<BuildingDef> newlyUnlocked(TownState s, int clearedLevels) {
+    final all = unlocked(clearedLevels);
+    return s.seenUnlocked >= all.length
+        ? const []
+        : all.sublist(s.seenUnlocked);
+  }
+
+  /// 解放の知らせを済みにする。
+  TownState markUnlocksSeen(TownState s, int clearedLevels) =>
+      s.copyWith(seenUnlocked: unlocked(clearedLevels).length);
+
   /// 使えるマス数。解放数+空き、最大 [TownConfig.maxCells]。
   int cellCount(int clearedLevels) =>
       (unlocked(clearedLevels).length + config.spareCells)
@@ -135,6 +147,12 @@ class TownRules {
   /// 満開(完成していて、全建物が最終段階)。
   bool isBloom(TownState s) =>
       isComplete(s) && s.placements.every((p) => p.stage == BuildingDef.stages);
+
+  /// 完成の知らせを出すべきか(完成していて、まだ出していない)。
+  bool shouldShowComplete(TownState s) => isComplete(s) && !s.completeShown;
+
+  /// 満開の知らせを出すべきか。
+  bool shouldShowBloom(TownState s) => isBloom(s) && !s.bloomShown;
 
   static String dayKey(DateTime d) =>
       '${d.year.toString().padLeft(4, '0')}-${d.month.toString().padLeft(2, '0')}-'
