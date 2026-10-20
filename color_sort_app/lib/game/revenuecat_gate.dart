@@ -52,4 +52,12 @@ class RevenueCatGate implements PurchaseGate {
 
   @override
   Future<bool> adsRemoved() async => _has(await Purchases.getCustomerInfo());
+
+  @override
+  Future<Set<String>> ownedProducts() async {
+    final info = await Purchases.getCustomerInfo();
+    return {
+      for (final t in info.nonSubscriptionTransactions) t.productIdentifier,
+    };
+  }
 }

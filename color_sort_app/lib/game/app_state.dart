@@ -58,27 +58,53 @@ int clearReward({
 
 /// 課金まわりの保存状態。
 class PurchaseState {
-  const PurchaseState({this.adsRemoved = false, this.credited = const []});
+  const PurchaseState({
+    this.adsRemoved = false,
+    this.credited = const [],
+    this.grants = const [],
+    this.usedOnce = const [],
+  });
 
   final bool adsRemoved;
 
-  /// コインを付与済みの取引ID(二重付与の防止)。
+  /// 付与済みの取引ID(二重付与の防止)。
   final List<String> credited;
 
-  factory PurchaseState.fromJson(Map<String, Object?>? j) => j == null
-      ? const PurchaseState()
-      : PurchaseState(
-          adsRemoved: (j['adsRemoved'] as bool?) ?? false,
-          credited: ((j['credited'] as List?) ?? const []).cast<String>(),
-        );
+  /// 使えるようになった中身のID(飾り・スキン・着せ替え・追加面)。
+  final List<String> grants;
 
-  Map<String, Object?> toJson() =>
-      {'adsRemoved': adsRemoved, 'credited': credited};
+  /// 1回きりの商品(スターターパック)で使用済みの商品ID。
+  final List<String> usedOnce;
 
-  PurchaseState copyWith({bool? adsRemoved, List<String>? credited}) =>
+  factory PurchaseState.fromJson(Map<String, Object?>? j) {
+    if (j == null) return const PurchaseState();
+    List<String> list(String k) => ((j[k] as List?) ?? const []).cast<String>();
+    return PurchaseState(
+      adsRemoved: (j['adsRemoved'] as bool?) ?? false,
+      credited: list('credited'),
+      grants: list('grants'),
+      usedOnce: list('usedOnce'),
+    );
+  }
+
+  Map<String, Object?> toJson() => {
+        'adsRemoved': adsRemoved,
+        'credited': credited,
+        'grants': grants,
+        'usedOnce': usedOnce,
+      };
+
+  PurchaseState copyWith({
+    bool? adsRemoved,
+    List<String>? credited,
+    List<String>? grants,
+    List<String>? usedOnce,
+  }) =>
       PurchaseState(
         adsRemoved: adsRemoved ?? this.adsRemoved,
         credited: credited ?? this.credited,
+        grants: grants ?? this.grants,
+        usedOnce: usedOnce ?? this.usedOnce,
       );
 }
 
@@ -147,6 +173,9 @@ class AppState extends ChangeNotifier {
     Telemetry telemetry = const NoopTelemetry(),
     HintSolver hintSolver = isolateHintSolver,
     PurchaseGate? purchaseGate,
+
+    /// テスト用。商品カタログを差し替える。
+    ShopCatalog? catalogOverride,
   }) async {
     final raw = await (bundle ?? rootBundle).loadString(packAsset);
     final pack = LevelPack.fromJson(jsonDecode(raw) as Map<String, Object?>);
@@ -155,9 +184,10 @@ class AppState extends ChangeNotifier {
     final saved = await VersionedJsonStore(kv)
         .load(economyKey, currentVersion: economySchema);
     final b = bundle ?? rootBundle;
-    final catalog = purchaseGate == null
-        ? ShopCatalog.empty
-        : ShopCatalog.fromJson(await b.loadString(catalogAsset));
+    final catalog = catalogOverride ??
+        (purchaseGate == null
+            ? ShopCatalog.empty
+            : ShopCatalog.fromJson(await b.loadString(catalogAsset)));
     var purchases = PurchaseState.fromJson(await VersionedJsonStore(kv)
         .load(purchasesKey, currentVersion: purchasesSchema));
     if (purchaseGate != null) {
@@ -165,6 +195,8 @@ class AppState extends ChangeNotifier {
         // ストア側の権利を正とする(別端末での購入・返金を反映)。
         purchases =
             purchases.copyWith(adsRemoved: await purchaseGate.adsRemoved());
+        purchases =
+            _withOwned(purchases, catalog, await purchaseGate.ownedProducts());
       } catch (_) {
         // 取れない時は保存済みの値で続ける。
       }
@@ -207,7 +239,7 @@ class AppState extends ChangeNotifier {
   bool get canPlay => adsRemoved || lives > 0;
 
   /// 店を出せるか(課金の窓口と商品がそろっているとき)。
-  bool get shopAvailable => purchaseGate != null && catalog.products.isNotEmpty;
+  bool get shopAvailable => purchaseGate != null && catalog.shown.isNotEmpty;
 
   /// 次のライフが回復するまで。満タンなら null。
   Duration? get timeToNextLife => economy.timeToNextLife(_eco);
@@ -338,36 +370,84 @@ class AppState extends ChangeNotifier {
     return true;
   }
 
-  /// 商品の購入。成功なら true。コインは取引IDで重複を防いで付与する。
+  /// 買い切り商品の所有を中身(grants)に反映する。
+  static PurchaseState _withOwned(
+      PurchaseState p, ShopCatalog catalog, Set<String> owned) {
+    final grants = {...p.grants};
+    for (final id in owned) {
+      final prod = catalog.byId(id);
+      if (prod != null && prod.kind == ProductKind.unlock) {
+        grants.addAll(prod.grants);
+      }
+    }
+    return p.copyWith(grants: grants.toList());
+  }
+
+  /// 中身(飾り・スキン・着せ替え・追加面)を持っているか。
+  bool owns(String grant) => _purchases.grants.contains(grant);
+
+  /// 店に出す商品。
+  List<ShopProduct> get shopProducts => catalog.shown;
+
+  /// 購入済み(もう買えない)か。
+  bool isPurchased(ShopProduct p) => switch (p.kind) {
+        ProductKind.adsRemoval => adsRemoved,
+        ProductKind.unlock => p.grants.every(owns),
+        ProductKind.starterPack => _purchases.usedOnce.contains(p.id),
+        _ => false,
+      };
+
+  /// 商品の購入。成功なら true。消費型は取引IDで重複を防いで付与する。
   Future<bool> buyProduct(String productId) async {
     final gate = purchaseGate;
     final product = catalog.byId(productId);
-    if (gate == null || product == null) return false;
+    if (gate == null || product == null || !product.enabled) return false;
+    if (isPurchased(product)) return false;
     final r = await gate.buy(productId);
     if (r.status != BuyStatus.success) return false;
+
+    // 消費型・1回きりは、取引IDが無い/処理済みなら付与しない。
+    final consumable = product.kind == ProductKind.coinPack ||
+        product.kind == ProductKind.lifeRefill ||
+        product.kind == ProductKind.starterPack;
+    final tx = r.transactionId;
+    if (consumable) {
+      if (tx == null || _purchases.credited.contains(tx)) return false;
+      _purchases = _purchases.copyWith(credited: [..._purchases.credited, tx]);
+    }
     switch (product.kind) {
       case ProductKind.adsRemoval:
         _purchases = _purchases.copyWith(adsRemoved: true);
       case ProductKind.coinPack:
-        final tx = r.transactionId;
-        // 取引IDが無い・処理済みのときは付与しない。
-        if (tx == null || _purchases.credited.contains(tx)) return false;
         _eco = economy.addCoins(current, product.coins);
-        _purchases =
-            _purchases.copyWith(credited: [..._purchases.credited, tx]);
-        await _saveEconomy();
+      case ProductKind.lifeRefill:
+        _eco = current.copyWith(lives: economyConfig.maxLives);
+      case ProductKind.unlock:
+        _purchases = _purchases.copyWith(
+            grants: {..._purchases.grants, ...product.grants}.toList());
+      case ProductKind.starterPack:
+        _eco = economy.addCoins(current, product.coins);
+        _purchases = _purchases.copyWith(
+          grants: {..._purchases.grants, ...product.grants}.toList(),
+          usedOnce: [..._purchases.usedOnce, product.id],
+        );
     }
     notifyListeners();
+    await _saveEconomy();
     await _savePurchases();
     return true;
   }
 
-  /// 購入の復元(広告削除のみ。コインは復元されない)。
+  /// 購入の復元(買い切りのみ。コインやライフ回復は復元されない)。
   Future<bool> restorePurchases() async {
     final gate = purchaseGate;
     if (gate == null) return false;
     final has = await gate.restore();
-    _purchases = _purchases.copyWith(adsRemoved: has);
+    _purchases = _withOwned(
+      _purchases.copyWith(adsRemoved: has),
+      catalog,
+      await gate.ownedProducts(),
+    );
     notifyListeners();
     await _savePurchases();
     return has;

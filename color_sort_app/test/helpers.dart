@@ -14,6 +14,7 @@ Future<AppState> loadApp({
   Telemetry? telemetry,
   HintSolver? hintSolver,
   PurchaseGate? purchaseGate,
+  ShopCatalog? catalogOverride,
 }) {
   return AppState.load(
     kv ?? MemoryKeyValueStore(),
@@ -21,6 +22,7 @@ Future<AppState> loadApp({
     clock: clock ?? FakeClock(DateTime.utc(2026, 1, 1, 12)),
     adGate: adGate,
     purchaseGate: purchaseGate,
+    catalogOverride: catalogOverride,
     telemetry: telemetry ?? const NoopTelemetry(),
     // テストでは isolate を使わず同期で解く。
     hintSolver: hintSolver ?? (b) async => solveHint(b),

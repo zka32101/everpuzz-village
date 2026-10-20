@@ -1,18 +1,34 @@
 import 'dart:convert';
 
-/// 商品の種類。コインパックは消費型、広告削除は買い切り(権利)。
-enum ProductKind { adsRemoval, coinPack }
+/// 商品の種類。
+/// - adsRemoval: 買い切り(広告削除。ライフの制限も外れる)
+/// - coinPack / lifeRefill: 消費型(取引IDで重複付与を防ぐ)
+/// - unlock: 買い切り。[ShopProduct.grants] の中身(飾り・スキン・着せ替え・追加面)が使える
+/// - starterPack: 1人1回。コイン+[ShopProduct.grants]
+enum ProductKind { adsRemoval, coinPack, lifeRefill, unlock, starterPack }
 
 /// 商品の定義(価格はストアから取る。ここは「何が付くか」だけ)。
 class ShopProduct {
-  const ShopProduct({required this.id, required this.kind, this.coins = 0});
+  const ShopProduct({
+    required this.id,
+    required this.kind,
+    this.coins = 0,
+    this.grants = const [],
+    this.enabled = true,
+  });
 
   /// ストア側の商品ID(RevenueCat の Product identifier と同じにする)。
   final String id;
   final ProductKind kind;
 
-  /// コインパックで付与するコイン。
+  /// コインパック・スターターパックで付与するコイン。
   final int coins;
+
+  /// 使えるようになる中身のID(例: `deco.sakura`, `levels.extra1`)。
+  final List<String> grants;
+
+  /// false の間は店に出さない(中身の素材・面が揃うまで売らない)。
+  final bool enabled;
 }
 
 /// 商品カタログ(`assets/shop/products.json`)。
@@ -36,10 +52,18 @@ class ShopCatalog {
             id: p['id'] as String,
             kind: ProductKind.values.byName(p['kind'] as String),
             coins: (p['coins'] as int?) ?? 0,
+            grants: ((p['grants'] as List?) ?? const []).cast<String>(),
+            enabled: (p['enabled'] as bool?) ?? true,
           ),
       ],
     );
   }
+
+  /// 店に出す商品。
+  List<ShopProduct> get shown => [
+        for (final p in products)
+          if (p.enabled) p,
+      ];
 
   ShopProduct? byId(String id) {
     for (final p in products) {
@@ -74,4 +98,7 @@ abstract interface class PurchaseGate {
 
   /// 現在、広告削除の権利があるか。
   Future<bool> adsRemoved();
+
+  /// 購入済みの買い切り商品のID(広告削除・unlock)。復元と起動時の同期に使う。
+  Future<Set<String>> ownedProducts();
 }

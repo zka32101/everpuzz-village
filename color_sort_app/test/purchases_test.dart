@@ -10,6 +10,7 @@ class FakePurchases implements PurchaseGate {
   BuyStatus status = BuyStatus.success;
   String? nextTx = 'tx1';
   bool owned = false;
+  final Set<String> ownedIds = {};
 
   @override
   Future<Map<String, String>> prices(Iterable<String> ids) async =>
@@ -19,6 +20,7 @@ class FakePurchases implements PurchaseGate {
   Future<BuyResult> buy(String productId) async {
     if (status != BuyStatus.success) return BuyResult(status);
     if (productId == 'ads_removal') owned = true;
+    if (productId.endsWith('_pack_1')) ownedIds.add(productId);
     return BuyResult(BuyStatus.success,
         transactionId: nextTx, adsRemoved: owned);
   }
@@ -28,6 +30,10 @@ class FakePurchases implements PurchaseGate {
 
   @override
   Future<bool> adsRemoved() async => owned;
+
+  @override
+  Future<Set<String>> ownedProducts() async =>
+      {...ownedIds, if (owned) 'ads_removal'};
 }
 
 void main() {
@@ -98,6 +104,56 @@ void main() {
     final app = await loadApp(purchaseGate: gate);
     expect(await app.restorePurchases(), isTrue);
     expect(app.adsRemoved, isTrue);
+  });
+
+  test('素材のない商品(enabled:false)は店に出ず、買えない', () async {
+    final app = await loadApp(purchaseGate: FakePurchases());
+    expect(app.shopProducts.map((p) => p.id), isNot(contains('deco_pack_1')));
+    expect(await app.buyProduct('deco_pack_1'), isFalse);
+    expect(app.owns('deco.seasonal1'), isFalse);
+  });
+
+  test('ライフ全回復: 満タンまで戻る。同じ取引IDは二重に効かない', () async {
+    final app = await loadApp(purchaseGate: FakePurchases());
+    for (var i = 0; i < 5; i++) {
+      await app.loseLife();
+    }
+    expect(app.lives, economyConfig.maxLives - 5);
+    expect(await app.buyProduct('life_refill'), isTrue);
+    expect(app.lives, economyConfig.maxLives);
+    expect(await app.buyProduct('life_refill'), isFalse); // 同じ tx1
+  });
+
+  test('買い切り(unlock)は中身が使え、復元で戻り、再購入できない', () async {
+    final catalog = ShopCatalog.fromJson('''
+{"entitlement":"ads_removed","products":[
+ {"id":"deco_pack_1","kind":"unlock","grants":["deco.a","deco.b"]},
+ {"id":"starter_pack","kind":"starterPack","coins":500,"grants":["deco.s"]}]}''');
+    final gate = FakePurchases();
+    final app = await loadApp(purchaseGate: gate, catalogOverride: catalog);
+    expect(app.owns('deco.a'), isFalse);
+    expect(await app.buyProduct('deco_pack_1'), isTrue);
+    expect(app.owns('deco.a') && app.owns('deco.b'), isTrue);
+    expect(await app.buyProduct('deco_pack_1'), isFalse);
+
+    // 別端末: 保存が空でも、ストアの所有から復元できる
+    final other = await loadApp(purchaseGate: gate, catalogOverride: catalog);
+    expect(other.owns('deco.a'), isTrue);
+  });
+
+  test('スターターパックは1回だけ。コインと中身が付く', () async {
+    final catalog = ShopCatalog.fromJson('''
+{"entitlement":"ads_removed","products":[
+ {"id":"starter_pack","kind":"starterPack","coins":500,"grants":["deco.s"]}]}''');
+    final gate = FakePurchases();
+    final app = await loadApp(purchaseGate: gate, catalogOverride: catalog);
+    final before = app.coins;
+    expect(await app.buyProduct('starter_pack'), isTrue);
+    expect(app.coins, before + 500);
+    expect(app.owns('deco.s'), isTrue);
+    gate.nextTx = 'tx9';
+    expect(await app.buyProduct('starter_pack'), isFalse); // 使用済み
+    expect(app.coins, before + 500);
   });
 
   testWidgets('店の画面から購入できる(価格が出る)', (tester) async {
