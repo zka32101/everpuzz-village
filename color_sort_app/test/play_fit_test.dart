@@ -28,7 +28,8 @@ void main() {
     final screen = Offset.zero & size;
     for (var i = 0; i < count; i++) {
       final r = tester.getRect(find.byKey(Key('tube-$i')));
-      expect(screen.contains(r.topLeft) && screen.contains(r.bottomRight), isTrue,
+      expect(
+          screen.contains(r.topLeft) && screen.contains(r.bottomRight), isTrue,
           reason: '容器 $i が画面の外にはみ出す: $r (画面 $size)');
     }
   }
