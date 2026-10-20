@@ -86,121 +86,132 @@ class _PlayScreenState extends State<PlayScreen> {
               ),
             ],
           ),
-          body: SafeArea(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
-                  child: EconomyBar(app: widget.app),
-                ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(16),
-                    child: Center(
-                      child: Wrap(
-                        alignment: WrapAlignment.center,
-                        spacing: 12,
-                        runSpacing: 12,
-                        children: [
-                          for (var i = 0; i < game.board.tubes.length; i++)
-                            TubeWidget(
-                              key: Key('tube-$i'),
-                              index: i,
-                              tube: game.board.tubes[i],
-                              lock: game.board.locks[i],
-                              usable: game.board.isUsable(i),
-                              selected: game.selected == i,
-                              hintRole: game.hint == null
-                                  ? HintRole.none
-                                  : game.hint!.$1 == i
-                                      ? HintRole.from
-                                      : game.hint!.$2 == i
-                                          ? HintRole.to
-                                          : HintRole.none,
-                              onTap: () => game.tap(i),
-                            ),
-                        ],
+          body: DecoratedBox(
+            decoration: BoxDecoration(
+              image: widget.app.art.has('bg_stage_01')
+                  ? const DecorationImage(
+                      image: AssetImage(
+                          'packages/color_sort/assets/art/bg_stage_01.png'),
+                      fit: BoxFit.cover,
+                    )
+                  : null,
+            ),
+            child: SafeArea(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
+                    child: EconomyBar(app: widget.app),
+                  ),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(16),
+                      child: Center(
+                        child: Wrap(
+                          alignment: WrapAlignment.center,
+                          spacing: 12,
+                          runSpacing: 12,
+                          children: [
+                            for (var i = 0; i < game.board.tubes.length; i++)
+                              TubeWidget(
+                                key: Key('tube-$i'),
+                                index: i,
+                                tube: game.board.tubes[i],
+                                lock: game.board.locks[i],
+                                usable: game.board.isUsable(i),
+                                selected: game.selected == i,
+                                hintRole: game.hint == null
+                                    ? HintRole.none
+                                    : game.hint!.$1 == i
+                                        ? HintRole.from
+                                        : game.hint!.$2 == i
+                                            ? HintRole.to
+                                            : HintRole.none,
+                                onTap: () => game.tap(i),
+                              ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-                _Message(game: game, lifeLost: _lifeLost),
-                Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Wrap(
-                    spacing: 12,
-                    runSpacing: 8,
-                    alignment: WrapAlignment.center,
-                    children: [
-                      FilledButton.tonalIcon(
-                        key: const Key('undo'),
-                        style: _big,
-                        onPressed: game.canUndo ? game.undo : null,
-                        icon: const Icon(Icons.undo),
-                        label: Text(t.tr('undo')),
-                      ),
-                      FilledButton.tonalIcon(
-                        key: const Key('restart'),
-                        style: _big,
-                        onPressed: () {
-                          game.restart();
-                          _attempt++;
-                          widget.app.telemetry.log(
-                              TelemetryEvent.levelStart(_level.id, _attempt));
-                          setState(() {
-                            _stuckCharged = false;
-                            _lifeLost = false;
-                          });
-                        },
-                        icon: const Icon(Icons.refresh),
-                        label: Text(t.tr('restart')),
-                      ),
-                      FilledButton.tonalIcon(
-                        key: const Key('hint'),
-                        style: _big,
-                        onPressed: game.won || game.stuck || _hinting
-                            ? null
-                            : _showHint,
-                        icon: const Icon(Icons.lightbulb_outline),
-                        label: Text(
-                          '${t.tr('hint')} (${t.tr('extraTubeCost', {
-                                'n': widget.app.hintCost
-                              })})',
+                  _Message(game: game, lifeLost: _lifeLost),
+                  Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Wrap(
+                      spacing: 12,
+                      runSpacing: 8,
+                      alignment: WrapAlignment.center,
+                      children: [
+                        FilledButton.tonalIcon(
+                          key: const Key('undo'),
+                          style: _big,
+                          onPressed: game.canUndo ? game.undo : null,
+                          icon: const Icon(Icons.undo),
+                          label: Text(t.tr('undo')),
                         ),
-                      ),
-                      FilledButton.tonalIcon(
-                        key: const Key('extraTube'),
-                        style: _big,
-                        onPressed: game.extraTubeUsed || game.won
-                            ? null
-                            : _buyExtraTube,
-                        icon: const Icon(Icons.add_box_outlined),
-                        label: Text(
-                          '${t.tr('extraTube')} (${t.tr('extraTubeCost', {
-                                'n': widget.app.extraTubeCost
-                              })})',
+                        FilledButton.tonalIcon(
+                          key: const Key('restart'),
+                          style: _big,
+                          onPressed: () {
+                            game.restart();
+                            _attempt++;
+                            widget.app.telemetry.log(
+                                TelemetryEvent.levelStart(_level.id, _attempt));
+                            setState(() {
+                              _stuckCharged = false;
+                              _lifeLost = false;
+                            });
+                          },
+                          icon: const Icon(Icons.refresh),
+                          label: Text(t.tr('restart')),
                         ),
-                      ),
-                    ],
+                        FilledButton.tonalIcon(
+                          key: const Key('hint'),
+                          style: _big,
+                          onPressed: game.won || game.stuck || _hinting
+                              ? null
+                              : _showHint,
+                          icon: const Icon(Icons.lightbulb_outline),
+                          label: Text(
+                            '${t.tr('hint')} (${t.tr('extraTubeCost', {
+                                  'n': widget.app.hintCost
+                                })})',
+                          ),
+                        ),
+                        FilledButton.tonalIcon(
+                          key: const Key('extraTube'),
+                          style: _big,
+                          onPressed: game.extraTubeUsed || game.won
+                              ? null
+                              : _buyExtraTube,
+                          icon: const Icon(Icons.add_box_outlined),
+                          label: Text(
+                            '${t.tr('extraTube')} (${t.tr('extraTubeCost', {
+                                  'n': widget.app.extraTubeCost
+                                })})',
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                if (game.won)
-                  _WinPanel(
-                    stars: game.stars ?? 1,
-                    reward: _reward,
-                    onNext: hasNext && widget.app.canPlay
-                        ? () => Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                builder: (_) => PlayScreen(
-                                  app: widget.app,
-                                  index: widget.index + 1,
+                  if (game.won)
+                    _WinPanel(
+                      stars: game.stars ?? 1,
+                      reward: _reward,
+                      onNext: hasNext && widget.app.canPlay
+                          ? () => Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (_) => PlayScreen(
+                                    app: widget.app,
+                                    index: widget.index + 1,
+                                  ),
                                 ),
-                              ),
-                            )
-                        : null,
-                    onBack: () => Navigator.of(context).pop(),
-                  ),
-              ],
+                              )
+                          : null,
+                      onBack: () => Navigator.of(context).pop(),
+                    ),
+                ],
+              ),
             ),
           ),
         );

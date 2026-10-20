@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:puzzle_core/foundation.dart' show Translator;
 
 import '../game/app_state.dart';
+import '../game/art.dart';
 import '../l10n/strings.dart';
 import 'economy_bar.dart';
 import 'level_select_screen.dart';
@@ -187,22 +188,39 @@ class _TownScreenState extends State<TownScreen> {
               child: Center(
                 child: p == null
                     ? const Icon(Icons.add)
-                    : FittedBox(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            _icon(app.townConfig.byId(p.buildingId)!.category),
-                            Text(_name(t, p.buildingId)),
-                            Text(t.tr('stageOf', {'n': p.stage}),
-                                style: Theme.of(context).textTheme.bodySmall),
-                          ],
-                        ),
-                      ),
+                    : _building(context, t, p),
               ),
             ),
           ),
         ),
       ),
+    );
+  }
+
+  /// 建物。画像があれば画像(マスの下端にそろえる)、なければ図形+名前+段階の文字。
+  Widget _building(BuildContext context, Translator t, Placement p) {
+    final def = app.townConfig.byId(p.buildingId)!;
+    final fallback = FittedBox(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _icon(def.category),
+          Text(_name(t, p.buildingId)),
+          Text(t.tr('stageOf', {'n': p.stage}),
+              style: Theme.of(context).textTheme.bodySmall),
+        ],
+      ),
+    );
+    final id = '${p.buildingId}_s${p.stage}';
+    if (!app.art.has(id)) return fallback;
+    return Image.asset(
+      ArtCatalog.assetOf(id),
+      key: Key('art-$id'),
+      fit: BoxFit.contain,
+      alignment: Alignment.bottomCenter,
+      // 名前・段階は文字でも示す(絵だけに頼らない)ので Semantics は外側で付く。
+      excludeFromSemantics: true,
+      errorBuilder: (_, __, ___) => fallback,
     );
   }
 
