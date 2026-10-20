@@ -5,6 +5,7 @@ import '../game/app_state.dart';
 import '../l10n/strings.dart';
 import 'economy_bar.dart';
 import 'play_screen.dart';
+import 'shop_screen.dart';
 
 class LevelSelectScreen extends StatelessWidget {
   const LevelSelectScreen({super.key, required this.app});
@@ -15,7 +16,20 @@ class LevelSelectScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = L10n.of(context);
     return Scaffold(
-      appBar: AppBar(title: Text(t.tr('appTitle'))),
+      appBar: AppBar(
+        title: Text(t.tr('appTitle')),
+        actions: [
+          if (app.shopAvailable)
+            IconButton(
+              key: const Key('openShop'),
+              tooltip: t.tr('openShop'),
+              icon: const Icon(Icons.storefront),
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => ShopScreen(app: app)),
+              ),
+            ),
+        ],
+      ),
       body: Column(
         children: [
           Padding(

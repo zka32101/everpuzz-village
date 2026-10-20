@@ -1,0 +1,9 @@
+{
+  "entitlement": "ads_removed",
+  "products": [
+    {"id": "ads_removal", "kind": "adsRemoval"},
+    {"id": "coins_small", "kind": "coinPack", "coins": 300},
+    {"id": "coins_medium", "kind": "coinPack", "coins": 800},
+    {"id": "coins_large", "kind": "coinPack", "coins": 2000}
+  ]
+}

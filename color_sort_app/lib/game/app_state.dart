@@ -6,6 +6,7 @@ import 'package:puzzle_core/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'hint.dart';
+import 'purchases.dart';
 
 /// SharedPreferences を puzzle_core の保存窓口に合わせるアダプタ。
 class PrefsKeyValueStore implements KeyValueStore {
@@ -53,6 +54,32 @@ int clearReward({
   return (newStars - previousStars).clamp(0, 3) * starBonus;
 }
 
+/// 課金まわりの保存状態。
+class PurchaseState {
+  const PurchaseState({this.adsRemoved = false, this.credited = const []});
+
+  final bool adsRemoved;
+
+  /// コインを付与済みの取引ID(二重付与の防止)。
+  final List<String> credited;
+
+  factory PurchaseState.fromJson(Map<String, Object?>? j) => j == null
+      ? const PurchaseState()
+      : PurchaseState(
+          adsRemoved: (j['adsRemoved'] as bool?) ?? false,
+          credited: ((j['credited'] as List?) ?? const []).cast<String>(),
+        );
+
+  Map<String, Object?> toJson() =>
+      {'adsRemoved': adsRemoved, 'credited': credited};
+
+  PurchaseState copyWith({bool? adsRemoved, List<String>? credited}) =>
+      PurchaseState(
+        adsRemoved: adsRemoved ?? this.adsRemoved,
+        credited: credited ?? this.credited,
+      );
+}
+
 /// アプリ全体の状態(レベルパック・進行・ライフとコイン)。
 class AppState extends ChangeNotifier {
   AppState({
@@ -64,13 +91,20 @@ class AppState extends ChangeNotifier {
     this.adGate,
     this.telemetry = const NoopTelemetry(),
     this.hintSolver = isolateHintSolver,
+    this.purchaseGate,
+    this.catalog = ShopCatalog.empty,
+    PurchaseState purchaseState = const PurchaseState(),
   })  : economy = Economy(economyConfig, clock),
         _eco = economyState,
+        _purchases = purchaseState,
         _progressStore = KeyValueProgressStore(kv);
 
   static const packAsset = 'packages/color_sort/assets/levels/pack_main.json';
   static const economyKey = 'economy';
   static const economySchema = 1;
+  static const purchasesKey = 'purchases';
+  static const purchasesSchema = 1;
+  static const catalogAsset = 'assets/shop/products.json';
 
   final LevelPack pack;
   final KeyValueStore kv;
@@ -85,10 +119,15 @@ class AppState extends ChangeNotifier {
   /// ヒントを解く関数(既定は別isolate。テストでは同期版に差し替える)。
   final HintSolver hintSolver;
 
+  /// 課金の窓口。未接続(null)なら店は出さない。
+  final PurchaseGate? purchaseGate;
+  final ShopCatalog catalog;
+
   final Economy economy;
   final ProgressStore _progressStore;
   Progress progress;
   EconomyState _eco;
+  PurchaseState _purchases;
 
   static Future<AppState> load(
     KeyValueStore kv, {
@@ -97,6 +136,7 @@ class AppState extends ChangeNotifier {
     AdGate? adGate,
     Telemetry telemetry = const NoopTelemetry(),
     HintSolver hintSolver = isolateHintSolver,
+    PurchaseGate? purchaseGate,
   }) async {
     final raw = await (bundle ?? rootBundle).loadString(packAsset);
     final pack = LevelPack.fromJson(jsonDecode(raw) as Map<String, Object?>);
@@ -104,7 +144,25 @@ class AppState extends ChangeNotifier {
     assert(pack.validate().isEmpty, pack.validate().join('\n'));
     final saved = await VersionedJsonStore(kv)
         .load(economyKey, currentVersion: economySchema);
+    final b = bundle ?? rootBundle;
+    final catalog = purchaseGate == null
+        ? ShopCatalog.empty
+        : ShopCatalog.fromJson(await b.loadString(catalogAsset));
+    var purchases = PurchaseState.fromJson(await VersionedJsonStore(kv)
+        .load(purchasesKey, currentVersion: purchasesSchema));
+    if (purchaseGate != null) {
+      try {
+        // ストア側の権利を正とする(別端末での購入・返金を反映)。
+        purchases =
+            purchases.copyWith(adsRemoved: await purchaseGate.adsRemoved());
+      } catch (_) {
+        // 取れない時は保存済みの値で続ける。
+      }
+    }
     return AppState(
+      purchaseGate: purchaseGate,
+      catalog: catalog,
+      purchaseState: purchases,
       pack: pack,
       kv: kv,
       clock: clock,
@@ -123,7 +181,14 @@ class AppState extends ChangeNotifier {
 
   int get lives => current.lives;
   int get coins => current.coins;
-  bool get canPlay => lives > 0;
+
+  /// 広告削除の購入済みか(購入するとライフの制限も外れる)。
+  bool get adsRemoved => _purchases.adsRemoved;
+
+  bool get canPlay => adsRemoved || lives > 0;
+
+  /// 店を出せるか(課金の窓口と商品がそろっているとき)。
+  bool get shopAvailable => purchaseGate != null && catalog.products.isNotEmpty;
 
   /// 次のライフが回復するまで。満タンなら null。
   Duration? get timeToNextLife => economy.timeToNextLife(_eco);
@@ -171,6 +236,7 @@ class AppState extends ChangeNotifier {
 
   /// 行き詰まりでライフを1つ消費する。消費できたら true(ライフ切れなら false)。
   Future<bool> loseLife() async {
+    if (adsRemoved) return false;
     final next = economy.consumeLife(_eco);
     if (next == null) return false;
     _eco = next;
@@ -213,6 +279,44 @@ class AppState extends ChangeNotifier {
     await _saveEconomy();
     return true;
   }
+
+  /// 商品の購入。成功なら true。コインは取引IDで重複を防いで付与する。
+  Future<bool> buyProduct(String productId) async {
+    final gate = purchaseGate;
+    final product = catalog.byId(productId);
+    if (gate == null || product == null) return false;
+    final r = await gate.buy(productId);
+    if (r.status != BuyStatus.success) return false;
+    switch (product.kind) {
+      case ProductKind.adsRemoval:
+        _purchases = _purchases.copyWith(adsRemoved: true);
+      case ProductKind.coinPack:
+        final tx = r.transactionId;
+        // 取引IDが無い・処理済みのときは付与しない。
+        if (tx == null || _purchases.credited.contains(tx)) return false;
+        _eco = economy.addCoins(current, product.coins);
+        _purchases =
+            _purchases.copyWith(credited: [..._purchases.credited, tx]);
+        await _saveEconomy();
+    }
+    notifyListeners();
+    await _savePurchases();
+    return true;
+  }
+
+  /// 購入の復元(広告削除のみ。コインは復元されない)。
+  Future<bool> restorePurchases() async {
+    final gate = purchaseGate;
+    if (gate == null) return false;
+    final has = await gate.restore();
+    _purchases = _purchases.copyWith(adsRemoved: has);
+    notifyListeners();
+    await _savePurchases();
+    return has;
+  }
+
+  Future<void> _savePurchases() => VersionedJsonStore(kv)
+      .save(purchasesKey, purchasesSchema, _purchases.toJson());
 
   Future<void> _saveEconomy() =>
       VersionedJsonStore(kv).save(economyKey, economySchema, current.toJson());

@@ -1,5 +1,6 @@
 import 'package:color_sort_app/game/app_state.dart';
 import 'package:color_sort_app/game/hint.dart';
+import 'package:color_sort_app/game/purchases.dart';
 import 'package:color_sort_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,12 +13,14 @@ Future<AppState> loadApp({
   AdGate? adGate,
   Telemetry? telemetry,
   HintSolver? hintSolver,
+  PurchaseGate? purchaseGate,
 }) {
   return AppState.load(
     kv ?? MemoryKeyValueStore(),
     bundle: rootBundle,
     clock: clock ?? FakeClock(DateTime.utc(2026, 1, 1, 12)),
     adGate: adGate,
+    purchaseGate: purchaseGate,
     telemetry: telemetry ?? const NoopTelemetry(),
     // テストでは isolate を使わず同期で解く。
     hintSolver: hintSolver ?? (b) async => solveHint(b),

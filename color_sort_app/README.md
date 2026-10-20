@@ -43,3 +43,9 @@ flutter run
 - 画像素材(`../color_sort/assets/art_manifest.json`)。未配置の間は図形で描画
 - アプリID・アプリ名・アイコンは仮(`com.petitworksapps.color_sort_app`)
 - 効果音・演出(注ぎアニメ等)、チュートリアル、設定画面、日替わり報酬
+
+## 課金(RevenueCat)
+
+- 商品は `assets/shop/products.json`(広告削除=買い切り、コインパック=消費型)。価格はストアから取得する。
+- 公開SDKキーをビルド時に渡したときだけ有効: `flutter run --dart-define=RC_API_KEY=<公開SDKキー>`。キー未設定なら店は出ない(キーはコミットしない)。
+- コインは取引IDで重複付与を防ぐ。広告削除はライフの制限も外す。RevenueCat の権利IDは `ads_removed`。
