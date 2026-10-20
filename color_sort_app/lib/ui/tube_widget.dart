@@ -21,6 +21,7 @@ class TubeWidget extends StatelessWidget {
     required this.onTap,
     this.hintRole = HintRole.none,
     this.art = ArtCatalog.empty,
+    this.unit = defaultUnit,
   });
 
   final int index;
@@ -34,12 +35,30 @@ class TubeWidget extends StatelessWidget {
   /// 配置済みの画像。tube_back / tube_front があれば画像の容器で描く(無ければ従来の図形)。
   final ArtCatalog art;
 
+  /// 1スロットの大きさ。画面の高さに収めるため、面の画面が縮めて渡す。
+  final double unit;
+
   bool get useArt => art.has('tube_back') && art.has('tube_front');
 
-  static const unit = 46.0; // 1スロットの大きさ(44pt以上)
+  static const defaultUnit = 46.0; // 1スロットの標準の大きさ(44pt以上)
+  static const minUnit = 30.0; // 画面に収めるときの下限(これ以上は縮めない)
   static const pad = 4.0;
   static const badgeHeight = 28.0;
   static const border = 3.0; // 選択時の枠線の太さ(最大)を常に見込む
+
+  /// 容器1本の高さ(バッジ・余白を含む)。面の画面が、収まる大きさを決めるのに使う。
+  static double heightFor(double unit, {required bool useArt}) {
+    final glass = useArt
+        ? unit * ColorSortRules.capacity / _artGlassHeight + border * 2
+        : unit * ColorSortRules.capacity + pad * 2 + border * 2;
+    return badgeHeight + 14 + glass; // 上の余白14は選択時の持ち上がり分
+  }
+
+  /// 容器1本の幅。
+  static double widthFor(double unit, {required bool useArt}) => useArt
+      ? unit * ColorSortRules.capacity / _artGlassHeight * _artAspect +
+          border * 2
+      : unit + pad * 2 + border * 2;
 
   // 容器画像(256x640)。ガラスの内側は縦は約88%・横は約59%なので、
   // 色玉の積み(unit x capacity)がちょうど収まる大きさに合わせて描く。
@@ -51,7 +70,7 @@ class TubeWidget extends StatelessWidget {
   /// 中身が見えないと手が読めないので、鍵の覆いは半透明にする。
   Widget _lockCover() {
     final id = lock!.kind == LockKind.key ? 'tube_lock_key' : 'tube_frozen';
-    if (!useArt || !art.has(id)) return LockOverlay(lock: lock!);
+    if (!useArt || !art.has(id)) return LockOverlay(lock: lock!, unit: unit);
     return Positioned.fill(
       child: IgnorePointer(
         child: Opacity(
@@ -146,7 +165,8 @@ class TubeWidget extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          for (final c in tube.reversed) UnitChip(color: c),
+                          for (final c in tube.reversed)
+                            UnitChip(color: c, unit: unit),
                         ],
                       ),
                     ),
@@ -157,7 +177,8 @@ class TubeWidget extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          for (final c in tube.reversed) UnitChip(color: c),
+                          for (final c in tube.reversed)
+                            UnitChip(color: c, unit: unit),
                         ],
                       ),
                     ),
@@ -189,16 +210,18 @@ Widget _art(String id) => Image.asset(
     );
 
 class UnitChip extends StatelessWidget {
-  const UnitChip({super.key, required this.color});
+  const UnitChip(
+      {super.key, required this.color, this.unit = TubeWidget.defaultUnit});
 
   final int color;
+  final double unit;
 
   @override
   Widget build(BuildContext context) {
     final style = palette[color % palette.length];
     return SizedBox(
-      width: TubeWidget.unit,
-      height: TubeWidget.unit,
+      width: unit,
+      height: unit,
       child: Padding(
         padding: const EdgeInsets.all(2),
         child: CustomPaint(
@@ -255,18 +278,19 @@ class _UnitPainter extends CustomPainter {
 
 /// 使えない容器の覆い。中身は見えたままにし、縞模様(凍結)と白い膜(鍵)で示す。
 class LockOverlay extends StatelessWidget {
-  const LockOverlay({super.key, required this.lock});
+  const LockOverlay(
+      {super.key, required this.lock, this.unit = TubeWidget.defaultUnit});
 
   final TubeLock lock;
+  final double unit;
 
   @override
   Widget build(BuildContext context) {
     return Positioned.fill(
       child: IgnorePointer(
         child: ClipRRect(
-          borderRadius: const BorderRadius.vertical(
-              top: Radius.circular(4),
-              bottom: Radius.circular(TubeWidget.unit / 2)),
+          borderRadius: BorderRadius.vertical(
+              top: const Radius.circular(4), bottom: Radius.circular(unit / 2)),
           child: CustomPaint(
             painter: _LockPainter(striped: lock.kind == LockKind.frozen),
           ),

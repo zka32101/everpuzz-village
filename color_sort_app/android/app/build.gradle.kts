@@ -34,6 +34,14 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
+            // R8 が WorkManager(Room)/Firebase/Flutter プラグインのリフレクション経由のクラスを削り、
+            // 起動直後に「Failed to create an instance of androidx.work.impl.WorkDatabase」で落ちるため、
+            // keep ルール(proguard-rules.pro。うかラボのアプリと同じもの)を適用する。
+            isMinifyEnabled = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
         }
     }
 }
