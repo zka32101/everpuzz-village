@@ -69,8 +69,9 @@ void main() {
       final app = await loadApp(clock: clock);
       expect(await app.loseLife(), isTrue);
       expect(app.lives, economyConfig.maxLives - 1);
-      expect(app.timeToNextLife, const Duration(minutes: 30));
-      clock.advance(const Duration(minutes: 31));
+      expect(app.timeToNextLife, economyConfig.lifeRegenInterval);
+      clock.advance(
+          economyConfig.lifeRegenInterval + const Duration(minutes: 1));
       expect(app.lives, economyConfig.maxLives);
     });
 
@@ -84,23 +85,38 @@ void main() {
       expect(await app.loseLife(), isFalse);
     });
 
-    test('初回クリアだけ固定報酬(2回目は0)', () async {
+    test('クリア報酬: 初回は基本額+星ボーナス、同じ星の繰り返しは0、星が増えた分だけ加算', () async {
       final app = await loadApp();
-      expect(
-          await app.recordWin(0, moves: 7, stars: 3), economyConfig.winReward);
-      expect(app.coins, economyConfig.winReward);
+      // 初回に3つ星: 20 + 2×5 = 30
+      expect(await app.recordWin(0, moves: 7, stars: 3), 30);
+      expect(app.coins, 30);
       expect(await app.recordWin(0, moves: 7, stars: 3), 0);
-      expect(app.coins, economyConfig.winReward);
+      expect(app.coins, 30);
+      // 別の面: 1つ星で初回 → 2つ星 → 3つ星
+      expect(await app.recordWin(1, moves: 9, stars: 1), 20);
+      expect(await app.recordWin(1, moves: 8, stars: 2), 5);
+      expect(await app.recordWin(1, moves: 7, stars: 3), 5);
+      expect(await app.recordWin(1, moves: 9, stars: 1), 0); // 悪くなっても減らない
+      expect(app.coins, 60);
+    });
+
+    test('報酬の式(純関数)', () {
+      int r(bool first, int prev, int now) =>
+          clearReward(firstClear: first, previousStars: prev, newStars: now);
+      expect([r(true, 0, 1), r(true, 0, 2), r(true, 0, 3)], [20, 25, 30]);
+      expect([r(false, 1, 3), r(false, 2, 3), r(false, 3, 3), r(false, 3, 1)],
+          [10, 5, 0, 0]);
+      // 1面の最大は30、60面で1,800(町づくりの費用1,500に届く)
+      expect(60 * r(true, 0, 3), 1800);
+      expect(60 * r(true, 0, 1), 1200);
     });
 
     test('空き容器の購入: コイン不足は失敗で状態不変、足りれば消費', () async {
       final app = await loadApp();
       expect(await app.buyExtraTube(), isFalse);
       expect(app.coins, 0);
-      await app.recordWin(0, moves: 7, stars: 3); // +10
-      await app.recordWin(1, moves: 7, stars: 3);
-      await app.recordWin(2, moves: 7, stars: 3);
-      await app.recordWin(3, moves: 7, stars: 3);
+      await app.recordWin(0, moves: 7, stars: 1); // +20
+      await app.recordWin(1, moves: 7, stars: 1);
       expect(app.coins, 40);
       expect(await app.buyExtraTube(), isTrue);
       expect(app.coins, 0);
@@ -132,7 +148,7 @@ void main() {
       await app.recordWin(0, moves: 7, stars: 2);
       final again = await loadApp(kv: kv, clock: clock);
       expect(again.lives, economyConfig.maxLives - 1);
-      expect(again.coins, economyConfig.winReward);
+      expect(again.coins, 25); // 初回に2つ星: 20 + 5
       expect(again.progress.recordOf(again.pack.levels[0].id).stars, 2);
     });
   });
@@ -173,7 +189,10 @@ void main() {
     testWidgets('ライフとコインが数字で表示される', (tester) async {
       final app = await tester.runAsync(loadApp) as AppState;
       await tester.pumpWidget(appWidget(app));
-      expect(find.text('Lives 5/5'), findsOneWidget);
+      expect(
+          find.text(
+              'Lives ${economyConfig.maxLives}/${economyConfig.maxLives}'),
+          findsOneWidget);
       expect(find.text('Coins 0'), findsOneWidget);
       expect(find.byKey(const Key('nextLife')), findsNothing);
     });
@@ -181,12 +200,12 @@ void main() {
     testWidgets('ライフ切れで面を開くと案内。広告窓口がなければ回復ボタンなし', (tester) async {
       final app = await tester.runAsync(loadApp) as AppState;
       await tester.runAsync(() async {
-        for (var i = 0; i < 5; i++) {
+        for (var i = 0; i < economyConfig.maxLives; i++) {
           await app.loseLife();
         }
       });
       await tester.pumpWidget(appWidget(app));
-      expect(find.text('Lives 0/5'), findsOneWidget);
+      expect(find.text('Lives 0/${economyConfig.maxLives}'), findsOneWidget);
       expect(find.byKey(const Key('nextLife')), findsOneWidget);
       await tester.tap(find.byKey(const Key('level-0')));
       await tester.pumpAndSettle();
@@ -199,7 +218,7 @@ void main() {
       final ads = FakeAds(true);
       final app = await tester.runAsync(() => loadApp(adGate: ads)) as AppState;
       await tester.runAsync(() async {
-        for (var i = 0; i < 5; i++) {
+        for (var i = 0; i < economyConfig.maxLives; i++) {
           await app.loseLife();
         }
       });
@@ -230,8 +249,9 @@ void main() {
       }
       await tester.pumpAndSettle();
       expect(find.byKey(const Key('win')), findsOneWidget);
-      expect(find.text('+10 coins'), findsOneWidget);
-      expect(find.text('Coins 10'), findsOneWidget);
+      // 最短手数でクリア(3つ星): 20 + 2×5 = 30
+      expect(find.text('+30 coins'), findsOneWidget);
+      expect(find.text('Coins 30'), findsOneWidget);
     });
 
     testWidgets('コイン不足で空き容器を買おうとすると案内が出て、容器は増えない', (tester) async {
@@ -249,8 +269,8 @@ void main() {
     testWidgets('コインがあれば買って容器が増え、コインが減る', (tester) async {
       final app = await tester.runAsync(loadApp) as AppState;
       await tester.runAsync(() async {
-        for (var i = 0; i < 4; i++) {
-          await app.recordWin(i, moves: 7, stars: 3);
+        for (var i = 0; i < 2; i++) {
+          await app.recordWin(i, moves: 7, stars: 1); // コイン40
         }
       });
       await tester.pumpWidget(appWidget(app));
@@ -293,10 +313,13 @@ void main() {
       }
 
       await play();
-      expect(app.lives, 4);
+      expect(app.lives, economyConfig.maxLives - 1);
       expect(find.text('No moves left. You lost a life. Undo or restart.'),
           findsOneWidget);
-      expect(find.text('Lives 4/5'), findsOneWidget);
+      expect(
+          find.text(
+              'Lives ${economyConfig.maxLives - 1}/${economyConfig.maxLives}'),
+          findsOneWidget);
 
       // 戻して、同じ手でまた詰んでも、同じプレイ中は二重に失わない。
       await tester.tap(find.byKey(const Key('undo')));
@@ -306,13 +329,13 @@ void main() {
       await tester.pump();
       await tester.tap(find.byKey(Key('tube-$to')));
       await tester.pumpAndSettle();
-      expect(app.lives, 4);
+      expect(app.lives, economyConfig.maxLives - 1);
 
       // やり直して再び詰むと、また1つ失う。
       await tester.tap(find.byKey(const Key('restart')));
       await tester.pumpAndSettle();
       await play();
-      expect(app.lives, 3);
+      expect(app.lives, economyConfig.maxLives - 2);
     });
   });
 }

@@ -74,8 +74,8 @@ void main() {
     final app = await tester
         .runAsync(() => loadApp(telemetry: tel, adGate: ads)) as AppState;
     await tester.runAsync(() async {
-      for (var i = 0; i < 4; i++) {
-        await app.recordWin(i, moves: 7, stars: 3); // コイン40
+      for (var i = 0; i < 2; i++) {
+        await app.recordWin(i, moves: 7, stars: 1); // コイン40
       }
       await app.loseLife();
     });
