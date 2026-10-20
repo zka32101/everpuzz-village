@@ -1,4 +1,5 @@
 import 'package:color_sort_app/game/app_state.dart';
+import 'package:color_sort_app/game/art.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:puzzle_core/foundation.dart';
@@ -19,6 +20,7 @@ Future<AppState> appWithCoins(WidgetTester tester, int coins) async {
 }
 
 void main() {
+  artTests();
   townMetaTests();
   testWidgets('起動すると町。最初は5マス(解放1+4)で、あそぶ/面を選ぶがある', (tester) async {
     final app = await appWithCoins(tester, 0);
@@ -198,5 +200,34 @@ void townMetaTests() {
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('milestone_complete')), findsNothing);
     expect(app.pendingTownMilestone, isNull);
+  });
+}
+
+void artTests() {
+  testWidgets('画像が配置されていれば建物は画像で描き、無ければ図形+名前のまま', (tester) async {
+    final app = await appWithCoins(tester, 100);
+    await tester.runAsync(() => app.placeBuilding('small_house', 0));
+    await tester.pumpWidget(appWidget(app, town: true));
+    // 画像なし: 文字で代用(名前が見える)
+    expect(find.text('Small house'), findsWidgets);
+    expect(find.byType(Image), findsNothing);
+
+    final withArt = AppState(
+      pack: app.pack,
+      kv: MemoryKeyValueStore(),
+      progress: app.progress,
+      economyState:
+          EconomyState.initial(economyConfig, DateTime.utc(2026, 1, 1, 12)),
+      townConfig: app.townConfig,
+      townState: app.townState,
+      art: const ArtCatalog({'small_house_s1'}),
+    );
+    await tester.pumpWidget(appWidget(withArt, town: true));
+    await tester.pump();
+    expect(find.byKey(const Key('art-small_house_s1')), findsOneWidget);
+    // 読み込みに失敗しても(テストには実画像が無い)文字の代用に戻り、崩れない
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+    expect(find.text('Small house'), findsWidgets);
   });
 }

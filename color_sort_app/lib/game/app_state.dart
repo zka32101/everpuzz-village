@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:puzzle_core/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'art.dart';
 import 'hint.dart';
 import 'purchases.dart';
 
@@ -121,6 +122,7 @@ class AppState extends ChangeNotifier {
     this.hintSolver = isolateHintSolver,
     this.purchaseGate,
     required this.townConfig,
+    this.art = ArtCatalog.empty,
     this.townState = TownState.empty,
     this.catalog = ShopCatalog.empty,
     PurchaseState purchaseState = const PurchaseState(),
@@ -156,6 +158,9 @@ class AppState extends ChangeNotifier {
   final ShopCatalog catalog;
 
   final TownConfig townConfig;
+
+  /// 配置済みの画像素材。
+  final ArtCatalog art;
   final TownRules townRules;
   TownState townState;
 
@@ -208,6 +213,7 @@ class AppState extends ChangeNotifier {
         pack.levels.where((l) => progress.recordOf(l.id).cleared).length;
     return AppState(
       townConfig: townConfig,
+      art: await ArtCatalog.load(b),
       townState: await TownStore(kv, townConfig,
               cellLimit: TownRules(townConfig).cellCount(clearedNow))
           .load(),
