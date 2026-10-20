@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter/services.dart';
+import 'package:puzzle_core/foundation.dart' show AdGate;
 
+import 'game/admob_gate.dart';
 import 'game/app_state.dart';
 import 'game/purchases.dart';
 import 'game/revenuecat_gate.dart';
@@ -24,8 +26,16 @@ Future<void> main() async {
     gate =
         await RevenueCatGate.configure(rcKey, entitlement: catalog.entitlement);
   }
-  final app =
-      await AppState.load(PrefsKeyValueStore(prefs), purchaseGate: gate);
+  // 広告ユニットIDもビルド時に渡す(--dart-define=ADMOB_REWARDED_ID=...)。無ければ広告ボタンは出ない。
+  const adUnit = String.fromEnvironment('ADMOB_REWARDED_ID');
+  late final AppState app;
+  AdGate? ads;
+  if (adUnit.isNotEmpty) {
+    ads = await AdMobGate.configure(
+        unitId: adUnit, adsRemoved: () => app.adsRemoved);
+  }
+  app = await AppState.load(PrefsKeyValueStore(prefs),
+      purchaseGate: gate, adGate: ads);
   runApp(ColorSortApp(app: app));
 }
 
