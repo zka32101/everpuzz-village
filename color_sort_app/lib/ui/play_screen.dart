@@ -109,36 +109,48 @@ class _PlayScreenState extends State<PlayScreen> {
                     child: EconomyBar(app: widget.app),
                   ),
                   Expanded(
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.all(16),
-                      child: Center(
-                        child: Wrap(
-                          alignment: WrapAlignment.center,
-                          spacing: 12,
-                          runSpacing: 12,
-                          children: [
-                            for (var i = 0; i < game.board.tubes.length; i++)
-                              TubeWidget(
-                                key: Key('tube-$i'),
-                                index: i,
-                                tube: game.board.tubes[i],
-                                lock: game.board.locks[i],
-                                usable: game.board.isUsable(i),
-                                selected: game.selected == i,
-                                hintRole: game.hint == null
-                                    ? HintRole.none
-                                    : game.hint!.$1 == i
-                                        ? HintRole.from
-                                        : game.hint!.$2 == i
-                                            ? HintRole.to
-                                            : HintRole.none,
-                                art: widget.app.art,
-                                onTap: () => game.tap(i),
-                              ),
-                          ],
+                    // 容器は、使える幅・高さに全部収まる大きさに縮める(下段が切れないように)。
+                    // 縮めても足りない(極端に小さい画面・文字拡大)ときだけ、スクロールで見せる。
+                    child: LayoutBuilder(builder: (context, box) {
+                      final unit = _fitUnit(
+                        count: game.board.tubes.length,
+                        maxWidth: box.maxWidth - 32,
+                        maxHeight: box.maxHeight - 32,
+                        useArt: widget.app.art.has('tube_back') &&
+                            widget.app.art.has('tube_front'),
+                      );
+                      return SingleChildScrollView(
+                        padding: const EdgeInsets.all(16),
+                        child: Center(
+                          child: Wrap(
+                            alignment: WrapAlignment.center,
+                            spacing: 12,
+                            runSpacing: 12,
+                            children: [
+                              for (var i = 0; i < game.board.tubes.length; i++)
+                                TubeWidget(
+                                  key: Key('tube-$i'),
+                                  index: i,
+                                  tube: game.board.tubes[i],
+                                  lock: game.board.locks[i],
+                                  usable: game.board.isUsable(i),
+                                  selected: game.selected == i,
+                                  hintRole: game.hint == null
+                                      ? HintRole.none
+                                      : game.hint!.$1 == i
+                                          ? HintRole.from
+                                          : game.hint!.$2 == i
+                                              ? HintRole.to
+                                              : HintRole.none,
+                                  art: widget.app.art,
+                                  unit: unit,
+                                  onTap: () => game.tap(i),
+                                ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ),
+                      );
+                    }),
                   ),
                   _Message(game: game, lifeLost: _lifeLost),
                   Padding(
@@ -223,6 +235,28 @@ class _PlayScreenState extends State<PlayScreen> {
         );
       },
     );
+  }
+
+  /// 容器が全部収まる 1スロットの大きさ。標準(46)から、収まるまで縮める(下限 30)。
+  /// 横に並べる本数は、幅に入るだけ(標準の幅)で決まり、足りなければ段が増える。
+  static double _fitUnit({
+    required int count,
+    required double maxWidth,
+    required double maxHeight,
+    required bool useArt,
+  }) {
+    const spacing = 12.0;
+    var unit = TubeWidget.defaultUnit;
+    while (unit > TubeWidget.minUnit) {
+      final w = TubeWidget.widthFor(unit, useArt: useArt);
+      final perRow =
+          ((maxWidth + spacing) / (w + spacing)).floor().clamp(1, count);
+      final rows = (count / perRow).ceil();
+      final h = TubeWidget.heightFor(unit, useArt: useArt);
+      if (rows * h + (rows - 1) * spacing <= maxHeight) return unit;
+      unit -= 1;
+    }
+    return TubeWidget.minUnit;
   }
 
   /// 先に手を探し、見つかったときだけコインを払う(見つからなければ課金しない)。

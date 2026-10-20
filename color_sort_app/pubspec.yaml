@@ -37,3 +37,8 @@ flutter_launcher_icons:
   android: true
   ios: true
   remove_alpha_ios: true
+
+# shared_preferences_android 2.5.0 は、リリースビルドで起動時に NoSuchMethodError となり、画面が白いまま止まる(実機で確認)。
+# うかラボのアプリと同じ 2.4.x に固定する。
+dependency_overrides:
+  shared_preferences_android: 2.4.23
