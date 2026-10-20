@@ -79,3 +79,5 @@ flutter run
 - 初回起動時に同意(UMP)を確認し、同意が得られない地域/状態では広告を出さない。
 - アプリID(`AndroidManifest.xml` / `Info.plist`)は**Googleのテスト用ID**が入っている。本番はAdMobで発行したIDに差し替える(差し替えずに公開しない)。
 - 実機/エミュレータでの表示確認は未実施(このCI/セッションでは確認できない)。
+### 計測(町・購入)
+`town_place` / `town_upgrade` / `town_move`(buildingId, stage, cost, clearedLevels)、`town_gift`、`purchase`(productId)。個人を特定する値は送らない。実体(analytics)は後から差し込む。
