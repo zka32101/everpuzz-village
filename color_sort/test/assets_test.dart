@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -70,8 +71,70 @@ void main() {
     expect(checkAssets(manifest, root: tmp.path), isEmpty);
   });
 
-  test('同梱の台帳は読め、現状(未配置)で通常検査に合格する', () {
-    final m = {'slots': <Object?>[]};
-    expect(checkAssets(m, root: '.'), isEmpty);
+  group('同梱の台帳', () {
+    final manifest =
+        jsonDecode(File('assets/art_manifest.json').readAsStringSync())
+            as Map<String, Object?>;
+    final slots = [
+      for (final s in manifest['slots']! as List<Object?>)
+        s! as Map<String, Object?>,
+    ];
+
+    test('読めて、現状(未配置)で通常検査に合格する', () {
+      expect(checkAssets(manifest, root: '.'), isEmpty);
+    });
+
+    test('IDとパスは重複しない', () {
+      expect({for (final s in slots) s['id']}.length, slots.length);
+      expect({for (final s in slots) s['path']}.length, slots.length);
+    });
+
+    test('建物は設計書の20種×3段階=60状態(512x512・透過・任意)', () {
+      // 設計書(町づくり設計 v0.1 の「建物20種」)の並び。名前と絵柄は仮だが、IDはここで固定する。
+      const slugs = [
+        'small_house',
+        'mushroom_house',
+        'windmill_house',
+        'treehouse',
+        'flower_house',
+        'flower_field',
+        'big_tree',
+        'gourd_pond',
+        'log_bridge',
+        'bench',
+        'bakery',
+        'cafe',
+        'general_store',
+        'vegetable_field',
+        'ranch',
+        'lighthouse',
+        'balloon',
+        'water_mill',
+        'clock_tower',
+        'rainbow_arch',
+      ];
+      final expected = [
+        for (final s in slugs)
+          for (final st in [1, 2, 3]) '${s}_s$st',
+      ];
+      final ids = [for (final s in slots) s['id']! as String];
+      final states = ids.where((i) => RegExp(r'_s[123]$').hasMatch(i)).toList();
+      expect(states, expected);
+      for (final s in slots.where((s) => expected.contains(s['id']))) {
+        expect(s['width'], 512, reason: '${s['id']}');
+        expect(s['height'], 512, reason: '${s['id']}');
+        expect(s['transparent'], isTrue, reason: '${s['id']}');
+        expect(s['required'], isFalse, reason: '${s['id']}');
+        expect(s['path'], 'assets/art/${s['id']}.png');
+      }
+    });
+
+    test('必須の素材は、背景1・アイコン・容器の奥と手前だけ', () {
+      final required = {
+        for (final s in slots)
+          if (s['required'] == true) s['id'],
+      };
+      expect(required, {'bg_stage_01', 'tube_back', 'tube_front', 'app_icon'});
+    });
   });
 }

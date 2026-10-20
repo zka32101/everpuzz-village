@@ -1,6 +1,6 @@
 {
  "version": 1,
- "note": "コードは画像をIDでのみ参照する。画像未配置の間は描画側が仮の図形で代用する。",
+ "note": "コードは画像をIDでのみ参照する。画像未配置の間は描画側が仮の図形で代用する。建物は20種×3段階=60状態(設計書: 町づくり設計 v0.1)。",
  "slots": [
   {
    "id": "bg_stage_01",
@@ -75,184 +75,544 @@
    "note": "1色そろった時の装飾(任意)"
   },
   {
-   "id": "building_01",
-   "path": "assets/art/building_01.png",
+   "id": "small_house_s1",
+   "path": "assets/art/small_house_s1.png",
    "width": 512,
    "height": 512,
    "transparent": true,
    "required": false,
-   "note": "町づくりの建物(全20種。拡張なし)"
+   "note": "町づくり: ちいさなおうちの1段階目"
   },
   {
-   "id": "building_02",
-   "path": "assets/art/building_02.png",
+   "id": "small_house_s2",
+   "path": "assets/art/small_house_s2.png",
    "width": 512,
    "height": 512,
    "transparent": true,
    "required": false,
-   "note": "町づくりの建物(全20種。拡張なし)"
+   "note": "町づくり: ちいさなおうちの2段階目"
   },
   {
-   "id": "building_03",
-   "path": "assets/art/building_03.png",
+   "id": "small_house_s3",
+   "path": "assets/art/small_house_s3.png",
    "width": 512,
    "height": 512,
    "transparent": true,
    "required": false,
-   "note": "町づくりの建物(全20種。拡張なし)"
+   "note": "町づくり: ちいさなおうちの3段階目 (縦に伸びてよい。段階の組は prep_stages.py でそろえる)"
   },
   {
-   "id": "building_04",
-   "path": "assets/art/building_04.png",
+   "id": "mushroom_house_s1",
+   "path": "assets/art/mushroom_house_s1.png",
    "width": 512,
    "height": 512,
    "transparent": true,
    "required": false,
-   "note": "町づくりの建物(全20種。拡張なし)"
+   "note": "町づくり: きのこハウスの1段階目"
   },
   {
-   "id": "building_05",
-   "path": "assets/art/building_05.png",
+   "id": "mushroom_house_s2",
+   "path": "assets/art/mushroom_house_s2.png",
    "width": 512,
    "height": 512,
    "transparent": true,
    "required": false,
-   "note": "町づくりの建物(全20種。拡張なし)"
+   "note": "町づくり: きのこハウスの2段階目"
   },
   {
-   "id": "building_06",
-   "path": "assets/art/building_06.png",
+   "id": "mushroom_house_s3",
+   "path": "assets/art/mushroom_house_s3.png",
    "width": 512,
    "height": 512,
    "transparent": true,
    "required": false,
-   "note": "町づくりの建物(全20種。拡張なし)"
+   "note": "町づくり: きのこハウスの3段階目 (縦に伸びてよい。段階の組は prep_stages.py でそろえる)"
   },
   {
-   "id": "building_07",
-   "path": "assets/art/building_07.png",
+   "id": "windmill_house_s1",
+   "path": "assets/art/windmill_house_s1.png",
    "width": 512,
    "height": 512,
    "transparent": true,
    "required": false,
-   "note": "町づくりの建物(全20種。拡張なし)"
+   "note": "町づくり: 風車のおうちの1段階目"
   },
   {
-   "id": "building_08",
-   "path": "assets/art/building_08.png",
+   "id": "windmill_house_s2",
+   "path": "assets/art/windmill_house_s2.png",
    "width": 512,
    "height": 512,
    "transparent": true,
    "required": false,
-   "note": "町づくりの建物(全20種。拡張なし)"
+   "note": "町づくり: 風車のおうちの2段階目"
   },
   {
-   "id": "building_09",
-   "path": "assets/art/building_09.png",
+   "id": "windmill_house_s3",
+   "path": "assets/art/windmill_house_s3.png",
    "width": 512,
    "height": 512,
    "transparent": true,
    "required": false,
-   "note": "町づくりの建物(全20種。拡張なし)"
+   "note": "町づくり: 風車のおうちの3段階目 (縦に伸びてよい。段階の組は prep_stages.py でそろえる)"
   },
   {
-   "id": "building_10",
-   "path": "assets/art/building_10.png",
+   "id": "treehouse_s1",
+   "path": "assets/art/treehouse_s1.png",
    "width": 512,
    "height": 512,
    "transparent": true,
    "required": false,
-   "note": "町づくりの建物(全20種。拡張なし)"
+   "note": "町づくり: 木の上のおうちの1段階目"
   },
   {
-   "id": "building_11",
-   "path": "assets/art/building_11.png",
+   "id": "treehouse_s2",
+   "path": "assets/art/treehouse_s2.png",
    "width": 512,
    "height": 512,
    "transparent": true,
    "required": false,
-   "note": "町づくりの建物(全20種。拡張なし)"
+   "note": "町づくり: 木の上のおうちの2段階目"
   },
   {
-   "id": "building_12",
-   "path": "assets/art/building_12.png",
+   "id": "treehouse_s3",
+   "path": "assets/art/treehouse_s3.png",
    "width": 512,
    "height": 512,
    "transparent": true,
    "required": false,
-   "note": "町づくりの建物(全20種。拡張なし)"
+   "note": "町づくり: 木の上のおうちの3段階目 (縦に伸びてよい。段階の組は prep_stages.py でそろえる)"
   },
   {
-   "id": "building_13",
-   "path": "assets/art/building_13.png",
+   "id": "flower_house_s1",
+   "path": "assets/art/flower_house_s1.png",
    "width": 512,
    "height": 512,
    "transparent": true,
    "required": false,
-   "note": "町づくりの建物(全20種。拡張なし)"
+   "note": "町づくり: お花のおうちの1段階目"
   },
   {
-   "id": "building_14",
-   "path": "assets/art/building_14.png",
+   "id": "flower_house_s2",
+   "path": "assets/art/flower_house_s2.png",
    "width": 512,
    "height": 512,
    "transparent": true,
    "required": false,
-   "note": "町づくりの建物(全20種。拡張なし)"
+   "note": "町づくり: お花のおうちの2段階目"
   },
   {
-   "id": "building_15",
-   "path": "assets/art/building_15.png",
+   "id": "flower_house_s3",
+   "path": "assets/art/flower_house_s3.png",
    "width": 512,
    "height": 512,
    "transparent": true,
    "required": false,
-   "note": "町づくりの建物(全20種。拡張なし)"
+   "note": "町づくり: お花のおうちの3段階目 (縦に伸びてよい。段階の組は prep_stages.py でそろえる)"
   },
   {
-   "id": "building_16",
-   "path": "assets/art/building_16.png",
+   "id": "flower_field_s1",
+   "path": "assets/art/flower_field_s1.png",
    "width": 512,
    "height": 512,
    "transparent": true,
    "required": false,
-   "note": "町づくりの建物(全20種。拡張なし)"
+   "note": "町づくり: 花畑の1段階目"
   },
   {
-   "id": "building_17",
-   "path": "assets/art/building_17.png",
+   "id": "flower_field_s2",
+   "path": "assets/art/flower_field_s2.png",
    "width": 512,
    "height": 512,
    "transparent": true,
    "required": false,
-   "note": "町づくりの建物(全20種。拡張なし)"
+   "note": "町づくり: 花畑の2段階目"
   },
   {
-   "id": "building_18",
-   "path": "assets/art/building_18.png",
+   "id": "flower_field_s3",
+   "path": "assets/art/flower_field_s3.png",
    "width": 512,
    "height": 512,
    "transparent": true,
    "required": false,
-   "note": "町づくりの建物(全20種。拡張なし)"
+   "note": "町づくり: 花畑の3段階目 (縦に伸びてよい。段階の組は prep_stages.py でそろえる)"
   },
   {
-   "id": "building_19",
-   "path": "assets/art/building_19.png",
+   "id": "big_tree_s1",
+   "path": "assets/art/big_tree_s1.png",
    "width": 512,
    "height": 512,
    "transparent": true,
    "required": false,
-   "note": "町づくりの建物(全20種。拡張なし)"
+   "note": "町づくり: 大きな木の1段階目"
   },
   {
-   "id": "building_20",
-   "path": "assets/art/building_20.png",
+   "id": "big_tree_s2",
+   "path": "assets/art/big_tree_s2.png",
    "width": 512,
    "height": 512,
    "transparent": true,
    "required": false,
-   "note": "町づくりの建物(全20種。拡張なし)"
+   "note": "町づくり: 大きな木の2段階目"
+  },
+  {
+   "id": "big_tree_s3",
+   "path": "assets/art/big_tree_s3.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくり: 大きな木の3段階目 (縦に伸びてよい。段階の組は prep_stages.py でそろえる)"
+  },
+  {
+   "id": "gourd_pond_s1",
+   "path": "assets/art/gourd_pond_s1.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくり: ひょうたん池の1段階目"
+  },
+  {
+   "id": "gourd_pond_s2",
+   "path": "assets/art/gourd_pond_s2.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくり: ひょうたん池の2段階目"
+  },
+  {
+   "id": "gourd_pond_s3",
+   "path": "assets/art/gourd_pond_s3.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくり: ひょうたん池の3段階目 (縦に伸びてよい。段階の組は prep_stages.py でそろえる)"
+  },
+  {
+   "id": "log_bridge_s1",
+   "path": "assets/art/log_bridge_s1.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくり: 丸木橋の1段階目"
+  },
+  {
+   "id": "log_bridge_s2",
+   "path": "assets/art/log_bridge_s2.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくり: 丸木橋の2段階目"
+  },
+  {
+   "id": "log_bridge_s3",
+   "path": "assets/art/log_bridge_s3.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくり: 丸木橋の3段階目 (縦に伸びてよい。段階の組は prep_stages.py でそろえる)"
+  },
+  {
+   "id": "bench_s1",
+   "path": "assets/art/bench_s1.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくり: ベンチの1段階目"
+  },
+  {
+   "id": "bench_s2",
+   "path": "assets/art/bench_s2.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくり: ベンチの2段階目"
+  },
+  {
+   "id": "bench_s3",
+   "path": "assets/art/bench_s3.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくり: ベンチの3段階目 (縦に伸びてよい。段階の組は prep_stages.py でそろえる)"
+  },
+  {
+   "id": "bakery_s1",
+   "path": "assets/art/bakery_s1.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくり: パン屋さんの1段階目"
+  },
+  {
+   "id": "bakery_s2",
+   "path": "assets/art/bakery_s2.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくり: パン屋さんの2段階目"
+  },
+  {
+   "id": "bakery_s3",
+   "path": "assets/art/bakery_s3.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくり: パン屋さんの3段階目 (縦に伸びてよい。段階の組は prep_stages.py でそろえる)"
+  },
+  {
+   "id": "cafe_s1",
+   "path": "assets/art/cafe_s1.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくり: カフェの1段階目"
+  },
+  {
+   "id": "cafe_s2",
+   "path": "assets/art/cafe_s2.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくり: カフェの2段階目"
+  },
+  {
+   "id": "cafe_s3",
+   "path": "assets/art/cafe_s3.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくり: カフェの3段階目 (縦に伸びてよい。段階の組は prep_stages.py でそろえる)"
+  },
+  {
+   "id": "general_store_s1",
+   "path": "assets/art/general_store_s1.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくり: ざっか屋さんの1段階目"
+  },
+  {
+   "id": "general_store_s2",
+   "path": "assets/art/general_store_s2.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくり: ざっか屋さんの2段階目"
+  },
+  {
+   "id": "general_store_s3",
+   "path": "assets/art/general_store_s3.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくり: ざっか屋さんの3段階目 (縦に伸びてよい。段階の組は prep_stages.py でそろえる)"
+  },
+  {
+   "id": "vegetable_field_s1",
+   "path": "assets/art/vegetable_field_s1.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくり: 畑の1段階目"
+  },
+  {
+   "id": "vegetable_field_s2",
+   "path": "assets/art/vegetable_field_s2.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくり: 畑の2段階目"
+  },
+  {
+   "id": "vegetable_field_s3",
+   "path": "assets/art/vegetable_field_s3.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくり: 畑の3段階目 (縦に伸びてよい。段階の組は prep_stages.py でそろえる)"
+  },
+  {
+   "id": "ranch_s1",
+   "path": "assets/art/ranch_s1.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくり: ちいさな牧場の1段階目 (動物は描かない)"
+  },
+  {
+   "id": "ranch_s2",
+   "path": "assets/art/ranch_s2.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくり: ちいさな牧場の2段階目 (動物は描かない)"
+  },
+  {
+   "id": "ranch_s3",
+   "path": "assets/art/ranch_s3.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくり: ちいさな牧場の3段階目 (動物は描かない) (縦に伸びてよい。段階の組は prep_stages.py でそろえる)"
+  },
+  {
+   "id": "lighthouse_s1",
+   "path": "assets/art/lighthouse_s1.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくり: 灯台の1段階目"
+  },
+  {
+   "id": "lighthouse_s2",
+   "path": "assets/art/lighthouse_s2.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくり: 灯台の2段階目"
+  },
+  {
+   "id": "lighthouse_s3",
+   "path": "assets/art/lighthouse_s3.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくり: 灯台の3段階目 (縦に伸びてよい。段階の組は prep_stages.py でそろえる)"
+  },
+  {
+   "id": "balloon_s1",
+   "path": "assets/art/balloon_s1.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくり: 気球の1段階目"
+  },
+  {
+   "id": "balloon_s2",
+   "path": "assets/art/balloon_s2.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくり: 気球の2段階目"
+  },
+  {
+   "id": "balloon_s3",
+   "path": "assets/art/balloon_s3.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくり: 気球の3段階目 (縦に伸びてよい。段階の組は prep_stages.py でそろえる)"
+  },
+  {
+   "id": "water_mill_s1",
+   "path": "assets/art/water_mill_s1.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくり: 水車小屋の1段階目"
+  },
+  {
+   "id": "water_mill_s2",
+   "path": "assets/art/water_mill_s2.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくり: 水車小屋の2段階目"
+  },
+  {
+   "id": "water_mill_s3",
+   "path": "assets/art/water_mill_s3.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくり: 水車小屋の3段階目 (縦に伸びてよい。段階の組は prep_stages.py でそろえる)"
+  },
+  {
+   "id": "clock_tower_s1",
+   "path": "assets/art/clock_tower_s1.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくり: 時計台の1段階目"
+  },
+  {
+   "id": "clock_tower_s2",
+   "path": "assets/art/clock_tower_s2.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくり: 時計台の2段階目"
+  },
+  {
+   "id": "clock_tower_s3",
+   "path": "assets/art/clock_tower_s3.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくり: 時計台の3段階目 (縦に伸びてよい。段階の組は prep_stages.py でそろえる)"
+  },
+  {
+   "id": "rainbow_arch_s1",
+   "path": "assets/art/rainbow_arch_s1.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくり: 虹のアーチの1段階目"
+  },
+  {
+   "id": "rainbow_arch_s2",
+   "path": "assets/art/rainbow_arch_s2.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくり: 虹のアーチの2段階目"
+  },
+  {
+   "id": "rainbow_arch_s3",
+   "path": "assets/art/rainbow_arch_s3.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "町づくり: 虹のアーチの3段階目 (縦に伸びてよい。段階の組は prep_stages.py でそろえる)"
   },
   {
    "id": "kobito_01",
