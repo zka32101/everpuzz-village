@@ -23,6 +23,7 @@ class TownScreen extends StatefulWidget {
 class _TownScreenState extends State<TownScreen> {
   /// 「動かす」中の建物ID。
   String? _moving;
+  bool _showingMilestone = false;
 
   AppState get app => widget.app;
 
@@ -205,6 +206,97 @@ class _TownScreenState extends State<TownScreen> {
     );
   }
 
+  /// 贈り物・新しい建物の知らせ・こびと。急かさない、静かな表示。
+  Widget _extras(BuildContext context, Translator t) {
+    final newIds = app.newBuildingIds;
+    final dwellers = app.dwellers;
+    // 完成・満開の知らせは1回だけ、描画のあとで出す。
+    final milestone = app.pendingTownMilestone;
+    if (milestone != null && !_showingMilestone) {
+      _showingMilestone = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        if (!mounted) return;
+        await showDialog<void>(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            key: Key('milestone_$milestone'),
+            title: Text(t.tr(milestone == 'complete'
+                ? 'townCompleteTitle'
+                : 'townBloomTitle')),
+            content: Text(t.tr(milestone == 'complete'
+                ? 'townCompleteBody'
+                : 'townBloomBody')),
+            actions: [
+              TextButton(
+                style: TextButton.styleFrom(minimumSize: const Size(48, 48)),
+                onPressed: () => Navigator.of(ctx).pop(),
+                child: Text(t.tr('ok')),
+              ),
+            ],
+          ),
+        );
+        await app.acknowledgeMilestone(milestone);
+        _showingMilestone = false;
+      });
+    }
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (newIds.isNotEmpty)
+            Card(
+              key: const Key('newBuilding'),
+              child: ListTile(
+                leading: const Icon(Icons.auto_awesome),
+                title: Text(t.tr('townNewBuilding', {
+                  'name': newIds.map((id) => _name(t, id)).join('、'),
+                })),
+                trailing: TextButton(
+                  style: TextButton.styleFrom(minimumSize: const Size(48, 48)),
+                  onPressed: app.acknowledgeNewBuildings,
+                  child: Text(t.tr('ok')),
+                ),
+              ),
+            ),
+          if (app.canClaimGift)
+            Card(
+              key: const Key('gift'),
+              child: ListTile(
+                leading: const Icon(Icons.card_giftcard),
+                title: Text(t.tr('townGift')),
+                subtitle:
+                    Text(t.tr('townGiftGot', {'n': app.townConfig.dailyGift})),
+                trailing: FilledButton(
+                  key: const Key('claimGift'),
+                  style:
+                      FilledButton.styleFrom(minimumSize: const Size(48, 48)),
+                  onPressed: app.claimGift,
+                  child: Text(t.tr('townGiftClaim')),
+                ),
+              ),
+            ),
+          if (dwellers > 0)
+            Semantics(
+              label: t.tr('dwellers', {'n': dwellers}),
+              child: ExcludeSemantics(
+                child: Wrap(
+                  key: const Key('dwellers'),
+                  spacing: 4,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    for (var i = 0; i < dwellers; i++)
+                      const Icon(Icons.emoji_people, size: 20),
+                    Text(t.tr('dwellers', {'n': dwellers})),
+                  ],
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
   void _play() {
     if (!app.canPlay) {
       showNoLivesDialog(context, app);
@@ -241,6 +333,7 @@ class _TownScreenState extends State<TownScreen> {
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
                 child: EconomyBar(app: app),
               ),
+              _extras(context, t),
               if (_moving != null)
                 MaterialBanner(
                   key: const Key('moveBanner'),

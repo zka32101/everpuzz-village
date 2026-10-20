@@ -20,13 +20,26 @@ class Placement {
 
 /// 町の状態(解放済みは進行から導くので持たない)。
 class TownState {
-  const TownState({this.placements = const [], this.lastGiftDay});
+  const TownState({
+    this.placements = const [],
+    this.lastGiftDay,
+    this.seenUnlocked = 1,
+    this.completeShown = false,
+    this.bloomShown = false,
+  });
 
   /// 置いた建物(各建物は最大1つ)。
   final List<Placement> placements;
 
   /// 町の贈り物を最後に受け取った日(`yyyy-mm-dd`)。
   final String? lastGiftDay;
+
+  /// 知らせ済みの解放数(最初の1種は最初から解放なので 1)。
+  final int seenUnlocked;
+
+  /// 「完成」「満開」の知らせを出した(1回だけ)。
+  final bool completeShown;
+  final bool bloomShown;
 
   static const empty = TownState();
 
@@ -44,10 +57,19 @@ class TownState {
     return null;
   }
 
-  TownState copyWith({List<Placement>? placements, String? lastGiftDay}) =>
+  TownState copyWith({
+    List<Placement>? placements,
+    String? lastGiftDay,
+    int? seenUnlocked,
+    bool? completeShown,
+    bool? bloomShown,
+  }) =>
       TownState(
         placements: placements ?? this.placements,
         lastGiftDay: lastGiftDay ?? this.lastGiftDay,
+        seenUnlocked: seenUnlocked ?? this.seenUnlocked,
+        completeShown: completeShown ?? this.completeShown,
+        bloomShown: bloomShown ?? this.bloomShown,
       );
 
   Map<String, Object?> toJson() => {
@@ -56,5 +78,8 @@ class TownState {
             {'id': p.buildingId, 'cell': p.cell, 'stage': p.stage},
         ],
         'lastGiftDay': lastGiftDay,
+        'seenUnlocked': seenUnlocked,
+        'completeShown': completeShown,
+        'bloomShown': bloomShown,
       };
 }

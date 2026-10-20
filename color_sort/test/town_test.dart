@@ -190,6 +190,37 @@ void main() {
     expect(rules.canClaimGift(s, DateTime(2026, 10, 25)), isTrue);
   });
 
+  test('新しい建物の知らせは1回だけ(解放数に追いつくまで)', () {
+    var s = empty;
+    expect(rules.newlyUnlocked(s, 0), isEmpty);
+    expect(rules.newlyUnlocked(s, 3).map((b) => b.id), ['mushroom_house']);
+    expect(rules.newlyUnlocked(s, 7).map((b) => b.id),
+        ['mushroom_house', 'windmill_house']);
+    s = rules.markUnlocksSeen(s, 7);
+    expect(rules.newlyUnlocked(s, 7), isEmpty);
+    expect(rules.newlyUnlocked(s, 9).map((b) => b.id), ['treehouse']);
+  });
+
+  test('完成・満開の知らせは1回だけ', () {
+    var s = empty;
+    for (var i = 0; i < 20; i++) {
+      s = rules
+          .place(s, config.buildings[i].id, i, clearedLevels: 60, coins: 999)
+          .state!;
+    }
+    expect(rules.shouldShowComplete(s), isTrue);
+    expect(rules.shouldShowBloom(s), isFalse);
+    s = s.copyWith(completeShown: true);
+    expect(rules.shouldShowComplete(s), isFalse);
+    for (final b in config.buildings) {
+      for (var k = 0; k < 2; k++) {
+        s = rules.upgrade(s, b.id, coins: 999).state!;
+      }
+    }
+    expect(rules.shouldShowBloom(s), isTrue);
+    expect(rules.shouldShowBloom(s.copyWith(bloomShown: true)), isFalse);
+  });
+
   group('保存', () {
     test('往復できる', () async {
       final kv = MemoryKeyValueStore();
@@ -204,6 +235,12 @@ void main() {
       expect(back.placements.single.cell, 2);
       expect(back.placements.single.stage, 2);
       expect(back.lastGiftDay, '2026-10-20');
+      final marked =
+          rules.markUnlocksSeen(back, 9).copyWith(completeShown: true);
+      await store.save(marked);
+      final again = await store.load();
+      expect(again.seenUnlocked, 4);
+      expect(again.completeShown, isTrue);
     });
 
     test('未保存・破損・将来版は空の町', () async {
