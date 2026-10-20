@@ -73,5 +73,11 @@ flutter run
 - こびとは合計段階6ごとに1人(最大10人)。いまはアイコンの表示のみ。歩く動きなどの演出は素材が届いてから。
 - 完成(20種そろう)・満開(全部が最終段階)の知らせは、それぞれ1回だけ。
 
+## 広告(AdMob リワード)
+- ライフ切れの案内に「広告を見て回復」を出す(リワードのみ。強制の全画面広告は出さない)。広告削除済みなら出さない。
+- 有効化: `--dart-define=ADMOB_REWARDED_ID=<リワード広告ユニットID>`。未指定なら広告ボタンは出ない。
+- 初回起動時に同意(UMP)を確認し、同意が得られない地域/状態では広告を出さない。
+- アプリID(`AndroidManifest.xml` / `Info.plist`)は**Googleのテスト用ID**が入っている。本番はAdMobで発行したIDに差し替える(差し替えずに公開しない)。
+- 実機/エミュレータでの表示確認は未実施(このCI/セッションでは確認できない)。
 ### 計測(町・購入)
 `town_place` / `town_upgrade` / `town_move`(buildingId, stage, cost, clearedLevels)、`town_gift`、`purchase`(productId)。個人を特定する値は送らない。実体(analytics)は後から差し込む。

@@ -17,6 +17,7 @@ dependencies:
       ref: 08e1e41cd9c41e3584ac6c64dc6197f41a5de783 # puzzle_core の固定版(コミット。タグを打ったらタグに置き換えてよい)
   shared_preferences: ^2.3.0
   purchases_flutter: ^10.17.0
+  google_mobile_ads: ^9.1.0
 
 dev_dependencies:
   flutter_test:
