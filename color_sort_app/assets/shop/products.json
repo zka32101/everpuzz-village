@@ -1,9 +1,69 @@
 {
-  "entitlement": "ads_removed",
-  "products": [
-    {"id": "ads_removal", "kind": "adsRemoval"},
-    {"id": "coins_small", "kind": "coinPack", "coins": 300},
-    {"id": "coins_medium", "kind": "coinPack", "coins": 800},
-    {"id": "coins_large", "kind": "coinPack", "coins": 2000}
-  ]
+ "entitlement": "ads_removed",
+ "products": [
+  {
+   "id": "ads_removal",
+   "kind": "adsRemoval"
+  },
+  {
+   "id": "coins_small",
+   "kind": "coinPack",
+   "coins": 300
+  },
+  {
+   "id": "coins_medium",
+   "kind": "coinPack",
+   "coins": 800
+  },
+  {
+   "id": "coins_large",
+   "kind": "coinPack",
+   "coins": 2000
+  },
+  {
+   "id": "life_refill",
+   "kind": "lifeRefill"
+  },
+  {
+   "id": "deco_pack_1",
+   "kind": "unlock",
+   "grants": [
+    "deco.seasonal1"
+   ],
+   "enabled": false
+  },
+  {
+   "id": "skins_pack_1",
+   "kind": "unlock",
+   "grants": [
+    "skins.set1"
+   ],
+   "enabled": false
+  },
+  {
+   "id": "outfits_pack_1",
+   "kind": "unlock",
+   "grants": [
+    "outfits.set1"
+   ],
+   "enabled": false
+  },
+  {
+   "id": "levels_pack_1",
+   "kind": "unlock",
+   "grants": [
+    "levels.extra1"
+   ],
+   "enabled": false
+  },
+  {
+   "id": "starter_pack",
+   "kind": "starterPack",
+   "coins": 500,
+   "grants": [
+    "deco.starter"
+   ],
+   "enabled": false
+  }
+ ]
 }

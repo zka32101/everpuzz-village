@@ -17,8 +17,8 @@ class ShopScreen extends StatefulWidget {
 }
 
 class _ShopScreenState extends State<ShopScreen> {
-  late final Future<Map<String, String>> _prices = widget.app.purchaseGate!
-      .prices(widget.app.catalog.products.map((p) => p.id));
+  late final Future<Map<String, String>> _prices =
+      widget.app.purchaseGate!.prices(widget.app.shopProducts.map((p) => p.id));
   bool _busy = false;
 
   Future<void> _run(Future<bool> Function() action, String okKey) async {
@@ -47,7 +47,7 @@ class _ShopScreenState extends State<ShopScreen> {
             return ListView(
               padding: const EdgeInsets.all(16),
               children: [
-                for (final p in app.catalog.products)
+                for (final p in app.shopProducts)
                   _tile(context, t, p, prices[p.id]),
                 const SizedBox(height: 8),
                 TextButton(
@@ -69,20 +69,27 @@ class _ShopScreenState extends State<ShopScreen> {
   Widget _tile(
       BuildContext context, Translator t, ShopProduct p, String? price) {
     final app = widget.app;
-    final isAds = p.kind == ProductKind.adsRemoval;
-    final owned = isAds && app.adsRemoved;
-    final title = isAds ? t.tr('adsRemoval') : t.tr('coinPack', {'n': p.coins});
+    final owned = app.isPurchased(p);
+    final (title, note) = switch (p.kind) {
+      ProductKind.adsRemoval => (t.tr('adsRemoval'), t.tr('adsRemovalNote')),
+      ProductKind.coinPack => (t.tr('coinPack', {'n': p.coins}), null),
+      ProductKind.lifeRefill => (t.tr('lifeRefill'), t.tr('lifeRefillNote')),
+      _ => (t.tr('product.${p.id}'), t.tr('product.${p.id}.note')),
+    };
+    // ライフが満タン・広告削除済みならライフ回復は買えない。
+    final blocked = p.kind == ProductKind.lifeRefill &&
+        (app.adsRemoved || app.lives >= economyConfig.maxLives);
     return Card(
       child: ListTile(
         key: Key('product_${p.id}'),
         title: Text(title),
-        subtitle: isAds ? Text(t.tr('adsRemovalNote')) : null,
+        subtitle: note == null ? null : Text(note),
         trailing: owned
             ? Text(t.tr('owned'))
             : FilledButton(
                 style: FilledButton.styleFrom(minimumSize: const Size(48, 48)),
                 // 価格が取れていない商品は買わせない。
-                onPressed: _busy || price == null
+                onPressed: _busy || price == null || blocked
                     ? null
                     : () => _run(() => app.buyProduct(p.id), 'purchased'),
                 child: Text(price ?? '—'),
