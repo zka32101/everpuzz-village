@@ -16,6 +16,7 @@ dependencies:
       url: https://github.com/zka32101/puzzle_core.git
       ref: 08e1e41cd9c41e3584ac6c64dc6197f41a5de783 # puzzle_core の固定版(コミット。タグを打ったらタグに置き換えてよい)
   shared_preferences: ^2.3.0
+  purchases_flutter: ^10.17.0
 
 dev_dependencies:
   flutter_test:
@@ -24,3 +25,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/shop/products.json

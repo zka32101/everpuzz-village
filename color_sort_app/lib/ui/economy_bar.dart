@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../game/app_state.dart';
 import '../l10n/strings.dart';
+import 'shop_screen.dart';
 
 /// ライフとコインの表示。アイコンに加えて数字でも示す(色・形だけに頼らない)。
 class EconomyBar extends StatelessWidget {
@@ -91,6 +92,18 @@ Future<void> showNoLivesDialog(BuildContext context, AppState app) {
               if (ok && ctx.mounted) Navigator.of(ctx).pop();
             },
             child: Text(t.tr('watchAd')),
+          ),
+        if (app.shopAvailable)
+          TextButton(
+            key: const Key('noLivesShop'),
+            style: TextButton.styleFrom(minimumSize: const Size(48, 48)),
+            onPressed: () {
+              Navigator.of(ctx).pop();
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => ShopScreen(app: app)),
+              );
+            },
+            child: Text(t.tr('openShop')),
           ),
         TextButton(
           key: const Key('closeDialog'),

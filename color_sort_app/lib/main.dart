@@ -3,14 +3,28 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:flutter/services.dart';
+
 import 'game/app_state.dart';
+import 'game/purchases.dart';
+import 'game/revenuecat_gate.dart';
 import 'l10n/strings.dart';
 import 'ui/level_select_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
-  final app = await AppState.load(PrefsKeyValueStore(prefs));
+  // 公開SDKキーはビルド時に渡す(--dart-define=RC_API_KEY=...)。無ければ店を出さない。
+  const rcKey = String.fromEnvironment('RC_API_KEY');
+  PurchaseGate? gate;
+  if (rcKey.isNotEmpty) {
+    final catalog = ShopCatalog.fromJson(
+        await rootBundle.loadString(AppState.catalogAsset));
+    gate =
+        await RevenueCatGate.configure(rcKey, entitlement: catalog.entitlement);
+  }
+  final app =
+      await AppState.load(PrefsKeyValueStore(prefs), purchaseGate: gate);
   runApp(ColorSortApp(app: app));
 }
 
