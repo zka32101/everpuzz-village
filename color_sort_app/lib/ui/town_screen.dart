@@ -28,6 +28,9 @@ class _TownScreenState extends State<TownScreen> {
 
   AppState get app => widget.app;
 
+  /// 町の背景は、いま遊ぶ面の段階に合わせて変わる。
+  String? get _background => app.art.stageBackground(app.nextLevelIndex);
+
   static const _columns = 4;
 
   String _name(Translator t, String id) => t.tr('building.$id');
@@ -201,6 +204,19 @@ class _TownScreenState extends State<TownScreen> {
     );
   }
 
+  /// こびと1人。画像があれば3種を順に、無ければアイコン。
+  Widget _dweller(int i) {
+    final id = 'kobito_0${i % 3 + 1}';
+    if (!app.art.has(id)) return const Icon(Icons.emoji_people, size: 20);
+    return Image.asset(
+      ArtCatalog.assetOf(id),
+      width: 32,
+      height: 32,
+      excludeFromSemantics: true,
+      errorBuilder: (_, __, ___) => const Icon(Icons.emoji_people, size: 20),
+    );
+  }
+
   /// 建物。画像があれば画像(マスの下端にそろえる)、なければ図形+名前+段階の文字。
   Widget _building(BuildContext context, Translator t, Placement p) {
     final def = app.townConfig.byId(p.buildingId)!;
@@ -307,8 +323,7 @@ class _TownScreenState extends State<TownScreen> {
                   spacing: 4,
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
-                    for (var i = 0; i < dwellers; i++)
-                      const Icon(Icons.emoji_people, size: 20),
+                    for (var i = 0; i < dwellers; i++) _dweller(i),
                     Text(t.tr('dwellers', {'n': dwellers})),
                   ],
                 ),
@@ -347,15 +362,14 @@ class _TownScreenState extends State<TownScreen> {
       ),
       body: DecoratedBox(
         decoration: BoxDecoration(
-          image: app.art.has('bg_stage_01')
-              ? const DecorationImage(
-                  image: AssetImage(
-                      'packages/color_sort/assets/art/bg_stage_01.png'),
+          image: _background == null
+              ? null
+              : DecorationImage(
+                  image: AssetImage(ArtCatalog.assetOf(_background!)),
                   fit: BoxFit.cover,
-                  colorFilter:
-                      ColorFilter.mode(Color(0x66FFFFFF), BlendMode.srcOver),
-                )
-              : null,
+                  colorFilter: const ColorFilter.mode(
+                      Color(0x66FFFFFF), BlendMode.srcOver),
+                ),
         ),
         child: ListenableBuilder(
           listenable: app,

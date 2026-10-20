@@ -86,3 +86,7 @@ flutter run
 - `color_sort/assets/art/<ID>.png` を置くだけで反映される(台帳 `art_manifest.json` のID)。無いIDは図形+文字で代用する。
 - 町の建物は `<建物ID>_s1〜s3.png`(マスの下端にそろえて表示)。プレイ画面の背景は `bg_stage_01.png`。
 - 容器は `tube_back` / `tube_front` があれば画像で描く(ガラスの内側に色玉の積みが収まる大きさ)。アイコン(`app_icon`)の組み込みは、画像が届いてから別PRで行う。
+
+### 画像素材の組み込み(全点)
+建物60・背景5(12面ごとに切り替え。町は今遊ぶ面の段階)・容器(通常/鍵/凍結/そろった時)・こびと3種(町の「こびと n人」を画像で表示)・アイコン。ロゴは未配置(アプリ名の決定後)。
+アイコンは `dart run flutter_launcher_icons` で `ios/` `android/` に書き出し済み(元画像 `color_sort/assets/art/app_icon.png`)。Androidのアダプティブアイコン(前景/背景の分離)は未対応。
