@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:puzzle_core/foundation.dart';
 
 import '../game/app_state.dart';
+import '../game/art.dart';
 import '../game/game_controller.dart';
 import '../l10n/strings.dart';
 import 'economy_bar.dart';
@@ -64,6 +65,8 @@ class _PlayScreenState extends State<PlayScreen> {
     }
   }
 
+  String? get _background => widget.app.art.stageBackground(widget.index);
+
   @override
   Widget build(BuildContext context) {
     final t = L10n.of(context);
@@ -88,16 +91,15 @@ class _PlayScreenState extends State<PlayScreen> {
           ),
           body: DecoratedBox(
             decoration: BoxDecoration(
-              image: widget.app.art.has('bg_stage_01')
-                  ? const DecorationImage(
-                      image: AssetImage(
-                          'packages/color_sort/assets/art/bg_stage_01.png'),
+              image: _background == null
+                  ? null
+                  : DecorationImage(
+                      image: AssetImage(ArtCatalog.assetOf(_background!)),
                       fit: BoxFit.cover,
                       // 盤面と競合しないよう、背景を白で薄めて落ち着かせる。
-                      colorFilter: ColorFilter.mode(
+                      colorFilter: const ColorFilter.mode(
                           Color(0x66FFFFFF), BlendMode.srcOver),
-                    )
-                  : null,
+                    ),
             ),
             child: SafeArea(
               child: Column(
@@ -130,8 +132,7 @@ class _PlayScreenState extends State<PlayScreen> {
                                         : game.hint!.$2 == i
                                             ? HintRole.to
                                             : HintRole.none,
-                                useArt: widget.app.art.has('tube_back') &&
-                                    widget.app.art.has('tube_front'),
+                                art: widget.app.art,
                                 onTap: () => game.tap(i),
                               ),
                           ],

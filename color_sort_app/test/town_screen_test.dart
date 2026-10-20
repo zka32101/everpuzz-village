@@ -23,6 +23,7 @@ Future<AppState> appWithCoins(WidgetTester tester, int coins) async {
 }
 
 void main() {
+  stageArtTests();
   realArtTests();
   artTests();
   townMetaTests();
@@ -264,5 +265,26 @@ void realArtTests() {
     await tester.tap(find.byKey(const Key('tube-0')));
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
+  });
+}
+
+void stageArtTests() {
+  test('ステージ背景は12面ごとに切り替わり、無い段階は手前の段階で代用する', () {
+    const all = ArtCatalog({
+      'bg_stage_01',
+      'bg_stage_02',
+      'bg_stage_03',
+      'bg_stage_04',
+      'bg_stage_05',
+    });
+    expect(all.stageBackground(0), 'bg_stage_01');
+    expect(all.stageBackground(11), 'bg_stage_01');
+    expect(all.stageBackground(12), 'bg_stage_02');
+    expect(all.stageBackground(59), 'bg_stage_05');
+    expect(all.stageBackground(999), 'bg_stage_05');
+    const some = ArtCatalog({'bg_stage_01', 'bg_stage_03'});
+    expect(some.stageBackground(14), 'bg_stage_01'); // 02 が無い
+    expect(some.stageBackground(30), 'bg_stage_03');
+    expect(ArtCatalog.empty.stageBackground(0), isNull);
   });
 }

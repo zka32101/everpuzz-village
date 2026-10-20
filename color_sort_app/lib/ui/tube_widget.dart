@@ -1,6 +1,7 @@
 import 'package:color_sort/color_sort.dart';
 import 'package:flutter/material.dart';
 
+import '../game/art.dart';
 import '../l10n/strings.dart';
 import 'symbols.dart';
 
@@ -19,7 +20,7 @@ class TubeWidget extends StatelessWidget {
     required this.selected,
     required this.onTap,
     this.hintRole = HintRole.none,
-    this.useArt = false,
+    this.art = ArtCatalog.empty,
   });
 
   final int index;
@@ -30,8 +31,10 @@ class TubeWidget extends StatelessWidget {
   final VoidCallback onTap;
   final HintRole hintRole;
 
-  /// 容器の画像(tube_back / tube_front)で描く。無ければ従来の図形。
-  final bool useArt;
+  /// 配置済みの画像。tube_back / tube_front があれば画像の容器で描く(無ければ従来の図形)。
+  final ArtCatalog art;
+
+  bool get useArt => art.has('tube_back') && art.has('tube_front');
 
   static const unit = 46.0; // 1スロットの大きさ(44pt以上)
   static const pad = 4.0;
@@ -43,6 +46,21 @@ class TubeWidget extends StatelessWidget {
   static const _artGlassHeight = 0.88;
   static const _artAspect = 256 / 640;
   static const _artBottom = 0.04; // 下の余白(高さに対する割合)
+
+  /// 使えない容器の覆い。画像があれば画像(鍵=南京錠、凍結=氷)、無ければ従来の膜。
+  /// 中身が見えないと手が読めないので、鍵の覆いは半透明にする。
+  Widget _lockCover() {
+    final id = lock!.kind == LockKind.key ? 'tube_lock_key' : 'tube_frozen';
+    if (!useArt || !art.has(id)) return LockOverlay(lock: lock!);
+    return Positioned.fill(
+      child: IgnorePointer(
+        child: Opacity(
+          opacity: lock!.kind == LockKind.key ? 0.55 : 1,
+          child: _art(id),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -143,13 +161,16 @@ class TubeWidget extends StatelessWidget {
                         ],
                       ),
                     ),
+                  if (done && art.has('tube_done'))
+                    Positioned.fill(
+                        child: IgnorePointer(child: _art('tube_done'))),
                   if (done)
                     Positioned(
                       top: 2,
                       child: Icon(Icons.check_circle,
                           size: 16, color: scheme.primary),
                     ),
-                  if (lock != null && !usable) LockOverlay(lock: lock!),
+                  if (lock != null && !usable) _lockCover(),
                 ],
               ),
             ),

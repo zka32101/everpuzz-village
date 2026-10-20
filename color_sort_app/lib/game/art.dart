@@ -12,6 +12,17 @@ class ArtCatalog {
 
   bool has(String id) => ids.contains(id);
 
+  /// ステージ背景は12面ごとに切り替わる(bg_stage_01〜05)。
+  /// 画像が無い段階は、ある中で一番近い手前の段階にする。無ければ null。
+  String? stageBackground(int levelIndex, {int levelsPerStage = 12}) {
+    var n = (levelIndex ~/ levelsPerStage + 1).clamp(1, 5);
+    for (; n >= 1; n--) {
+      final id = 'bg_stage_${n.toString().padLeft(2, '0')}';
+      if (has(id)) return id;
+    }
+    return null;
+  }
+
   /// Image.asset に渡すパス。
   static String assetOf(String id) => '$prefix$id.png';
 
