@@ -267,14 +267,16 @@ class AppState extends ChangeNotifier {
   Future<TownError?> placeBuilding(String id, int cell) async {
     final r = townRules.place(townState, id, cell,
         clearedLevels: clearedLevels, coins: coins);
-    return _applyTown(r);
+    return _applyTown(r, 'town_place', id);
   }
 
-  Future<TownError?> upgradeBuilding(String id) async =>
-      _applyTown(townRules.upgrade(townState, id, coins: coins));
+  Future<TownError?> upgradeBuilding(String id) async => _applyTown(
+      townRules.upgrade(townState, id, coins: coins), 'town_upgrade', id);
 
   Future<TownError?> moveBuilding(String id, int cell) async => _applyTown(
-      townRules.move(townState, id, cell, clearedLevels: clearedLevels));
+      townRules.move(townState, id, cell, clearedLevels: clearedLevels),
+      'town_move',
+      id);
 
   /// まだ知らせていない新しい建物の名前ID(静かに知らせる)。
   List<String> get newBuildingIds => [
@@ -297,6 +299,7 @@ class AppState extends ChangeNotifier {
     townState = r.state!;
     _eco = economy.addCoins(current, townConfig.dailyGift);
     notifyListeners();
+    telemetry.log(const TelemetryEvent('town_gift'));
     await TownStore(kv, townConfig).save(townState);
     await _saveEconomy();
     return townConfig.dailyGift;
@@ -320,13 +323,20 @@ class AppState extends ChangeNotifier {
     await TownStore(kv, townConfig).save(townState);
   }
 
-  Future<TownError?> _applyTown(TownResult r) async {
+  Future<TownError?> _applyTown(TownResult r, String event, String id) async {
     if (!r.ok) return r.error;
     if (r.cost > 0) {
       _eco = economy.spendCoins(current, r.cost)!;
     }
     townState = r.state!;
     notifyListeners();
+    // 個人を特定しない値だけ送る(建物ID・段階・使ったコイン・クリア数)。
+    telemetry.log(TelemetryEvent(event, {
+      'buildingId': id,
+      'stage': townState.placementOf(id)?.stage,
+      'cost': r.cost,
+      'clearedLevels': clearedLevels,
+    }));
     await TownStore(kv, townConfig).save(townState);
     if (r.cost > 0) await _saveEconomy();
     return null;
@@ -477,6 +487,7 @@ class AppState extends ChangeNotifier {
         );
     }
     notifyListeners();
+    telemetry.log(TelemetryEvent.purchase(productId));
     await _saveEconomy();
     await _savePurchases();
     return true;
