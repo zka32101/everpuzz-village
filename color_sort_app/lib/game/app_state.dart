@@ -30,11 +30,28 @@ const hintBooster = 'hint';
 /// 経済の設定データ(数値はここだけ。価格・商品IDはストア側でゲームが持つ)。
 /// 通貨は1種類、報酬は固定のみ(確率報酬なし)。
 const economyConfig = EconomyConfig(
-  maxLives: 5,
-  lifeRegenInterval: Duration(minutes: 30),
-  winReward: 10,
+  maxLives: 8,
+  lifeRegenInterval: Duration(minutes: 15),
+  winReward: 20,
   boosterCosts: {extraTubeBooster: 40, hintBooster: 20},
 );
+
+/// 星が1つ増えるごとのコイン。
+const starBonus = 5;
+
+/// クリア報酬(固定のみ。確率報酬なし)。
+/// 初回クリアは、基本額(`winReward`)+(星-1)×[starBonus]。
+/// 2回目以降は、星が増えた分だけ×[starBonus](同じ星で繰り返しても増えない)。
+int clearReward({
+  required bool firstClear,
+  required int previousStars,
+  required int newStars,
+}) {
+  if (firstClear) {
+    return economyConfig.winReward + (newStars - 1).clamp(0, 2) * starBonus;
+  }
+  return (newStars - previousStars).clamp(0, 3) * starBonus;
+}
 
 /// アプリ全体の状態(レベルパック・進行・ライフとコイン)。
 class AppState extends ChangeNotifier {
@@ -119,25 +136,26 @@ class AppState extends ChangeNotifier {
   /// 順番にだけ進める(現在レベルまで遊べる)。
   bool isUnlocked(int index) => index <= progress.currentLevelIndex;
 
-  /// クリアを記録する。初回クリアのみ固定報酬を返す(2回目以降は0)。
+  /// クリアを記録し、得たコインを返す(`clearReward`。星が増えない繰り返しは0)。
   Future<int> recordWin(
     int index, {
     required int moves,
     required int stars,
   }) async {
     final id = pack.levels[index].id;
-    final first = !progress.recordOf(id).cleared;
+    final before = progress.recordOf(id);
     progress = progress.recordWin(
       id,
       stars: stars,
       moves: moves,
       levelIndex: index,
     );
-    var reward = 0;
-    if (first) {
-      reward = economyConfig.winReward;
-      _eco = economy.addCoins(current, reward);
-    }
+    final reward = clearReward(
+      firstClear: !before.cleared,
+      previousStars: before.stars,
+      newStars: stars,
+    );
+    if (reward > 0) _eco = economy.addCoins(current, reward);
     notifyListeners();
     await _progressStore.save(progress);
     await _saveEconomy();

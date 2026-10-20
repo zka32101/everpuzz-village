@@ -20,8 +20,8 @@ Future<AppState> richApp(WidgetTester tester, {HintSolver? hintSolver}) async {
   final app =
       await tester.runAsync(() => loadApp(hintSolver: hintSolver)) as AppState;
   await tester.runAsync(() async {
-    for (var i = 0; i < 4; i++) {
-      await app.recordWin(i, moves: 7, stars: 3); // コイン40
+    for (var i = 0; i < 2; i++) {
+      await app.recordWin(i, moves: 7, stars: 1); // コイン40
     }
   });
   return app;
@@ -142,8 +142,8 @@ void main() {
       final app =
           await tester.runAsync(() => loadApp(telemetry: tel)) as AppState;
       await tester.runAsync(() async {
-        for (var i = 0; i < 4; i++) {
-          await app.recordWin(i, moves: 7, stars: 3);
+        for (var i = 0; i < 2; i++) {
+          await app.recordWin(i, moves: 7, stars: 1);
         }
       });
       await tester.binding.setSurfaceSize(const Size(900, 1600));
