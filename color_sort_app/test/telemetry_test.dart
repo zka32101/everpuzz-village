@@ -28,6 +28,7 @@ Future<void> tapMoves(WidgetTester tester, Iterable<Move> moves) async {
 List<String> names(MemoryTelemetry t) => [for (final e in t.events) e.name];
 
 void main() {
+  townTelemetryTests();
   testWidgets('開始→クリアで level_start / level_win(手数つき)が出る', (tester) async {
     final tel = MemoryTelemetry();
     final app =
@@ -97,5 +98,38 @@ void main() {
     TestWidgetsFlutterBinding.ensureInitialized();
     final app = await loadApp();
     expect(app.telemetry, isA<NoopTelemetry>());
+  });
+}
+
+void townTelemetryTests() {
+  test('町の操作・贈り物・購入が計測される(個人を特定する値なし)', () async {
+    final tel = MemoryTelemetry();
+    final kv = MemoryKeyValueStore();
+    final clock = FakeClock(DateTime.utc(2026, 1, 1, 12));
+    await VersionedJsonStore(kv).save(
+        AppState.economyKey,
+        AppState.economySchema,
+        EconomyState.initial(economyConfig, clock.now())
+            .copyWith(coins: 200)
+            .toJson());
+    final app = await loadApp(kv: kv, clock: clock, telemetry: tel);
+    await app.placeBuilding('small_house', 0);
+    await app.upgradeBuilding('small_house');
+    await app.moveBuilding('small_house', 2);
+    await app.claimGift();
+    expect(
+        names(tel), ['town_place', 'town_upgrade', 'town_move', 'town_gift']);
+    expect(tel.events[0].params, {
+      'buildingId': 'small_house',
+      'stage': 1,
+      'cost': 15,
+      'clearedLevels': 0,
+    });
+    expect(tel.events[1].params['stage'], 2);
+    // 失敗(コイン不足)では計測しない
+    await app.upgradeBuilding('small_house'); // 35 まだ足りる
+    final before = tel.events.length;
+    await app.upgradeBuilding('small_house'); // 最大段階
+    expect(tel.events.length, before);
   });
 }

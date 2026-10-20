@@ -72,3 +72,6 @@ flutter run
 - 「町の贈り物」は1日1回(端末の日付)。連続しなくても受け取れ、罰はない。
 - こびとは合計段階6ごとに1人(最大10人)。いまはアイコンの表示のみ。歩く動きなどの演出は素材が届いてから。
 - 完成(20種そろう)・満開(全部が最終段階)の知らせは、それぞれ1回だけ。
+
+### 計測(町・購入)
+`town_place` / `town_upgrade` / `town_move`(buildingId, stage, cost, clearedLevels)、`town_gift`、`purchase`(productId)。個人を特定する値は送らない。実体(analytics)は後から差し込む。
