@@ -181,6 +181,9 @@ class AppState extends ChangeNotifier {
 
     /// テスト用。商品カタログを差し替える。
     ShopCatalog? catalogOverride,
+
+    /// テスト用。画像素材の一覧を差し替える(省略時は同梱の画像を読む)。
+    ArtCatalog? artOverride,
   }) async {
     final raw = await (bundle ?? rootBundle).loadString(packAsset);
     final pack = LevelPack.fromJson(jsonDecode(raw) as Map<String, Object?>);
@@ -213,7 +216,7 @@ class AppState extends ChangeNotifier {
         pack.levels.where((l) => progress.recordOf(l.id).cleared).length;
     return AppState(
       townConfig: townConfig,
-      art: await ArtCatalog.load(b),
+      art: artOverride ?? await ArtCatalog.load(b),
       townState: await TownStore(kv, townConfig,
               cellLimit: TownRules(townConfig).cellCount(clearedNow))
           .load(),

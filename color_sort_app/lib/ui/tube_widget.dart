@@ -19,6 +19,7 @@ class TubeWidget extends StatelessWidget {
     required this.selected,
     required this.onTap,
     this.hintRole = HintRole.none,
+    this.useArt = false,
   });
 
   final int index;
@@ -29,16 +30,29 @@ class TubeWidget extends StatelessWidget {
   final VoidCallback onTap;
   final HintRole hintRole;
 
+  /// 容器の画像(tube_back / tube_front)で描く。無ければ従来の図形。
+  final bool useArt;
+
   static const unit = 46.0; // 1スロットの大きさ(44pt以上)
   static const pad = 4.0;
   static const badgeHeight = 28.0;
   static const border = 3.0; // 選択時の枠線の太さ(最大)を常に見込む
 
+  // 容器画像(256x640)。ガラスの内側は縦は約88%・横は約59%なので、
+  // 色玉の積み(unit x capacity)がちょうど収まる大きさに合わせて描く。
+  static const _artGlassHeight = 0.88;
+  static const _artAspect = 256 / 640;
+  static const _artBottom = 0.04; // 下の余白(高さに対する割合)
+
   @override
   Widget build(BuildContext context) {
     final t = L10n.of(context);
     final scheme = Theme.of(context).colorScheme;
-    final height = unit * ColorSortRules.capacity + pad * 2 + border * 2;
+    final artHeight = unit * ColorSortRules.capacity / _artGlassHeight; // 画像の高さ
+    final artWidth = artHeight * _artAspect;
+    final height = useArt
+        ? artHeight + border * 2
+        : unit * ColorSortRules.capacity + pad * 2 + border * 2;
     final done = ColorSortRules.isDone(tube);
     final label = [
       t.tr('tube', {'n': index + 1}),
@@ -82,35 +96,53 @@ class TubeWidget extends StatelessWidget {
             ),
             AnimatedContainer(
               duration: const Duration(milliseconds: 120),
-              width: unit + pad * 2 + border * 2,
+              width:
+                  useArt ? artWidth + border * 2 : unit + pad * 2 + border * 2,
               height: height,
               margin: EdgeInsets.only(
                   bottom: selected ? 14 : 0, top: selected ? 0 : 14),
               decoration: BoxDecoration(
-                color: scheme.surfaceContainerHighest,
+                color: useArt ? null : scheme.surfaceContainerHighest,
                 border: Border.all(
                   color: selected
                       ? scheme.primary
                       : hintRole != HintRole.none
                           ? scheme.tertiary
-                          : scheme.outline,
+                          // 画像の容器は縁が絵に含まれるので、枠は選択・ヒントの時だけ。
+                          : useArt
+                              ? Colors.transparent
+                              : scheme.outline,
                   width: selected || hintRole != HintRole.none ? 3 : 1.5,
                 ),
-                borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(6), bottom: Radius.circular(unit / 2)),
+                borderRadius: BorderRadius.vertical(
+                    top: const Radius.circular(6),
+                    bottom: Radius.circular(unit / 2)),
               ),
               child: Stack(
                 alignment: Alignment.bottomCenter,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(pad),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        for (final c in tube.reversed) UnitChip(color: c),
-                      ],
+                  if (useArt) ...[
+                    Positioned.fill(child: _art('tube_back')),
+                    Padding(
+                      padding: EdgeInsets.only(bottom: artHeight * _artBottom),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          for (final c in tube.reversed) UnitChip(color: c),
+                        ],
+                      ),
                     ),
-                  ),
+                    Positioned.fill(child: _art('tube_front')),
+                  ] else
+                    Padding(
+                      padding: const EdgeInsets.all(pad),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          for (final c in tube.reversed) UnitChip(color: c),
+                        ],
+                      ),
+                    ),
                   if (done)
                     Positioned(
                       top: 2,
@@ -129,6 +161,12 @@ class TubeWidget extends StatelessWidget {
 }
 
 /// 色玉1つ。塗り・記号・数字(色番号+1)。
+Widget _art(String id) => Image.asset(
+      'packages/color_sort/assets/art/$id.png',
+      fit: BoxFit.fill,
+      excludeFromSemantics: true,
+    );
+
 class UnitChip extends StatelessWidget {
   const UnitChip({super.key, required this.color});
 

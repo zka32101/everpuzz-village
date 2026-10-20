@@ -167,6 +167,7 @@ class _TownScreenState extends State<TownScreen> {
   Widget _cell(BuildContext context, Translator t, int cell) {
     final p = app.townState.at(cell);
     final scheme = Theme.of(context).colorScheme;
+    final hasArt = p != null && app.art.has('${p.buildingId}_s${p.stage}');
     final label = p == null
         ? t.tr('townEmptyCell')
         : '${_name(t, p.buildingId)}, ${t.tr('stageOf', {'n': p.stage})}';
@@ -175,9 +176,12 @@ class _TownScreenState extends State<TownScreen> {
       label: label,
       child: ExcludeSemantics(
         child: Material(
-          color: p == null
-              ? scheme.surfaceContainerHighest
-              : _color(context, app.townConfig.byId(p.buildingId)!.category),
+          color: hasArt
+              ? Colors.transparent
+              : p == null
+                  ? scheme.surfaceContainerHighest
+                  : _color(
+                      context, app.townConfig.byId(p.buildingId)!.category),
           borderRadius: BorderRadius.circular(12),
           child: InkWell(
             key: Key('cell-$cell'),
@@ -341,74 +345,88 @@ class _TownScreenState extends State<TownScreen> {
             ),
         ],
       ),
-      body: ListenableBuilder(
-        listenable: app,
-        builder: (context, _) {
-          final cells = app.townRules.cellCount(app.clearedLevels);
-          return Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                child: EconomyBar(app: app),
-              ),
-              _extras(context, t),
-              if (_moving != null)
-                MaterialBanner(
-                  key: const Key('moveBanner'),
-                  content: Text(t.tr('moveHint')),
-                  actions: [
-                    TextButton(
-                      style:
-                          TextButton.styleFrom(minimumSize: const Size(48, 48)),
-                      onPressed: () => setState(() => _moving = null),
-                      child: Text(t.tr('cancel')),
-                    ),
-                  ],
+      body: DecoratedBox(
+        decoration: BoxDecoration(
+          image: app.art.has('bg_stage_01')
+              ? const DecorationImage(
+                  image: AssetImage(
+                      'packages/color_sort/assets/art/bg_stage_01.png'),
+                  fit: BoxFit.cover,
+                  colorFilter:
+                      ColorFilter.mode(Color(0x66FFFFFF), BlendMode.srcOver),
+                )
+              : null,
+        ),
+        child: ListenableBuilder(
+          listenable: app,
+          builder: (context, _) {
+            final cells = app.townRules.cellCount(app.clearedLevels);
+            return Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                  child: EconomyBar(app: app),
                 ),
-              Expanded(
-                child: GridView.builder(
-                  key: const Key('townGrid'),
-                  padding: const EdgeInsets.all(16),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: _columns,
-                    mainAxisSpacing: 8,
-                    crossAxisSpacing: 8,
+                _extras(context, t),
+                if (_moving != null)
+                  MaterialBanner(
+                    key: const Key('moveBanner'),
+                    content: Text(t.tr('moveHint')),
+                    actions: [
+                      TextButton(
+                        style: TextButton.styleFrom(
+                            minimumSize: const Size(48, 48)),
+                        onPressed: () => setState(() => _moving = null),
+                        child: Text(t.tr('cancel')),
+                      ),
+                    ],
                   ),
-                  itemCount: cells,
-                  itemBuilder: (context, i) => _cell(context, t, i),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: FilledButton(
-                        key: const Key('play'),
-                        style: FilledButton.styleFrom(
-                            minimumSize: const Size(48, 52)),
-                        onPressed: _play,
-                        child: Text(t.tr('play')),
-                      ),
+                Expanded(
+                  child: GridView.builder(
+                    key: const Key('townGrid'),
+                    padding: const EdgeInsets.all(16),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: _columns,
+                      mainAxisSpacing: 8,
+                      crossAxisSpacing: 8,
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: OutlinedButton(
-                        key: const Key('chooseLevel'),
-                        style: OutlinedButton.styleFrom(
-                            minimumSize: const Size(48, 52)),
-                        onPressed: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (_) => LevelSelectScreen(app: app))),
-                        child: Text(t.tr('chooseLevel')),
-                      ),
-                    ),
-                  ],
+                    itemCount: cells,
+                    itemBuilder: (context, i) => _cell(context, t, i),
+                  ),
                 ),
-              ),
-            ],
-          );
-        },
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: FilledButton(
+                          key: const Key('play'),
+                          style: FilledButton.styleFrom(
+                              minimumSize: const Size(48, 52)),
+                          onPressed: _play,
+                          child: Text(t.tr('play')),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: OutlinedButton(
+                          key: const Key('chooseLevel'),
+                          style: OutlinedButton.styleFrom(
+                              minimumSize: const Size(48, 52)),
+                          onPressed: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (_) => LevelSelectScreen(app: app))),
+                          child: Text(t.tr('chooseLevel')),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }

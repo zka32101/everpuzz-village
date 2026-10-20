@@ -1,4 +1,5 @@
 import 'package:color_sort_app/game/app_state.dart';
+import 'package:color_sort_app/game/art.dart';
 import 'package:color_sort_app/game/hint.dart';
 import 'package:color_sort_app/game/purchases.dart';
 import 'package:color_sort_app/main.dart';
@@ -15,6 +16,7 @@ Future<AppState> loadApp({
   HintSolver? hintSolver,
   PurchaseGate? purchaseGate,
   ShopCatalog? catalogOverride,
+  ArtCatalog? art,
 }) {
   return AppState.load(
     kv ?? MemoryKeyValueStore(),
@@ -23,6 +25,8 @@ Future<AppState> loadApp({
     adGate: adGate,
     purchaseGate: purchaseGate,
     catalogOverride: catalogOverride,
+    // 既定は画像なし(図形+文字の表示を検査する)。実画像は art: で渡す。
+    artOverride: art ?? ArtCatalog.empty,
     telemetry: telemetry ?? const NoopTelemetry(),
     // テストでは isolate を使わず同期で解く。
     hintSolver: hintSolver ?? (b) async => solveHint(b),
