@@ -248,7 +248,8 @@ class _PlayScreenState extends State<PlayScreen> {
   }) {
     const spacing = 12.0;
     var unit = TubeWidget.defaultUnit;
-    while (unit > TubeWidget.minUnit) {
+    final minUnit = TubeWidget.minUnitFor(useArt: useArt);
+    while (unit > minUnit) {
       final w = TubeWidget.widthFor(unit, useArt: useArt);
       final perRow =
           ((maxWidth + spacing) / (w + spacing)).floor().clamp(1, count);
@@ -257,7 +258,7 @@ class _PlayScreenState extends State<PlayScreen> {
       if (rows * h + (rows - 1) * spacing <= maxHeight) return unit;
       unit -= 1;
     }
-    return TubeWidget.minUnit;
+    return minUnit;
   }
 
   /// 先に手を探し、見つかったときだけコインを払う(見つからなければ課金しない)。
@@ -279,11 +280,9 @@ class _PlayScreenState extends State<PlayScreen> {
     if (!await widget.app.buyHint() || !mounted) return;
     widget.app.telemetry
         .log(TelemetryEvent.boosterUsed(_level.id, hintBooster));
+    // 読み上げ・色以外の手がかりとして、文でも示す(盤面の下のひとこと欄。
+    // スナックバーだと下のボタンを隠すので使わない)。
     game.showHint(move);
-    // 読み上げ・色以外の手がかりとして、文でも示す。
-    messenger.showSnackBar(SnackBar(
-      content: Text(t.tr('hintText', {'from': move.$1 + 1, 'to': move.$2 + 1})),
-    ));
   }
 
   Future<void> _buyExtraTube() async {
@@ -317,6 +316,9 @@ class _Message extends StatelessWidget {
     String? text;
     if (game.stuck) {
       text = t.tr(lifeLost ? 'stuckLifeLost' : 'stuck');
+    } else if (game.hint != null) {
+      final h = game.hint!;
+      text = t.tr('hintText', {'from': h.$1 + 1, 'to': h.$2 + 1});
     } else if (game.lastError != null) {
       text = t.tr(switch (game.lastError!) {
         MoveError.locked => 'errLocked',

@@ -48,6 +48,12 @@ class TubeWidget extends StatelessWidget {
 
   static const defaultUnit = 46.0; // 1スロットの標準の大きさ(44pt以上)
   static const minUnit = 30.0; // 画面に収めるときの下限(これ以上は縮めない)
+
+  /// 画像の容器は幅が広がる(約1.8倍)ので、下限を少し小さくして、横に並ぶ本数を増やせる
+  /// ようにする(幅は 53 以上で、タップの大きさ 44 を保つ)。
+  static const minUnitArt = 26.0;
+  static double minUnitFor({required bool useArt}) =>
+      useArt ? minUnitArt : minUnit;
   static const pad = 4.0;
   static const badgeHeight = 28.0;
   static const border = 3.0; // 選択時の枠線の太さ(最大)を常に見込む
@@ -113,102 +119,109 @@ class TubeWidget extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         behavior: HitTestBehavior.opaque,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // 特殊容器の種類は容器の上のバッジで示す(中身に重ねない)。
-            SizedBox(
-              height: badgeHeight,
-              child: hintRole != HintRole.none
-                  ? Center(
-                      child: FittedBox(
-                        child: Text(
-                          t.tr(hintRole == HintRole.from
-                              ? 'hintFrom'
-                              : 'hintTo'),
-                          key: Key('hint-${hintRole.name}'),
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: scheme.tertiary,
+        // 容器の幅に固定する。ヒントの文字(「ここから」など)で幅が広がると、
+        // その容器だけ段から押し出されて、他の容器が画面の外に出てしまうため。
+        child: SizedBox(
+          width: TubeWidget.widthFor(unit, useArt: useArt),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // 特殊容器の種類は容器の上のバッジで示す(中身に重ねない)。
+              SizedBox(
+                height: badgeHeight,
+                child: hintRole != HintRole.none
+                    ? Center(
+                        child: FittedBox(
+                          child: Text(
+                            t.tr(hintRole == HintRole.from
+                                ? 'hintFrom'
+                                : 'hintTo'),
+                            key: Key('hint-${hintRole.name}'),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: scheme.tertiary,
+                            ),
                           ),
                         ),
-                      ),
-                    )
-                  : lock != null && !usable
-                      ? LockBadge(lock: lock!)
-                      : null,
-            ),
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 120),
-              width:
-                  useArt ? artWidth + border * 2 : unit + pad * 2 + border * 2,
-              height: height,
-              margin: EdgeInsets.only(
-                  bottom: selected ? 14 : 0, top: selected ? 0 : 14),
-              decoration: BoxDecoration(
-                color: useArt ? null : scheme.surfaceContainerHighest,
-                border: Border.all(
-                  color: selected
-                      ? scheme.primary
-                      : hintRole != HintRole.none
-                          ? scheme.tertiary
-                          // 画像の容器は縁が絵に含まれるので、枠は選択・ヒントの時だけ。
-                          : useArt
-                              ? Colors.transparent
-                              : scheme.outline,
-                  width: selected || hintRole != HintRole.none ? 3 : 1.5,
+                      )
+                    : lock != null && !usable
+                        ? LockBadge(lock: lock!)
+                        : null,
+              ),
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 120),
+                width: useArt
+                    ? artWidth + border * 2
+                    : unit + pad * 2 + border * 2,
+                height: height,
+                margin: EdgeInsets.only(
+                    bottom: selected ? 14 : 0, top: selected ? 0 : 14),
+                decoration: BoxDecoration(
+                  color: useArt ? null : scheme.surfaceContainerHighest,
+                  border: Border.all(
+                    color: selected
+                        ? scheme.primary
+                        : hintRole != HintRole.none
+                            ? scheme.tertiary
+                            // 画像の容器は縁が絵に含まれるので、枠は選択・ヒントの時だけ。
+                            : useArt
+                                ? Colors.transparent
+                                : scheme.outline,
+                    width: selected || hintRole != HintRole.none ? 3 : 1.5,
+                  ),
+                  borderRadius: BorderRadius.vertical(
+                      top: const Radius.circular(6),
+                      bottom: Radius.circular(unit / 2)),
                 ),
-                borderRadius: BorderRadius.vertical(
-                    top: const Radius.circular(6),
-                    bottom: Radius.circular(unit / 2)),
-              ),
-              child: Stack(
-                alignment: Alignment.bottomCenter,
-                children: [
-                  if (useArt) ...[
-                    Positioned.fill(child: _art(_id('tube_back'))),
-                    Padding(
-                      padding: EdgeInsets.only(bottom: artHeight * _artBottom),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          for (final c in tube.reversed)
-                            UnitChip(
-                                color: c,
-                                unit: unit,
-                                ball: art.ballId(theme, c)),
-                        ],
+                child: Stack(
+                  alignment: Alignment.bottomCenter,
+                  children: [
+                    if (useArt) ...[
+                      Positioned.fill(child: _art(_id('tube_back'))),
+                      Padding(
+                        padding:
+                            EdgeInsets.only(bottom: artHeight * _artBottom),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            for (final c in tube.reversed)
+                              UnitChip(
+                                  color: c,
+                                  unit: unit,
+                                  ball: art.ballId(theme, c)),
+                          ],
+                        ),
                       ),
-                    ),
-                    Positioned.fill(child: _art(_id('tube_front'))),
-                  ] else
-                    Padding(
-                      padding: const EdgeInsets.all(pad),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          for (final c in tube.reversed)
-                            UnitChip(
-                                color: c,
-                                unit: unit,
-                                ball: art.ballId(theme, c)),
-                        ],
+                      Positioned.fill(child: _art(_id('tube_front'))),
+                    ] else
+                      Padding(
+                        padding: const EdgeInsets.all(pad),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            for (final c in tube.reversed)
+                              UnitChip(
+                                  color: c,
+                                  unit: unit,
+                                  ball: art.ballId(theme, c)),
+                          ],
+                        ),
                       ),
-                    ),
-                  if (done && art.has(_id('tube_done')))
-                    Positioned.fill(
-                        child: IgnorePointer(child: _art(_id('tube_done')))),
-                  if (done)
-                    Positioned(
-                      top: 2,
-                      child: Icon(Icons.check_circle,
-                          size: 16, color: scheme.primary),
-                    ),
-                  if (lock != null && !usable) _lockCover(),
-                ],
+                    if (done && art.has(_id('tube_done')))
+                      Positioned.fill(
+                          child: IgnorePointer(child: _art(_id('tube_done')))),
+                    if (done)
+                      Positioned(
+                        top: 2,
+                        child: Icon(Icons.check_circle,
+                            size: 16, color: scheme.primary),
+                      ),
+                    if (lock != null && !usable) _lockCover(),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -245,39 +258,42 @@ class UnitChip extends StatelessWidget {
       height: unit,
       child: Padding(
         padding: const EdgeInsets.all(2),
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            if (ball != null)
-              Image.asset(
-                ArtCatalog.assetOf(ball!),
-                fit: BoxFit.contain,
-                excludeFromSemantics: true,
-                // 読み込めない時は、塗りの図形に戻す。
-                errorBuilder: (_, __, ___) =>
-                    CustomPaint(painter: _UnitPainter(style, drawFill: true)),
-              ),
-            CustomPaint(
-              painter: _UnitPainter(style, drawFill: ball == null),
-              child: Align(
-                alignment: Alignment.bottomRight,
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 3, bottom: 1),
-                  child: FittedBox(
+        child: LayoutBuilder(builder: (context, box) {
+          // 数字は玉の大きさに合わせて縮め、右下に収める(記号は左上に寄せて重ねない)。
+          final numberSize = (box.maxHeight * 0.3).clamp(8.0, 14.0);
+          return Stack(
+            fit: StackFit.expand,
+            children: [
+              if (ball != null)
+                Image.asset(
+                  ArtCatalog.assetOf(ball!),
+                  fit: BoxFit.contain,
+                  excludeFromSemantics: true,
+                  // 読み込めない時は、塗りの図形に戻す。
+                  errorBuilder: (_, __, ___) =>
+                      CustomPaint(painter: _UnitPainter(style, drawFill: true)),
+                ),
+              CustomPaint(
+                painter: _UnitPainter(style, drawFill: ball == null),
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 3, bottom: 1),
                     child: Text(
                       '${color + 1}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Color(symbolInk | 0xFF000000),
                         fontWeight: FontWeight.bold,
-                        fontSize: 12,
+                        fontSize: numberSize,
+                        height: 1,
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
-        ),
+            ],
+          );
+        }),
       ),
     );
   }
@@ -300,11 +316,12 @@ class _UnitPainter extends CustomPainter {
         Paint()..color = Color(style.fill | 0xFF000000),
       );
     }
+    // 記号は左上に寄せる(右下は数字の場所)。
     final symbolRect = Rect.fromLTWH(
-      size.width * 0.2,
-      size.height * 0.1,
-      size.width * 0.6,
-      size.height * 0.6,
+      size.width * 0.14,
+      size.height * 0.08,
+      size.width * 0.58,
+      size.height * 0.58,
     );
     final path = symbolPath(style.symbol, symbolRect);
     if (!drawFill) {

@@ -568,9 +568,10 @@ class _TownScreenState extends State<TownScreen> {
                       ),
                       const SizedBox(width: 12),
                       Expanded(
-                        child: OutlinedButton(
+                        // 背景の絵の上でも読めるよう、塗りのあるボタンにする。
+                        child: FilledButton.tonal(
                           key: const Key('chooseLevel'),
-                          style: OutlinedButton.styleFrom(
+                          style: FilledButton.styleFrom(
                               minimumSize: const Size(48, 52)),
                           onPressed: () => Navigator.of(context).push(
                               MaterialPageRoute(
