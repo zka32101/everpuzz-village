@@ -45,6 +45,7 @@ class TownStore {
         seenUnlocked: (j['seenUnlocked'] as int?) ?? 1,
         completeShown: (j['completeShown'] as bool?) ?? false,
         bloomShown: (j['bloomShown'] as bool?) ?? false,
+        seenSeasons: (j['seenSeasons'] as int?) ?? 0,
       );
     } on Object {
       return TownState.empty;

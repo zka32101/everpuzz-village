@@ -27,6 +27,17 @@ class BuildingDef {
   int upgradeCost(int stage) => costs[stage];
 }
 
+/// 季節(ステージ)ごとの資材。演出と文言だけで、経済(コイン)には関係しない。
+class SeasonDef {
+  const SeasonDef({required this.theme, required this.materials});
+
+  /// 面のテーマID(spring / autumn / winter / summer / sakura)。
+  final String theme;
+
+  /// 資材のID(名前は l10n の `material.<id>`、画像は `material_<id>`)。
+  final List<String> materials;
+}
+
 /// 町の設定。
 class TownConfig {
   const TownConfig({
@@ -37,6 +48,8 @@ class TownConfig {
     required this.pointsPerDweller,
     required this.maxDwellers,
     required this.buildings,
+    this.levelsPerSeason = 12,
+    this.seasons = const [],
   });
 
   final int columns;
@@ -55,6 +68,10 @@ class TownConfig {
   final int maxDwellers;
   final List<BuildingDef> buildings;
 
+  /// 何面ごとに季節が変わるか。
+  final int levelsPerSeason;
+  final List<SeasonDef> seasons;
+
   factory TownConfig.fromJson(String raw) {
     final m = jsonDecode(raw) as Map<String, Object?>;
     final grid = m['grid'] as Map<String, Object?>;
@@ -66,6 +83,15 @@ class TownConfig {
       dailyGift: m['dailyGift'] as int,
       pointsPerDweller: dw['pointsPerDweller'] as int,
       maxDwellers: dw['max'] as int,
+      levelsPerSeason: (m['levelsPerSeason'] as int?) ?? 12,
+      seasons: [
+        for (final e in ((m['seasons'] as List?) ?? const [])
+            .cast<Map<String, Object?>>())
+          SeasonDef(
+            theme: e['theme'] as String,
+            materials: (e['materials'] as List).cast<String>(),
+          ),
+      ],
       buildings: [
         for (final b in (m['buildings'] as List).cast<Map<String, Object?>>())
           BuildingDef(
@@ -116,6 +142,10 @@ class TownConfig {
     }
     if (columns <= 0 || maxCells % columns != 0) {
       issues.add('マス数は列数の倍数にする');
+    }
+    if (levelsPerSeason <= 0) issues.add('季節の面数は正の数');
+    for (final e in seasons) {
+      if (e.materials.isEmpty) issues.add('${e.theme}: 資材がない');
     }
     if (spareCells < 0 || dailyGift < 0 || pointsPerDweller <= 0) {
       issues.add('設定値が不正');

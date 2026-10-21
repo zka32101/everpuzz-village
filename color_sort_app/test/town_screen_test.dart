@@ -24,6 +24,7 @@ Future<AppState> appWithCoins(WidgetTester tester, int coins) async {
 }
 
 void main() {
+  seasonTests();
   walkerTests();
   stageArtTests();
   realArtTests();
@@ -359,5 +360,65 @@ void walkerTests() {
     final app = await appWithCoins(tester, 2000);
     await tester.pumpWidget(appWidget(app, town: true));
     expect(find.byKey(const Key('dwellerLayer')), findsNothing);
+  });
+}
+
+void seasonTests() {
+  testWidgets('置く・育てると、いまの季節の資材を添えたひとことが出る', (tester) async {
+    final app = await appWithCoins(tester, 200);
+    await tester.pumpWidget(appWidget(app, town: true));
+    await tester.tap(find.byKey(const Key('cell-0')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('place_small_house')));
+    await tester.pumpAndSettle();
+    // 1〜12面は若草: 木材・わら・つた のうち2つ
+    expect(find.textContaining('Placed Small house'), findsOneWidget);
+    expect(find.textContaining(RegExp('wood|straw|ivy')), findsWidgets);
+    await tester.tap(find.byKey(const Key('cell-0')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('upgrade')));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Grew Small house with'), findsOneWidget);
+  });
+
+  test('資材は建物と段階で決まり、季節の資材から2つ', () async {
+    final base = await loadApp();
+    for (final id in ['small_house', 'bench']) {
+      for (final st in [1, 2, 3]) {
+        final m = base.materialsFor(id, st);
+        expect(m, hasLength(2));
+        expect(m.toSet(), hasLength(2));
+        expect(base.currentSeason!.materials, containsAll(m));
+        expect(base.materialsFor(id, st), m); // 同じ入力なら同じ
+      }
+    }
+  });
+
+  testWidgets('季節を終えると飾りが届き(知らせは1回)、飾りの帯に並ぶ', (tester) async {
+    final app = await appWithCoins(tester, 0);
+    await tester.pumpWidget(appWidget(app, town: true));
+    expect(find.byKey(const Key('newSeasonObject')), findsNothing);
+    expect(find.byKey(const Key('seasonStrip')), findsNothing);
+    for (var i = 0; i < 12; i++) {
+      await tester.runAsync(() => app.recordWin(i, moves: 10, stars: 1));
+    }
+    await tester.pumpAndSettle();
+    // 新しい建物の知らせが先、その後に季節の飾りの知らせ(1度に1枚だけ)
+    expect(find.byKey(const Key('newBuilding')), findsOneWidget);
+    expect(find.byKey(const Key('newSeasonObject')), findsNothing);
+    await tester.tap(find.descendant(
+        of: find.byKey(const Key('newBuilding')),
+        matching: find.byType(TextButton)));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('newSeasonObject')), findsOneWidget);
+    expect(find.byKey(const Key('seasonStrip')), findsOneWidget);
+    expect(find.byKey(const Key('season-spring')), findsOneWidget);
+    await tester.tap(find.descendant(
+        of: find.byKey(const Key('newSeasonObject')),
+        matching: find.byType(TextButton)));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('newSeasonObject')), findsNothing);
+    expect(app.seasonsDone, 1);
+    expect(app.newSeasonObjects, isEmpty);
   });
 }

@@ -221,6 +221,32 @@ void main() {
     expect(rules.shouldShowBloom(s.copyWith(bloomShown: true)), isFalse);
   });
 
+  test('季節: 12面ごとに季節が替わり、終えるごとに飾りが1つ贈られる(知らせは1回)', () {
+    expect(config.seasons.map((e) => e.theme),
+        ['spring', 'autumn', 'winter', 'summer', 'sakura']);
+    expect(config.validate(levelCount: 60), isEmpty);
+    expect(rules.seasonAt(0)!.theme, 'spring');
+    expect(rules.seasonAt(12)!.theme, 'autumn');
+    expect(rules.seasonAt(59)!.theme, 'sakura');
+    expect(rules.seasonAt(999)!.theme, 'sakura');
+    expect(rules.seasonsDone(11), 0);
+    expect(rules.seasonsDone(12), 1);
+    expect(rules.seasonsDone(60), 5);
+    expect(rules.seasonsDone(999), 5);
+    var s = empty;
+    expect(rules.newSeasonObjects(s, 11), isEmpty);
+    expect(rules.newSeasonObjects(s, 25), [0, 1]);
+    s = rules.markSeasonsSeen(s, 25);
+    expect(rules.newSeasonObjects(s, 25), isEmpty);
+    expect(rules.newSeasonObjects(s, 36), [2]);
+  });
+
+  test('資材は季節ごとに3つ。IDの重複なし(名前は l10n、画像は material_<ID>)', () {
+    final all = [for (final e in config.seasons) ...e.materials];
+    expect(all, hasLength(15));
+    expect(all.toSet(), hasLength(15));
+  });
+
   group('保存', () {
     test('往復できる', () async {
       final kv = MemoryKeyValueStore();
@@ -241,6 +267,9 @@ void main() {
       final again = await store.load();
       expect(again.seenUnlocked, 4);
       expect(again.completeShown, isTrue);
+      final withSeasons = rules.markSeasonsSeen(again, 25);
+      await store.save(withSeasons);
+      expect((await store.load()).seenSeasons, 2);
     });
 
     test('未保存・破損・将来版は空の町', () async {

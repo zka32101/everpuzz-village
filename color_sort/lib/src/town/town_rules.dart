@@ -51,6 +51,28 @@ class TownRules {
   TownState markUnlocksSeen(TownState s, int clearedLevels) =>
       s.copyWith(seenUnlocked: unlocked(clearedLevels).length);
 
+  /// 終えた季節の数(季節を終えるごとに「季節の飾り」が1つ贈られる)。最大は季節の数。
+  int seasonsDone(int clearedLevels) => config.seasons.isEmpty
+      ? 0
+      : (clearedLevels ~/ config.levelsPerSeason)
+          .clamp(0, config.seasons.length);
+
+  /// まだ知らせていない新しい季節の飾り(季節の番号。0始まり)。
+  List<int> newSeasonObjects(TownState s, int clearedLevels) => [
+        for (var i = s.seenSeasons; i < seasonsDone(clearedLevels); i++) i,
+      ];
+
+  TownState markSeasonsSeen(TownState s, int clearedLevels) =>
+      s.copyWith(seenSeasons: seasonsDone(clearedLevels));
+
+  /// いま遊んでいる面(0始まり)の季節。範囲外は最後の季節。
+  SeasonDef? seasonAt(int levelIndex) {
+    if (config.seasons.isEmpty) return null;
+    final i = (levelIndex ~/ config.levelsPerSeason)
+        .clamp(0, config.seasons.length - 1);
+    return config.seasons[i];
+  }
+
   /// 使えるマス数。解放数+空き、最大 [TownConfig.maxCells]。
   int cellCount(int clearedLevels) =>
       (unlocked(clearedLevels).length + config.spareCells)

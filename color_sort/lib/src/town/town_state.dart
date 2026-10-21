@@ -26,6 +26,7 @@ class TownState {
     this.seenUnlocked = 1,
     this.completeShown = false,
     this.bloomShown = false,
+    this.seenSeasons = 0,
   });
 
   /// 置いた建物(各建物は最大1つ)。
@@ -40,6 +41,9 @@ class TownState {
   /// 「完成」「満開」の知らせを出した(1回だけ)。
   final bool completeShown;
   final bool bloomShown;
+
+  /// 知らせ済みの「季節の飾り」の数(季節を終えるごとに1つ贈る)。
+  final int seenSeasons;
 
   static const empty = TownState();
 
@@ -63,6 +67,7 @@ class TownState {
     int? seenUnlocked,
     bool? completeShown,
     bool? bloomShown,
+    int? seenSeasons,
   }) =>
       TownState(
         placements: placements ?? this.placements,
@@ -70,6 +75,7 @@ class TownState {
         seenUnlocked: seenUnlocked ?? this.seenUnlocked,
         completeShown: completeShown ?? this.completeShown,
         bloomShown: bloomShown ?? this.bloomShown,
+        seenSeasons: seenSeasons ?? this.seenSeasons,
       );
 
   Map<String, Object?> toJson() => {
@@ -81,5 +87,6 @@ class TownState {
         'seenUnlocked': seenUnlocked,
         'completeShown': completeShown,
         'bloomShown': bloomShown,
+        'seenSeasons': seenSeasons,
       };
 }

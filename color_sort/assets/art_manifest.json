@@ -1108,6 +1108,186 @@
    "transparent": true,
    "required": false,
    "note": "テーマ「桜」の色玉(色番号8)。色相は palette.dart の8番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
+  },
+  {
+   "id": "material_wood",
+   "path": "assets/art/material_wood.png",
+   "width": 128,
+   "height": 128,
+   "transparent": true,
+   "required": false,
+   "note": "資材「木材」(若草)。町の演出に使う小さな絵。文字は入れない"
+  },
+  {
+   "id": "material_straw",
+   "path": "assets/art/material_straw.png",
+   "width": 128,
+   "height": 128,
+   "transparent": true,
+   "required": false,
+   "note": "資材「わら」(若草)。町の演出に使う小さな絵。文字は入れない"
+  },
+  {
+   "id": "material_ivy",
+   "path": "assets/art/material_ivy.png",
+   "width": 128,
+   "height": 128,
+   "transparent": true,
+   "required": false,
+   "note": "資材「つた」(若草)。町の演出に使う小さな絵。文字は入れない"
+  },
+  {
+   "id": "season_spring",
+   "path": "assets/art/season_spring.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "季節の飾り(若草: 花かご)。季節を終えると町に1つ贈られる。建物と同じ縮尺・地面の線にそろえる"
+  },
+  {
+   "id": "material_chestnut",
+   "path": "assets/art/material_chestnut.png",
+   "width": 128,
+   "height": 128,
+   "transparent": true,
+   "required": false,
+   "note": "資材「栗」(秋)。町の演出に使う小さな絵。文字は入れない"
+  },
+  {
+   "id": "material_brick",
+   "path": "assets/art/material_brick.png",
+   "width": 128,
+   "height": 128,
+   "transparent": true,
+   "required": false,
+   "note": "資材「れんが」(秋)。町の演出に使う小さな絵。文字は入れない"
+  },
+  {
+   "id": "material_leaf",
+   "path": "assets/art/material_leaf.png",
+   "width": 128,
+   "height": 128,
+   "transparent": true,
+   "required": false,
+   "note": "資材「落ち葉」(秋)。町の演出に使う小さな絵。文字は入れない"
+  },
+  {
+   "id": "season_autumn",
+   "path": "assets/art/season_autumn.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "季節の飾り(秋: 落ち葉の山)。季節を終えると町に1つ贈られる。建物と同じ縮尺・地面の線にそろえる"
+  },
+  {
+   "id": "material_snow_block",
+   "path": "assets/art/material_snow_block.png",
+   "width": 128,
+   "height": 128,
+   "transparent": true,
+   "required": false,
+   "note": "資材「雪ブロック」(冬)。町の演出に使う小さな絵。文字は入れない"
+  },
+  {
+   "id": "material_ice",
+   "path": "assets/art/material_ice.png",
+   "width": 128,
+   "height": 128,
+   "transparent": true,
+   "required": false,
+   "note": "資材「氷」(冬)。町の演出に使う小さな絵。文字は入れない"
+  },
+  {
+   "id": "material_yarn",
+   "path": "assets/art/material_yarn.png",
+   "width": 128,
+   "height": 128,
+   "transparent": true,
+   "required": false,
+   "note": "資材「毛糸」(冬)。町の演出に使う小さな絵。文字は入れない"
+  },
+  {
+   "id": "season_winter",
+   "path": "assets/art/season_winter.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "季節の飾り(冬: 雪だるま)。季節を終えると町に1つ贈られる。建物と同じ縮尺・地面の線にそろえる"
+  },
+  {
+   "id": "material_shell",
+   "path": "assets/art/material_shell.png",
+   "width": 128,
+   "height": 128,
+   "transparent": true,
+   "required": false,
+   "note": "資材「貝殻」(夏)。町の演出に使う小さな絵。文字は入れない"
+  },
+  {
+   "id": "material_bamboo",
+   "path": "assets/art/material_bamboo.png",
+   "width": 128,
+   "height": 128,
+   "transparent": true,
+   "required": false,
+   "note": "資材「竹」(夏)。町の演出に使う小さな絵。文字は入れない"
+  },
+  {
+   "id": "material_glass",
+   "path": "assets/art/material_glass.png",
+   "width": 128,
+   "height": 128,
+   "transparent": true,
+   "required": false,
+   "note": "資材「ガラス」(夏)。町の演出に使う小さな絵。文字は入れない"
+  },
+  {
+   "id": "season_summer",
+   "path": "assets/art/season_summer.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "季節の飾り(夏: 風鈴とひまわり)。季節を終えると町に1つ贈られる。建物と同じ縮尺・地面の線にそろえる"
+  },
+  {
+   "id": "material_petal",
+   "path": "assets/art/material_petal.png",
+   "width": 128,
+   "height": 128,
+   "transparent": true,
+   "required": false,
+   "note": "資材「花びら」(桜)。町の演出に使う小さな絵。文字は入れない"
+  },
+  {
+   "id": "material_tile",
+   "path": "assets/art/material_tile.png",
+   "width": 128,
+   "height": 128,
+   "transparent": true,
+   "required": false,
+   "note": "資材「かわら」(桜)。町の演出に使う小さな絵。文字は入れない"
+  },
+  {
+   "id": "material_lantern",
+   "path": "assets/art/material_lantern.png",
+   "width": 128,
+   "height": 128,
+   "transparent": true,
+   "required": false,
+   "note": "資材「提灯」(桜)。町の演出に使う小さな絵。文字は入れない"
+  },
+  {
+   "id": "season_sakura",
+   "path": "assets/art/season_sakura.png",
+   "width": 512,
+   "height": 512,
+   "transparent": true,
+   "required": false,
+   "note": "季節の飾り(桜: 小さな桜の木)。季節を終えると町に1つ贈られる。建物と同じ縮尺・地面の線にそろえる"
   }
  ]
 }

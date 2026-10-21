@@ -1,7 +1,14 @@
 import 'dart:convert';
 
 import 'package:color_sort/color_sort.dart'
-    show TownConfig, TownError, TownResult, TownRules, TownState, TownStore;
+    show
+        SeasonDef,
+        TownConfig,
+        TownError,
+        TownResult,
+        TownRules,
+        TownState,
+        TownStore;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:puzzle_core/foundation.dart';
@@ -296,6 +303,31 @@ class AppState extends ChangeNotifier {
     townState = townRules.markUnlocksSeen(townState, clearedLevels);
     notifyListeners();
     await TownStore(kv, townConfig).save(townState);
+  }
+
+  /// いま遊ぶ面の季節(資材・テーマ)。
+  SeasonDef? get currentSeason => townRules.seasonAt(nextLevelIndex);
+
+  /// 終えた季節の数(= 町に贈られた季節の飾りの数)。
+  int get seasonsDone => townRules.seasonsDone(clearedLevels);
+
+  /// まだ知らせていない新しい季節の飾り(季節の番号)。
+  List<int> get newSeasonObjects =>
+      townRules.newSeasonObjects(townState, clearedLevels);
+
+  Future<void> acknowledgeSeasonObjects() async {
+    townState = townRules.markSeasonsSeen(townState, clearedLevels);
+    notifyListeners();
+    await TownStore(kv, townConfig).save(townState);
+  }
+
+  /// 建物を置く・育てたときに添える資材(いまの季節の2つ。建物と段階で回す)。
+  List<String> materialsFor(String buildingId, int stage) {
+    final m = currentSeason?.materials ?? const <String>[];
+    if (m.isEmpty) return const [];
+    final i = townConfig.buildings.indexWhere((b) => b.id == buildingId);
+    final a = (i + stage) % m.length;
+    return m.length == 1 ? [m[a]] : [m[a], m[(a + 1) % m.length]];
   }
 
   /// 今日の「町の贈り物」を受け取れるか(1日1回。連続は問わない)。

@@ -36,9 +36,20 @@ class _TownScreenState extends State<TownScreen> {
 
   String _name(Translator t, String id) => t.tr('building.$id');
 
+  /// 建物を置く・育てたときに添える、いまの季節の資材の名前(演出と文言だけ)。
+  String _materials(Translator t, String id, int stage) => app
+      .materialsFor(id, stage)
+      .map((m) => t.tr('material.$m'))
+      .join(t.tr('materialJoin'));
+
+  /// ひとことの知らせ。下のボタン(あそぶ・面を選ぶ)を隠さないよう、その上に浮かせる。
   void _say(String text) => ScaffoldMessenger.of(context)
     ..hideCurrentSnackBar()
-    ..showSnackBar(SnackBar(content: Text(text)));
+    ..showSnackBar(SnackBar(
+      content: Text(text),
+      behavior: SnackBarBehavior.floating,
+      margin: const EdgeInsets.fromLTRB(16, 0, 16, 96),
+    ));
 
   String _errorText(Translator t, TownError e) => switch (e) {
         TownError.notEnoughCoins => t.tr('notEnoughCoins'),
@@ -94,7 +105,15 @@ class _TownScreenState extends State<TownScreen> {
     );
     if (picked == null) return;
     final err = await app.placeBuilding(picked.id, cell);
-    if (err != null && mounted) _say(_errorText(t, err));
+    if (!mounted) return;
+    if (err != null) {
+      _say(_errorText(t, err));
+    } else {
+      _say(t.tr('townPlaced', {
+        'name': _name(t, picked.id),
+        'materials': _materials(t, picked.id, 1),
+      }));
+    }
   }
 
   Future<void> _showDetail(Placement p) async {
@@ -145,7 +164,16 @@ class _TownScreenState extends State<TownScreen> {
     );
     if (action == 'upgrade') {
       final err = await app.upgradeBuilding(p.buildingId);
-      if (err != null && mounted) _say(_errorText(t, err));
+      if (!mounted) return;
+      if (err != null) {
+        _say(_errorText(t, err));
+      } else {
+        final stage = app.townState.placementOf(p.buildingId)?.stage ?? 2;
+        _say(t.tr('townGrown', {
+          'name': _name(t, p.buildingId),
+          'materials': _materials(t, p.buildingId, stage),
+        }));
+      }
     } else if (action == 'move') {
       setState(() => _moving = p.buildingId);
     }
@@ -225,39 +253,90 @@ class _TownScreenState extends State<TownScreen> {
         final rows = (cells / _columns).ceil();
         final height = pad * 2 + rows * cell + (rows - 1) * gap;
         return SingleChildScrollView(
-          child: SizedBox(
-            height: height,
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                GridView.builder(
-                  key: const Key('townGrid'),
-                  physics: const NeverScrollableScrollPhysics(),
-                  padding: const EdgeInsets.all(pad),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: _columns,
-                    mainAxisSpacing: gap,
-                    crossAxisSpacing: gap,
-                  ),
-                  itemCount: cells,
-                  itemBuilder: (context, i) => _cell(context, t, i),
-                ),
-                if (walkers)
-                  Positioned.fill(
-                    child: DwellerLayer(
-                      key: const Key('dwellerLayer'),
-                      count: dwellers,
-                      walk: DwellerWalk(columns: _columns, cells: cells),
-                      cellSize: cell,
-                      gap: gap,
-                      padding: pad,
+          child: Column(children: [
+            SizedBox(
+              height: height,
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  GridView.builder(
+                    key: const Key('townGrid'),
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: const EdgeInsets.all(pad),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: _columns,
+                      mainAxisSpacing: gap,
+                      crossAxisSpacing: gap,
                     ),
+                    itemCount: cells,
+                    itemBuilder: (context, i) => _cell(context, t, i),
                   ),
-              ],
+                  if (walkers)
+                    Positioned.fill(
+                      child: DwellerLayer(
+                        key: const Key('dwellerLayer'),
+                        count: dwellers,
+                        walk: DwellerWalk(columns: _columns, cells: cells),
+                        cellSize: cell,
+                        gap: gap,
+                        padding: pad,
+                        carry: [
+                          for (final m in app.currentSeason?.materials ??
+                              const <String>[])
+                            if (app.art.has('material_$m')) 'material_$m',
+                        ],
+                      ),
+                    ),
+                ],
+              ),
             ),
-          ),
+            _seasonStrip(context, t),
+          ]),
         );
       },
+    );
+  }
+
+  /// 終えた季節の飾りを並べる細い帯(画像があれば画像、無ければ季節の名前の文字)。
+  Widget _seasonStrip(BuildContext context, Translator t) {
+    final done = app.seasonsDone;
+    if (done == 0) return const SizedBox.shrink();
+    return Semantics(
+      container: true,
+      label: t.tr('seasonStrip'),
+      child: SizedBox(
+        key: const Key('seasonStrip'),
+        height: 56,
+        child: ListView(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          children: [
+            for (var i = 0; i < done; i++)
+              _seasonObject(t, app.townConfig.seasons[i].theme),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _seasonObject(Translator t, String theme) {
+    final id = 'season_$theme';
+    final label = t.tr('season.$theme.object');
+    return Padding(
+      padding: const EdgeInsets.only(right: 8),
+      child: Tooltip(
+        message: label,
+        child: app.art.has(id)
+            ? Image.asset(
+                ArtCatalog.assetOf(id),
+                key: Key('season-$theme'),
+                height: 52,
+                excludeFromSemantics: true,
+                errorBuilder: (_, __, ___) => Chip(label: Text(label)),
+              )
+            : Chip(key: Key('season-$theme'), label: Text(label)),
+      ),
     );
   }
 
@@ -354,7 +433,27 @@ class _TownScreenState extends State<TownScreen> {
                 ),
               ),
             ),
-          if (app.canClaimGift)
+          if (newIds.isEmpty && app.newSeasonObjects.isNotEmpty)
+            Card(
+              key: const Key('newSeasonObject'),
+              child: ListTile(
+                leading: const Icon(Icons.local_florist),
+                title: Text(t.tr('townSeasonObject', {
+                  'name': app.newSeasonObjects
+                      .map((i) => t.tr(
+                          'season.${app.townConfig.seasons[i].theme}.object'))
+                      .join(t.tr('materialJoin')),
+                })),
+                trailing: TextButton(
+                  style: TextButton.styleFrom(minimumSize: const Size(48, 48)),
+                  onPressed: app.acknowledgeSeasonObjects,
+                  child: Text(t.tr('ok')),
+                ),
+              ),
+            ),
+          if (newIds.isEmpty &&
+              app.newSeasonObjects.isEmpty &&
+              app.canClaimGift)
             Card(
               key: const Key('gift'),
               child: ListTile(
