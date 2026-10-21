@@ -2,6 +2,7 @@ import 'package:color_sort_app/game/app_state.dart';
 import 'package:color_sort_app/game/art.dart';
 import 'package:color_sort_app/l10n/strings.dart';
 import 'package:color_sort_app/ui/play_screen.dart';
+import 'package:color_sort_app/ui/town_walk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -23,6 +24,7 @@ Future<AppState> appWithCoins(WidgetTester tester, int coins) async {
 }
 
 void main() {
+  walkerTests();
   stageArtTests();
   realArtTests();
   artTests();
@@ -286,5 +288,76 @@ void stageArtTests() {
     expect(some.stageBackground(14), 'bg_stage_01'); // 02 が無い
     expect(some.stageBackground(30), 'bg_stage_03');
     expect(ArtCatalog.empty.stageBackground(0), isNull);
+  });
+}
+
+void walkerTests() {
+  test('こびとの歩き: 範囲内・決まった動き・立ち止まる・ずれて出発', () {
+    const walk = DwellerWalk(columns: 4, cells: 9);
+    for (var i = 0; i < 10; i++) {
+      for (var s = 0.0; s < 200; s += 0.7) {
+        final p = walk.position(i, s);
+        expect(p.dx, inInclusiveRange(0.5 - 1e-9, 3.5 + 1e-9)); // 列 0〜3 の中心の間
+        expect(p.dy, inInclusiveRange(0.5 - 1e-9, 2.5 + 1e-9)); // 9マス=3行
+      }
+    }
+    // 同じ入力なら同じ位置(再描画しても飛ばない)
+    expect(walk.position(2, 12.3), walk.position(2, 12.3));
+    // 立ち止まっている間は動かない(歩く8秒+止まる3秒)
+    final still1 = walk.position(0, 8.5);
+    final still2 = walk.position(0, 10.5);
+    expect(still1, still2);
+    // 歩いている間は動く(同じ区間の中で)
+    expect(walk.position(1, 0.5) == walk.position(1, 4.5), isFalse);
+    // こびとごとに出発がずれる
+    expect(walk.position(0, 3) == walk.position(1, 3), isFalse);
+    expect(walk.isWalking(0, 1), isTrue);
+    expect(walk.isWalking(0, 9), isFalse);
+  });
+
+  testWidgets('画像があれば、こびとが町の中を歩く(人数ぶん)。タップは町に通る', (tester) async {
+    final art = (await tester.runAsync(() => ArtCatalog.load(rootBundle)))!;
+    final base = await appWithCoins(tester, 2000);
+    final app = AppState(
+      pack: base.pack,
+      kv: base.kv,
+      progress: base.progress,
+      economyState: base.current,
+      townConfig: base.townConfig,
+      art: art,
+    );
+    for (var i = 0; i < 12; i++) {
+      await tester.runAsync(() => app.recordWin(i, moves: 10, stars: 1));
+    }
+    final ids = app.townConfig.buildings.map((b) => b.id).toList();
+    for (var i = 0; i < 5; i++) {
+      await tester.runAsync(() => app.placeBuilding(ids[i], i));
+      await tester.runAsync(() => app.upgradeBuilding(ids[i]));
+      await tester.runAsync(() => app.upgradeBuilding(ids[i]));
+    }
+    expect(app.dwellers, 2); // 合計15 → 2人
+    await tester.binding.setSurfaceSize(const Size(430, 900));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    await tester.pumpWidget(appWidget(app, town: true));
+    await tester.pump(const Duration(seconds: 1));
+    expect(find.byKey(const Key('dwellerLayer')), findsOneWidget);
+    expect(find.byKey(const Key('walker-0')), findsOneWidget);
+    expect(find.byKey(const Key('walker-1')), findsOneWidget);
+    expect(find.byKey(const Key('walker-2')), findsNothing);
+    final before = tester.getTopLeft(find.byKey(const Key('walker-0')));
+    await tester.pump(const Duration(seconds: 4));
+    final after = tester.getTopLeft(find.byKey(const Key('walker-0')));
+    expect(before == after, isFalse); // 動いている
+    expect(tester.takeException(), isNull);
+    // こびとの上のマスもタップできる(IgnorePointer)
+    await tester.tap(find.byKey(const Key('cell-0')));
+    await tester.pump(const Duration(milliseconds: 500));
+    expect(find.byKey(const Key('detailSheet')), findsOneWidget);
+  });
+
+  testWidgets('画像がなければ歩かせず、従来の表示のまま', (tester) async {
+    final app = await appWithCoins(tester, 2000);
+    await tester.pumpWidget(appWidget(app, town: true));
+    expect(find.byKey(const Key('dwellerLayer')), findsNothing);
   });
 }
