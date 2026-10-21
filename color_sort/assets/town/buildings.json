@@ -211,5 +211,48 @@
     35
    ]
   }
+ ],
+ "levelsPerSeason": 12,
+ "seasons": [
+  {
+   "theme": "spring",
+   "materials": [
+    "wood",
+    "straw",
+    "ivy"
+   ]
+  },
+  {
+   "theme": "autumn",
+   "materials": [
+    "chestnut",
+    "brick",
+    "leaf"
+   ]
+  },
+  {
+   "theme": "winter",
+   "materials": [
+    "snow_block",
+    "ice",
+    "yarn"
+   ]
+  },
+  {
+   "theme": "summer",
+   "materials": [
+    "shell",
+    "bamboo",
+    "glass"
+   ]
+  },
+  {
+   "theme": "sakura",
+   "materials": [
+    "petal",
+    "tile",
+    "lantern"
+   ]
+  }
  ]
 }

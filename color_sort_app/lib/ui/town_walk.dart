@@ -68,6 +68,7 @@ class DwellerLayer extends StatefulWidget {
     required this.gap,
     required this.padding,
     this.size = 36,
+    this.carry = const [],
   });
 
   final int count;
@@ -76,6 +77,9 @@ class DwellerLayer extends StatefulWidget {
   final double gap;
   final double padding;
   final double size;
+
+  /// こびとが抱える資材の画像ID(こびと i は carry[i % 長さ])。空なら何も持たない。
+  final List<String> carry;
 
   @override
   State<DwellerLayer> createState() => _DwellerLayerState();
@@ -139,11 +143,31 @@ class _DwellerLayerState extends State<DwellerLayer>
       top: y,
       width: widget.size,
       height: widget.size,
-      child: Image.asset(
-        ArtCatalog.assetOf(id),
-        key: Key('walker-$i'),
-        excludeFromSemantics: true,
-        errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Positioned.fill(
+            child: Image.asset(
+              ArtCatalog.assetOf(id),
+              key: Key('walker-$i'),
+              excludeFromSemantics: true,
+              errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+            ),
+          ),
+          if (widget.carry.isNotEmpty)
+            Positioned(
+              right: -widget.size * 0.2,
+              bottom: 0,
+              width: widget.size * 0.5,
+              height: widget.size * 0.5,
+              child: Image.asset(
+                ArtCatalog.assetOf(widget.carry[i % widget.carry.length]),
+                key: Key('carry-$i'),
+                excludeFromSemantics: true,
+                errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+              ),
+            ),
+        ],
       ),
     );
   }
