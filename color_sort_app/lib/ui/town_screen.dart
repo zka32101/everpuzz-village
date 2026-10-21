@@ -10,6 +10,7 @@ import 'economy_bar.dart';
 import 'level_select_screen.dart';
 import 'play_screen.dart';
 import 'shop_screen.dart';
+import 'town_walk.dart';
 
 /// ホーム = 町。置く・育てる・動かす。素材が届くまでは、図形+名前で代用する。
 class TownScreen extends StatefulWidget {
@@ -204,6 +205,62 @@ class _TownScreenState extends State<TownScreen> {
     );
   }
 
+  bool get _hasKobitoArt =>
+      app.art.has('kobito_01') &&
+      app.art.has('kobito_02') &&
+      app.art.has('kobito_03');
+
+  /// 町のマス(スクロール可)と、その上を歩くこびと。
+  Widget _townArea(BuildContext context, Translator t, int cells) {
+    const pad = 16.0;
+    const gap = 8.0;
+    final dwellers = app.dwellers;
+    final walkers = dwellers > 0 &&
+        app.art.has('kobito_01') &&
+        app.art.has('kobito_02') &&
+        app.art.has('kobito_03');
+    return LayoutBuilder(
+      builder: (context, c) {
+        final cell = (c.maxWidth - pad * 2 - gap * (_columns - 1)) / _columns;
+        final rows = (cells / _columns).ceil();
+        final height = pad * 2 + rows * cell + (rows - 1) * gap;
+        return SingleChildScrollView(
+          child: SizedBox(
+            height: height,
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                GridView.builder(
+                  key: const Key('townGrid'),
+                  physics: const NeverScrollableScrollPhysics(),
+                  padding: const EdgeInsets.all(pad),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: _columns,
+                    mainAxisSpacing: gap,
+                    crossAxisSpacing: gap,
+                  ),
+                  itemCount: cells,
+                  itemBuilder: (context, i) => _cell(context, t, i),
+                ),
+                if (walkers)
+                  Positioned.fill(
+                    child: DwellerLayer(
+                      key: const Key('dwellerLayer'),
+                      count: dwellers,
+                      walk: DwellerWalk(columns: _columns, cells: cells),
+                      cellSize: cell,
+                      gap: gap,
+                      padding: pad,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   /// こびと1人。画像があれば3種を順に、無ければアイコン。
   Widget _dweller(int i) {
     final id = 'kobito_0${i % 3 + 1}';
@@ -323,7 +380,8 @@ class _TownScreenState extends State<TownScreen> {
                   spacing: 4,
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
-                    for (var i = 0; i < dwellers; i++) _dweller(i),
+                    if (!_hasKobitoArt)
+                      for (var i = 0; i < dwellers; i++) _dweller(i),
                     Text(t.tr('dwellers', {'n': dwellers})),
                   ],
                 ),
@@ -395,20 +453,7 @@ class _TownScreenState extends State<TownScreen> {
                       ),
                     ],
                   ),
-                Expanded(
-                  child: GridView.builder(
-                    key: const Key('townGrid'),
-                    padding: const EdgeInsets.all(16),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: _columns,
-                      mainAxisSpacing: 8,
-                      crossAxisSpacing: 8,
-                    ),
-                    itemCount: cells,
-                    itemBuilder: (context, i) => _cell(context, t, i),
-                  ),
-                ),
+                Expanded(child: _townArea(context, t, cells)),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                   child: Row(
