@@ -143,6 +143,7 @@ class _PlayScreenState extends State<PlayScreen> {
                                               ? HintRole.to
                                               : HintRole.none,
                                   art: widget.app.art,
+                                  theme: widget.app.art.themeFor(widget.index),
                                   unit: unit,
                                   onTap: () => game.tap(i),
                                 ),

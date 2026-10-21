@@ -1,6 +1,6 @@
 {
  "version": 1,
- "note": "コードは画像をIDでのみ参照する。画像未配置の間は描画側が仮の図形で代用する。建物は20種×3段階=60状態(設計書: 町づくり設計 v0.1)。",
+ "note": "コードは画像をIDでのみ参照する。画像未配置の間は描画側が仮の図形で代用する。建物は20種×3段階=60状態(設計書: 町づくり設計 v0.1)。 テーマ(若草・秋・冬・夏・桜。12面ごと)の容器・色玉は任意で、無ければ共通の画像/図形で代用する。",
  "slots": [
   {
    "id": "bg_stage_01",
@@ -676,6 +676,438 @@
    "transparent": true,
    "required": false,
    "note": "凍結容器の氷の覆い。半透明で中身が透ける(中身が見えないと手が読めない)"
+  },
+  {
+   "id": "tube_back_autumn",
+   "path": "assets/art/tube_back_autumn.png",
+   "width": 256,
+   "height": 640,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「秋」の容器の奥側(ガラスの内側)。共通の tube_back と同じ大きさ・同じガラスの位置にする"
+  },
+  {
+   "id": "tube_front_autumn",
+   "path": "assets/art/tube_front_autumn.png",
+   "width": 256,
+   "height": 640,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「秋」の容器の手前側(縁・反射)。中身が見えるよう半透明。共通の tube_front と同じ大きさ・同じガラスの位置にする"
+  },
+  {
+   "id": "tube_back_winter",
+   "path": "assets/art/tube_back_winter.png",
+   "width": 256,
+   "height": 640,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「冬」の容器の奥側(ガラスの内側)。共通の tube_back と同じ大きさ・同じガラスの位置にする"
+  },
+  {
+   "id": "tube_front_winter",
+   "path": "assets/art/tube_front_winter.png",
+   "width": 256,
+   "height": 640,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「冬」の容器の手前側(縁・反射)。中身が見えるよう半透明。共通の tube_front と同じ大きさ・同じガラスの位置にする"
+  },
+  {
+   "id": "tube_back_summer",
+   "path": "assets/art/tube_back_summer.png",
+   "width": 256,
+   "height": 640,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「夏」の容器の奥側(ガラスの内側)。共通の tube_back と同じ大きさ・同じガラスの位置にする"
+  },
+  {
+   "id": "tube_front_summer",
+   "path": "assets/art/tube_front_summer.png",
+   "width": 256,
+   "height": 640,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「夏」の容器の手前側(縁・反射)。中身が見えるよう半透明。共通の tube_front と同じ大きさ・同じガラスの位置にする"
+  },
+  {
+   "id": "tube_back_sakura",
+   "path": "assets/art/tube_back_sakura.png",
+   "width": 256,
+   "height": 640,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「桜」の容器の奥側(ガラスの内側)。共通の tube_back と同じ大きさ・同じガラスの位置にする"
+  },
+  {
+   "id": "tube_front_sakura",
+   "path": "assets/art/tube_front_sakura.png",
+   "width": 256,
+   "height": 640,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「桜」の容器の手前側(縁・反射)。中身が見えるよう半透明。共通の tube_front と同じ大きさ・同じガラスの位置にする"
+  },
+  {
+   "id": "ball_spring_00",
+   "path": "assets/art/ball_spring_00.png",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「若草(春はじめ・現行)」の色玉(色番号1)。色相は palette.dart の1番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
+  },
+  {
+   "id": "ball_spring_01",
+   "path": "assets/art/ball_spring_01.png",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「若草(春はじめ・現行)」の色玉(色番号2)。色相は palette.dart の2番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
+  },
+  {
+   "id": "ball_spring_02",
+   "path": "assets/art/ball_spring_02.png",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「若草(春はじめ・現行)」の色玉(色番号3)。色相は palette.dart の3番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
+  },
+  {
+   "id": "ball_spring_03",
+   "path": "assets/art/ball_spring_03.png",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「若草(春はじめ・現行)」の色玉(色番号4)。色相は palette.dart の4番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
+  },
+  {
+   "id": "ball_spring_04",
+   "path": "assets/art/ball_spring_04.png",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「若草(春はじめ・現行)」の色玉(色番号5)。色相は palette.dart の5番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
+  },
+  {
+   "id": "ball_spring_05",
+   "path": "assets/art/ball_spring_05.png",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「若草(春はじめ・現行)」の色玉(色番号6)。色相は palette.dart の6番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
+  },
+  {
+   "id": "ball_spring_06",
+   "path": "assets/art/ball_spring_06.png",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「若草(春はじめ・現行)」の色玉(色番号7)。色相は palette.dart の7番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
+  },
+  {
+   "id": "ball_spring_07",
+   "path": "assets/art/ball_spring_07.png",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「若草(春はじめ・現行)」の色玉(色番号8)。色相は palette.dart の8番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
+  },
+  {
+   "id": "ball_autumn_00",
+   "path": "assets/art/ball_autumn_00.png",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「秋」の色玉(色番号1)。色相は palette.dart の1番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
+  },
+  {
+   "id": "ball_autumn_01",
+   "path": "assets/art/ball_autumn_01.png",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「秋」の色玉(色番号2)。色相は palette.dart の2番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
+  },
+  {
+   "id": "ball_autumn_02",
+   "path": "assets/art/ball_autumn_02.png",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「秋」の色玉(色番号3)。色相は palette.dart の3番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
+  },
+  {
+   "id": "ball_autumn_03",
+   "path": "assets/art/ball_autumn_03.png",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「秋」の色玉(色番号4)。色相は palette.dart の4番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
+  },
+  {
+   "id": "ball_autumn_04",
+   "path": "assets/art/ball_autumn_04.png",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「秋」の色玉(色番号5)。色相は palette.dart の5番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
+  },
+  {
+   "id": "ball_autumn_05",
+   "path": "assets/art/ball_autumn_05.png",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「秋」の色玉(色番号6)。色相は palette.dart の6番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
+  },
+  {
+   "id": "ball_autumn_06",
+   "path": "assets/art/ball_autumn_06.png",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「秋」の色玉(色番号7)。色相は palette.dart の7番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
+  },
+  {
+   "id": "ball_autumn_07",
+   "path": "assets/art/ball_autumn_07.png",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「秋」の色玉(色番号8)。色相は palette.dart の8番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
+  },
+  {
+   "id": "ball_winter_00",
+   "path": "assets/art/ball_winter_00.png",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「冬」の色玉(色番号1)。色相は palette.dart の1番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
+  },
+  {
+   "id": "ball_winter_01",
+   "path": "assets/art/ball_winter_01.png",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「冬」の色玉(色番号2)。色相は palette.dart の2番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
+  },
+  {
+   "id": "ball_winter_02",
+   "path": "assets/art/ball_winter_02.png",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「冬」の色玉(色番号3)。色相は palette.dart の3番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
+  },
+  {
+   "id": "ball_winter_03",
+   "path": "assets/art/ball_winter_03.png",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「冬」の色玉(色番号4)。色相は palette.dart の4番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
+  },
+  {
+   "id": "ball_winter_04",
+   "path": "assets/art/ball_winter_04.png",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「冬」の色玉(色番号5)。色相は palette.dart の5番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
+  },
+  {
+   "id": "ball_winter_05",
+   "path": "assets/art/ball_winter_05.png",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「冬」の色玉(色番号6)。色相は palette.dart の6番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
+  },
+  {
+   "id": "ball_winter_06",
+   "path": "assets/art/ball_winter_06.png",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「冬」の色玉(色番号7)。色相は palette.dart の7番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
+  },
+  {
+   "id": "ball_winter_07",
+   "path": "assets/art/ball_winter_07.png",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「冬」の色玉(色番号8)。色相は palette.dart の8番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
+  },
+  {
+   "id": "ball_summer_00",
+   "path": "assets/art/ball_summer_00.png",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「夏」の色玉(色番号1)。色相は palette.dart の1番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
+  },
+  {
+   "id": "ball_summer_01",
+   "path": "assets/art/ball_summer_01.png",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「夏」の色玉(色番号2)。色相は palette.dart の2番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
+  },
+  {
+   "id": "ball_summer_02",
+   "path": "assets/art/ball_summer_02.png",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「夏」の色玉(色番号3)。色相は palette.dart の3番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
+  },
+  {
+   "id": "ball_summer_03",
+   "path": "assets/art/ball_summer_03.png",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「夏」の色玉(色番号4)。色相は palette.dart の4番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
+  },
+  {
+   "id": "ball_summer_04",
+   "path": "assets/art/ball_summer_04.png",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「夏」の色玉(色番号5)。色相は palette.dart の5番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
+  },
+  {
+   "id": "ball_summer_05",
+   "path": "assets/art/ball_summer_05.png",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「夏」の色玉(色番号6)。色相は palette.dart の6番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
+  },
+  {
+   "id": "ball_summer_06",
+   "path": "assets/art/ball_summer_06.png",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「夏」の色玉(色番号7)。色相は palette.dart の7番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
+  },
+  {
+   "id": "ball_summer_07",
+   "path": "assets/art/ball_summer_07.png",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「夏」の色玉(色番号8)。色相は palette.dart の8番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
+  },
+  {
+   "id": "ball_sakura_00",
+   "path": "assets/art/ball_sakura_00.png",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「桜」の色玉(色番号1)。色相は palette.dart の1番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
+  },
+  {
+   "id": "ball_sakura_01",
+   "path": "assets/art/ball_sakura_01.png",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「桜」の色玉(色番号2)。色相は palette.dart の2番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
+  },
+  {
+   "id": "ball_sakura_02",
+   "path": "assets/art/ball_sakura_02.png",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「桜」の色玉(色番号3)。色相は palette.dart の3番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
+  },
+  {
+   "id": "ball_sakura_03",
+   "path": "assets/art/ball_sakura_03.png",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「桜」の色玉(色番号4)。色相は palette.dart の4番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
+  },
+  {
+   "id": "ball_sakura_04",
+   "path": "assets/art/ball_sakura_04.png",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「桜」の色玉(色番号5)。色相は palette.dart の5番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
+  },
+  {
+   "id": "ball_sakura_05",
+   "path": "assets/art/ball_sakura_05.png",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「桜」の色玉(色番号6)。色相は palette.dart の6番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
+  },
+  {
+   "id": "ball_sakura_06",
+   "path": "assets/art/ball_sakura_06.png",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「桜」の色玉(色番号7)。色相は palette.dart の7番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
+  },
+  {
+   "id": "ball_sakura_07",
+   "path": "assets/art/ball_sakura_07.png",
+   "width": 256,
+   "height": 256,
+   "transparent": true,
+   "required": false,
+   "note": "テーマ「桜」の色玉(色番号8)。色相は palette.dart の8番目と同じにする。記号・数字・文字は画像に入れない(コードで重ねる)"
   }
  ]
 }

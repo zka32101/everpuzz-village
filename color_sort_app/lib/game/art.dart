@@ -23,6 +23,25 @@ class ArtCatalog {
     return null;
   }
 
+  /// 面のテーマ(背景の段階に対応: 若草・秋・冬・夏・桜)。12面ごとに切り替わる。
+  /// 容器と色玉の画像をテーマごとに用意できる(無ければ共通の画像、それも無ければ図形)。
+  static const themes = ['spring', 'autumn', 'winter', 'summer', 'sakura'];
+
+  String themeFor(int levelIndex, {int levelsPerStage = 12}) =>
+      themes[(levelIndex ~/ levelsPerStage).clamp(0, themes.length - 1)];
+
+  /// テーマ付きの画像ID(`<base>_<theme>`)があればそれ、無ければ共通の [base]。
+  String themed(String base, String theme) {
+    final id = '${base}_$theme';
+    return has(id) ? id : base;
+  }
+
+  /// テーマ付きの色玉の画像ID(`ball_<theme>_<色番号2桁>`)。無ければ null(図形で描く)。
+  String? ballId(String theme, int color, {int colors = 8}) {
+    final id = 'ball_${theme}_${(color % colors).toString().padLeft(2, '0')}';
+    return has(id) ? id : null;
+  }
+
   /// Image.asset に渡すパス。
   static String assetOf(String id) => '$prefix$id.png';
 

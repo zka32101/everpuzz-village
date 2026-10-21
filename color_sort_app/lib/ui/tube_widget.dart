@@ -22,6 +22,7 @@ class TubeWidget extends StatelessWidget {
     this.hintRole = HintRole.none,
     this.art = ArtCatalog.empty,
     this.unit = defaultUnit,
+    this.theme = 'spring',
   });
 
   final int index;
@@ -38,7 +39,12 @@ class TubeWidget extends StatelessWidget {
   /// 1スロットの大きさ。画面の高さに収めるため、面の画面が縮めて渡す。
   final double unit;
 
-  bool get useArt => art.has('tube_back') && art.has('tube_front');
+  /// 面のテーマ(容器・色玉の画像の系統)。
+  final String theme;
+
+  String _id(String base) => art.themed(base, theme);
+
+  bool get useArt => art.has(_id('tube_back')) && art.has(_id('tube_front'));
 
   static const defaultUnit = 46.0; // 1スロットの標準の大きさ(44pt以上)
   static const minUnit = 30.0; // 画面に収めるときの下限(これ以上は縮めない)
@@ -69,7 +75,8 @@ class TubeWidget extends StatelessWidget {
   /// 使えない容器の覆い。画像があれば画像(鍵=南京錠、凍結=氷)、無ければ従来の膜。
   /// 中身が見えないと手が読めないので、鍵の覆いは半透明にする。
   Widget _lockCover() {
-    final id = lock!.kind == LockKind.key ? 'tube_lock_key' : 'tube_frozen';
+    final id =
+        _id(lock!.kind == LockKind.key ? 'tube_lock_key' : 'tube_frozen');
     if (!useArt || !art.has(id)) return LockOverlay(lock: lock!, unit: unit);
     return Positioned.fill(
       child: IgnorePointer(
@@ -159,18 +166,21 @@ class TubeWidget extends StatelessWidget {
                 alignment: Alignment.bottomCenter,
                 children: [
                   if (useArt) ...[
-                    Positioned.fill(child: _art('tube_back')),
+                    Positioned.fill(child: _art(_id('tube_back'))),
                     Padding(
                       padding: EdgeInsets.only(bottom: artHeight * _artBottom),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           for (final c in tube.reversed)
-                            UnitChip(color: c, unit: unit),
+                            UnitChip(
+                                color: c,
+                                unit: unit,
+                                ball: art.ballId(theme, c)),
                         ],
                       ),
                     ),
-                    Positioned.fill(child: _art('tube_front')),
+                    Positioned.fill(child: _art(_id('tube_front'))),
                   ] else
                     Padding(
                       padding: const EdgeInsets.all(pad),
@@ -178,13 +188,16 @@ class TubeWidget extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           for (final c in tube.reversed)
-                            UnitChip(color: c, unit: unit),
+                            UnitChip(
+                                color: c,
+                                unit: unit,
+                                ball: art.ballId(theme, c)),
                         ],
                       ),
                     ),
-                  if (done && art.has('tube_done'))
+                  if (done && art.has(_id('tube_done')))
                     Positioned.fill(
-                        child: IgnorePointer(child: _art('tube_done'))),
+                        child: IgnorePointer(child: _art(_id('tube_done')))),
                   if (done)
                     Positioned(
                       top: 2,
@@ -210,11 +223,19 @@ Widget _art(String id) => Image.asset(
     );
 
 class UnitChip extends StatelessWidget {
-  const UnitChip(
-      {super.key, required this.color, this.unit = TubeWidget.defaultUnit});
+  const UnitChip({
+    super.key,
+    required this.color,
+    this.unit = TubeWidget.defaultUnit,
+    this.ball,
+  });
 
   final int color;
   final double unit;
+
+  /// 色玉の画像ID(テーマ付き)。あれば画像を塗りの代わりにし、記号と数字は上に重ねる
+  /// (色だけに頼らないため、記号と数字は常にコードで描く)。
+  final String? ball;
 
   @override
   Widget build(BuildContext context) {
@@ -224,24 +245,38 @@ class UnitChip extends StatelessWidget {
       height: unit,
       child: Padding(
         padding: const EdgeInsets.all(2),
-        child: CustomPaint(
-          painter: _UnitPainter(style),
-          child: Align(
-            alignment: Alignment.bottomRight,
-            child: Padding(
-              padding: const EdgeInsets.only(right: 3, bottom: 1),
-              child: FittedBox(
-                child: Text(
-                  '${color + 1}',
-                  style: const TextStyle(
-                    color: Color(symbolInk | 0xFF000000),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            if (ball != null)
+              Image.asset(
+                ArtCatalog.assetOf(ball!),
+                fit: BoxFit.contain,
+                excludeFromSemantics: true,
+                // 読み込めない時は、塗りの図形に戻す。
+                errorBuilder: (_, __, ___) =>
+                    CustomPaint(painter: _UnitPainter(style, drawFill: true)),
+              ),
+            CustomPaint(
+              painter: _UnitPainter(style, drawFill: ball == null),
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 3, bottom: 1),
+                  child: FittedBox(
+                    child: Text(
+                      '${color + 1}',
+                      style: const TextStyle(
+                        color: Color(symbolInk | 0xFF000000),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -249,31 +284,46 @@ class UnitChip extends StatelessWidget {
 }
 
 class _UnitPainter extends CustomPainter {
-  _UnitPainter(this.style);
+  _UnitPainter(this.style, {required this.drawFill});
 
   final ColorStyle style;
+
+  /// false のときは塗りを描かない(画像の色玉の上に記号だけ重ねる)。
+  final bool drawFill;
 
   @override
   void paint(Canvas canvas, Size size) {
     final rect = Offset.zero & size;
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(rect, const Radius.circular(10)),
-      Paint()..color = Color(style.fill | 0xFF000000),
-    );
+    if (drawFill) {
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(rect, const Radius.circular(10)),
+        Paint()..color = Color(style.fill | 0xFF000000),
+      );
+    }
     final symbolRect = Rect.fromLTWH(
       size.width * 0.2,
       size.height * 0.1,
       size.width * 0.6,
       size.height * 0.6,
     );
-    canvas.drawPath(
-      symbolPath(style.symbol, symbolRect),
-      Paint()..color = Color(symbolInk | 0xFF000000),
-    );
+    final path = symbolPath(style.symbol, symbolRect);
+    if (!drawFill) {
+      // 画像の上でも読めるよう、記号に白い縁を付ける。
+      canvas.drawPath(
+        path,
+        Paint()
+          ..color = const Color(0xCCFFFFFF)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 3
+          ..strokeJoin = StrokeJoin.round,
+      );
+    }
+    canvas.drawPath(path, Paint()..color = Color(symbolInk | 0xFF000000));
   }
 
   @override
-  bool shouldRepaint(_UnitPainter old) => old.style != style;
+  bool shouldRepaint(_UnitPainter old) =>
+      old.style != style || old.drawFill != drawFill;
 }
 
 /// 使えない容器の覆い。中身は見えたままにし、縞模様(凍結)と白い膜(鍵)で示す。
