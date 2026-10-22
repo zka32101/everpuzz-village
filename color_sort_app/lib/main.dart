@@ -13,6 +13,7 @@ import 'game/revenuecat_gate.dart';
 import 'l10n/strings.dart';
 import 'ui/level_select_screen.dart';
 import 'ui/town_screen.dart';
+import 'widget/home_widget_sync.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,6 +37,7 @@ Future<void> main() async {
   }
   app = await AppState.load(PrefsKeyValueStore(prefs),
       purchaseGate: gate, adGate: ads);
+  HomeWidgetSync(app).start(); // ホーム画面ウィジェットに町を見せる
   runApp(ColorSortApp(app: app));
 }
 
