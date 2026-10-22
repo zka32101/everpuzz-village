@@ -65,11 +65,11 @@ class TownRules {
   TownState markSeasonsSeen(TownState s, int clearedLevels) =>
       s.copyWith(seenSeasons: seasonsDone(clearedLevels));
 
-  /// いま遊んでいる面(0始まり)の季節。範囲外は最後の季節。
+  /// いま遊んでいる面(全パックを通した0始まりの番号)の季節。季節の数を超えたら最初から巡る
+  /// (面が増えても、背景・資材・テーマが同じ周期で続く)。
   SeasonDef? seasonAt(int levelIndex) {
     if (config.seasons.isEmpty) return null;
-    final i = (levelIndex ~/ config.levelsPerSeason)
-        .clamp(0, config.seasons.length - 1);
+    final i = (levelIndex ~/ config.levelsPerSeason) % config.seasons.length;
     return config.seasons[i];
   }
 

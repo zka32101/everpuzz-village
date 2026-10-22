@@ -26,9 +26,49 @@ class LevelSelectScreen extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
             child: EconomyBar(app: app),
           ),
+          _packBar(context, t),
           Expanded(child: _grid(context, t)),
         ],
       ),
+    );
+  }
+
+  /// チャプターの切り替え。遊べないチャプターは鍵つきで、理由を文字でも示す。
+  /// パックが1つだけなら出さない。
+  Widget _packBar(BuildContext context, Translator t) {
+    return ListenableBuilder(
+      listenable: app,
+      builder: (context, _) {
+        if (app.packs.length < 2) return const SizedBox.shrink();
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+          child: Wrap(
+            spacing: 8,
+            runSpacing: 4,
+            children: [
+              for (var i = 0; i < app.packs.length; i++) _packChip(t, i),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _packChip(Translator t, int i) {
+    final id = app.packs[i].id;
+    final reason = app.packLockReason(i);
+    final title = t.tr('pack.$id');
+    final done = '${app.clearedIn(i)}/${app.packs[i].pack.levels.length}';
+    final label = reason == null
+        ? '$title $done'
+        : '$title (${t.tr(reason == 'purchase' ? 'packNeedsPurchase' : 'packNeedsPrevious')})';
+    return ChoiceChip(
+      key: Key('pack-$id'),
+      avatar: reason == null ? null : const Icon(Icons.lock_outline, size: 16),
+      label: Text(label),
+      selected: i == app.activePackIndex,
+      // 遊べないチャプターは押せない(理由は文字に出ている)。
+      onSelected: reason == null ? (_) => app.selectPack(i) : null,
     );
   }
 

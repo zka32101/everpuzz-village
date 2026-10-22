@@ -20,3 +20,8 @@ Everpuzz シリーズ1本目（色ソート・仮称）のアプリ。共通基�
 1. puzzle_core 側で変更をマージし、そのコミット（またはタグ）を決める
 2. `color_sort/pubspec.yaml` と `color_sort_app/pubspec.yaml` の `ref:` を同じ版にそろえる
 3. テストが通ることを確認してからマージ
+
+## 面パック(チャプター)
+- `color_sort/assets/packs.json` に並べたパックが「章」になる。章は自由に行き来できる。
+- 追加: `dart run tool/generate_levels.dart --id extra2 --count 60 --offset 120 --out assets/levels/pack_extra2.json` → `packs.json` に追記(`requires` / `unlockAfterPrevious` で解放条件)。
+- 季節テーマ・背景は通し番号で5季節を循環する。

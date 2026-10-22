@@ -228,7 +228,10 @@ void main() {
     expect(rules.seasonAt(0)!.theme, 'spring');
     expect(rules.seasonAt(12)!.theme, 'autumn');
     expect(rules.seasonAt(59)!.theme, 'sakura');
-    expect(rules.seasonAt(999)!.theme, 'sakura');
+    // 季節の数(5)を超えたら最初から巡る(面が増えても続く)
+    expect(rules.seasonAt(60)!.theme, 'spring');
+    expect(rules.seasonAt(72)!.theme, 'autumn');
+    expect(rules.seasonAt(119)!.theme, 'sakura');
     expect(rules.seasonsDone(11), 0);
     expect(rules.seasonsDone(12), 1);
     expect(rules.seasonsDone(60), 5);
