@@ -48,6 +48,10 @@ const economyConfig = EconomyConfig(
   boosterCosts: {extraTubeBooster: 40, hintBooster: 20},
 );
 
+/// 続けて何面クリアしたら、やさしい休憩の案内を出すか。止めはしない(案内だけ)。
+/// 面が大量にあっても、遊べる量に上限は設けず、ライフ(行き詰まりで減る)だけで調整する。
+const restNudgeEvery = 10;
+
 /// 星が1つ増えるごとのコイン。
 const starBonus = 5;
 
@@ -410,12 +414,28 @@ class AppState extends ChangeNotifier {
   /// 順番にだけ進める(現在レベルまで遊べる)。
   bool isUnlocked(int index) => index <= progress.currentLevelIndex;
 
+  /// 町に寄らずに続けてクリアした面数(休憩の案内に使う。町に戻るとリセット)。
+  int winsSinceRest = 0;
+
+  /// 休憩の案内を出す時期か(出したらカウントを戻す。出す時だけ true)。
+  bool takeRestNudge() {
+    if (winsSinceRest < restNudgeEvery) return false;
+    final n = winsSinceRest;
+    winsSinceRest = 0;
+    telemetry.log(TelemetryEvent('rest_nudge', {'wins': n}));
+    return true;
+  }
+
+  /// 町に戻った(ひと息ついた)ので、続けてクリアした数を戻す。
+  void markRested() => winsSinceRest = 0;
+
   /// クリアを記録し、得たコインを返す(`clearReward`。星が増えない繰り返しは0)。
   Future<int> recordWin(
     int index, {
     required int moves,
     required int stars,
   }) async {
+    winsSinceRest++;
     final id = pack.levels[index].id;
     final before = progress.recordOf(id);
     progress = progress.recordWin(

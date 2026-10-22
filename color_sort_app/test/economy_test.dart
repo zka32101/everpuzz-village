@@ -55,6 +55,7 @@ void solveFirst(AppState app, GameController g) {
 }
 
 void main() {
+  restNudgeTests();
   group('AppState(ライフ・コイン)', () {
     test('初期状態: ライフ満タン・コイン0', () async {
       final app = await loadApp();
@@ -337,5 +338,39 @@ void main() {
       await play();
       expect(app.lives, economyConfig.maxLives - 2);
     });
+  });
+}
+
+void restNudgeTests() {
+  test('続けて10面クリアすると休憩の案内が1回出る。町に戻るとリセット。止めはしない', () async {
+    final app = await loadApp();
+    for (var i = 0; i < restNudgeEvery - 1; i++) {
+      await app.recordWin(i, moves: 10, stars: 1);
+      expect(app.takeRestNudge(), isFalse);
+    }
+    await app.recordWin(restNudgeEvery - 1, moves: 10, stars: 1);
+    expect(app.takeRestNudge(), isTrue);
+    expect(app.takeRestNudge(), isFalse); // 出したら戻る
+    // 町に戻ればカウントが戻る
+    for (var i = 0; i < 5; i++) {
+      await app.recordWin(i, moves: 10, stars: 1);
+    }
+    app.markRested();
+    for (var i = 0; i < 5; i++) {
+      await app.recordWin(i, moves: 10, stars: 1);
+    }
+    expect(app.takeRestNudge(), isFalse);
+    // 案内が出ても、遊べなくはならない
+    expect(app.canPlay, isTrue);
+  });
+
+  test('休憩の案内は計測される', () async {
+    final tel = MemoryTelemetry();
+    final app = await loadApp(telemetry: tel);
+    for (var i = 0; i < restNudgeEvery; i++) {
+      await app.recordWin(i, moves: 10, stars: 1);
+    }
+    app.takeRestNudge();
+    expect(tel.events.map((e) => e.name), contains('rest_nudge'));
   });
 }
