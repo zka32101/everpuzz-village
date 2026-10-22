@@ -25,7 +25,8 @@ class TownStore {
 
   /// 未保存・破損・将来版は空の町。壊れた項目(未知のID・範囲外・重複)は捨てる。
   Future<TownState> load() async {
-    final j = await VersionedJsonStore(kv).load(storageKey, currentVersion: schema);
+    final j =
+        await VersionedJsonStore(kv).load(storageKey, currentVersion: schema);
     if (j == null) return TownState.empty;
     try {
       final limit = cellLimit ?? config.maxCells;
