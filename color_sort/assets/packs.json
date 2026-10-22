@@ -7,6 +7,10 @@
   {
    "id": "extra1",
    "file": "pack_extra1.json"
+  },
+  {
+   "id": "extra2",
+   "file": "pack_extra2.json"
   }
  ]
 }
