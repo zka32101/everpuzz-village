@@ -1288,6 +1288,24 @@
    "transparent": true,
    "required": false,
    "note": "季節の飾り(桜: 小さな桜の木)。季節を終えると町に1つ贈られる。建物と同じ縮尺・地面の線にそろえる"
+  },
+  {
+   "id": "app_icon_fg",
+   "path": "assets/art/app_icon_fg.png",
+   "width": 1024,
+   "height": 1024,
+   "transparent": true,
+   "required": false,
+   "note": "Androidのアダプティブアイコンの前景(主役+バッジのみ・透過)。中央66%(約676px)の円の内側に収める。背景は含めない"
+  },
+  {
+   "id": "app_icon_bg",
+   "path": "assets/art/app_icon_bg.png",
+   "width": 1024,
+   "height": 1024,
+   "transparent": false,
+   "required": false,
+   "note": "Androidのアダプティブアイコンの背景(グラデーションのみ・不透明)。主役・バッジは含めない"
   }
  ]
 }

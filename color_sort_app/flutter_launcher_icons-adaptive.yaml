@@ -1,0 +1,12 @@
+# Androidのアダプティブアイコン(前景と背景を分けたアイコン)を含めて書き出す設定。
+# 前景 app_icon_fg.png と背景 app_icon_bg.png が color_sort/assets/art/ に置かれてから実行する:
+#   cd color_sort_app && dart run flutter_launcher_icons -f flutter_launcher_icons-adaptive.yaml
+# (無い間は pubspec.yaml の flutter_launcher_icons 設定=通常のアイコンだけ)
+flutter_launcher_icons:
+  image_path: "../color_sort/assets/art/app_icon.png"
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  adaptive_icon_background: "../color_sort/assets/art/app_icon_bg.png"
+  adaptive_icon_foreground: "../color_sort/assets/art/app_icon_fg.png"
+  # 単色テーマアイコン(Android 13+)は、前景の形が単純でないため使わない。

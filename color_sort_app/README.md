@@ -106,3 +106,8 @@ flutter run
 - 画像の容器では下限を小さくして(26)、横に並ぶ本数を増やし、9本でも360x800の盤面領域に収まるようにした。
 - 玉の記号と数字の重なり: 記号は左上、数字は右下に寄せ、数字は玉の大きさに合わせて縮める。
 - 「面を選ぶ」ボタンは背景の絵の上でも読めるよう、塗りのあるボタンにした。
+
+### Androidのアダプティブアイコン
+- 前景(主役+バッジ・透過・中央66%に収める)と背景(グラデーションのみ)を別画像にして、`color_sort/assets/art/app_icon_fg.png` / `app_icon_bg.png` に置く(台帳に任意枠)。
+- 置いたら `cd color_sort_app && dart run flutter_launcher_icons -f flutter_launcher_icons-adaptive.yaml` で書き出し、`android/` の差分をコミットする(iOSの `project.pbxproj` に不正な値が入る場合は戻す)。
+- それまでは通常のアイコンだけ(新しい端末では枠の中に小さく見えることがある)。
