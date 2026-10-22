@@ -69,6 +69,7 @@ class DwellerLayer extends StatefulWidget {
     required this.padding,
     this.size = 36,
     this.carry = const [],
+    this.reduceMotion = false,
   });
 
   final int count;
@@ -80,6 +81,9 @@ class DwellerLayer extends StatefulWidget {
 
   /// こびとが抱える資材の画像ID(こびと i は carry[i % 長さ])。空なら何も持たない。
   final List<String> carry;
+
+  /// 設定の「動きを減らす」。端末の設定と、どちらかが有効なら立ったまま。
+  final bool reduceMotion;
 
   @override
   State<DwellerLayer> createState() => _DwellerLayerState();
@@ -106,7 +110,8 @@ class _DwellerLayerState extends State<DwellerLayer>
 
   @override
   Widget build(BuildContext context) {
-    final still = MediaQuery.maybeDisableAnimationsOf(context) ?? false;
+    final still = widget.reduceMotion ||
+        (MediaQuery.maybeDisableAnimationsOf(context) ?? false);
     return IgnorePointer(
       child: ValueListenableBuilder<double>(
         valueListenable: _seconds,
