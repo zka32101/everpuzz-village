@@ -59,18 +59,25 @@ class ColorSortApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final tag =
         languageTag ?? ui.PlatformDispatcher.instance.locale.toLanguageTag();
-    final translator = translatorFor(tag);
-    return L10n(
-      translator: translator,
-      child: MaterialApp(
-        title: translator.tr('appTitle'),
-        theme: ThemeData(
-          colorSchemeSeed: const Color(0xFF7FB8F0),
-          useMaterial3: true,
-        ),
-        home:
-            startOnLevels ? LevelSelectScreen(app: app) : TownScreen(app: app),
-      ),
+    // 設定で言語を変えたら、すぐ反映する。
+    return ListenableBuilder(
+      listenable: app,
+      builder: (context, _) {
+        final translator = translatorFor(tag, settings: app.settings);
+        return L10n(
+          translator: translator,
+          child: MaterialApp(
+            title: translator.tr('appTitle'),
+            theme: ThemeData(
+              colorSchemeSeed: const Color(0xFF7FB8F0),
+              useMaterial3: true,
+            ),
+            home: startOnLevels
+                ? LevelSelectScreen(app: app)
+                : TownScreen(app: app),
+          ),
+        );
+      },
     );
   }
 }

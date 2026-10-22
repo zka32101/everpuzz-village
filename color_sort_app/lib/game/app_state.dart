@@ -12,6 +12,7 @@ import 'package:color_sort/color_sort.dart'
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:puzzle_core/foundation.dart';
+import 'package:puzzle_core/meta.dart' show AppSettings, SettingsStore;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'art.dart';
@@ -129,6 +130,7 @@ class AppState extends ChangeNotifier {
     this.hintSolver = isolateHintSolver,
     this.purchaseGate,
     required this.townConfig,
+    this.settings = AppSettings.defaults,
     this.art = ArtCatalog.empty,
     this.townState = TownState.empty,
     this.catalog = ShopCatalog.empty,
@@ -165,6 +167,9 @@ class AppState extends ChangeNotifier {
   final ShopCatalog catalog;
 
   final TownConfig townConfig;
+
+  /// ユーザー設定(言語・動きを減らす)。
+  AppSettings settings;
 
   /// 配置済みの画像素材。
   final ArtCatalog art;
@@ -223,6 +228,7 @@ class AppState extends ChangeNotifier {
         pack.levels.where((l) => progress.recordOf(l.id).cleared).length;
     return AppState(
       townConfig: townConfig,
+      settings: await SettingsStore(kv).load(),
       art: artOverride ?? await ArtCatalog.load(b),
       townState: await TownStore(kv, townConfig,
               cellLimit: TownRules(townConfig).cellCount(clearedNow))
@@ -328,6 +334,24 @@ class AppState extends ChangeNotifier {
     final i = townConfig.buildings.indexWhere((b) => b.id == buildingId);
     final a = (i + stage) % m.length;
     return m.length == 1 ? [m[a]] : [m[a], m[(a + 1) % m.length]];
+  }
+
+  /// 設定を変えて保存する(言語・動きを減らす)。
+  Future<void> updateSettings(AppSettings next) async {
+    settings = next;
+    notifyListeners();
+    await SettingsStore(kv).save(next);
+  }
+
+  /// 進行・コイン・町を初期に戻す(購入した内容・設定は残す)。
+  Future<void> resetProgress() async {
+    progress = const Progress();
+    _eco = EconomyState.initial(economyConfig, clock.now());
+    townState = TownState.empty;
+    notifyListeners();
+    await _progressStore.save(progress);
+    await _saveEconomy();
+    await TownStore(kv, townConfig).save(townState);
   }
 
   /// 今日の「町の贈り物」を受け取れるか(1日1回。連続は問わない)。

@@ -9,7 +9,7 @@ import '../l10n/strings.dart';
 import 'economy_bar.dart';
 import 'level_select_screen.dart';
 import 'play_screen.dart';
-import 'shop_screen.dart';
+import 'menu.dart';
 import 'town_walk.dart';
 
 /// ホーム = 町。置く・育てる・動かす。素材が届くまでは、図形+名前で代用する。
@@ -506,16 +506,7 @@ class _TownScreenState extends State<TownScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(t.tr('appTitle')),
-        actions: [
-          if (app.shopAvailable)
-            IconButton(
-              key: const Key('openShop'),
-              tooltip: t.tr('openShop'),
-              icon: const Icon(Icons.storefront),
-              onPressed: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => ShopScreen(app: app))),
-            ),
-        ],
+        actions: menuActions(context, app),
       ),
       body: DecoratedBox(
         decoration: BoxDecoration(

@@ -160,7 +160,7 @@ void main() {
     final app =
         await tester.runAsync(() => loadApp(purchaseGate: FakePurchases()));
     await tester.pumpWidget(appWidget(app!));
-    await tester.tap(find.byKey(const Key('openShop')));
+    await tester.tap(find.byKey(const Key('menu-shop')));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('product_coins_small')), findsOneWidget);
     final before = app.coins;

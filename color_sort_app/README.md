@@ -111,3 +111,8 @@ flutter run
 - 前景(主役+バッジ・透過・中央66%に収める)と背景(グラデーションのみ)を別画像にして、`color_sort/assets/art/app_icon_fg.png` / `app_icon_bg.png` に置く(台帳に任意枠)。
 - 置いたら `cd color_sort_app && dart run flutter_launcher_icons -f flutter_launcher_icons-adaptive.yaml` で書き出し、`android/` の差分をコミットする(iOSの `project.pbxproj` に不正な値が入る場合は戻す)。
 - それまでは通常のアイコンだけ(新しい端末では枠の中に小さく見えることがある)。
+
+## 標準のメニュー構成(puzzle_core の meta に準拠)
+- ホームの上部に **ショップ → 設定 → 情報**(ショップは課金の窓口・商品がそろう時だけ)。構成・文言・設定の保存は puzzle_core の `package:puzzle_core/meta.dart`、画面(`ui/menu.dart`)はこのアプリが持つ。
+- 設定: 言語(端末に合わせる/日本語/English。すぐ反映・保存)、動きを減らす(こびとが歩かず立ったまま。端末の設定とどちらかが有効なら止める)、購入の復元(ショップがある時)、データ削除(確認つき。進行・コイン・町を消す。購入した内容・設定は残す)。
+- 情報: クレジット(**AI生成画像の表記を含む**)、プライバシーポリシー・利用規約(`--dart-define=PRIVACY_URL=...` / `TERMS_URL=...`。無ければ出さない。**公開前に必ず用意する**)、版(`--dart-define=APP_VERSION=...`)。URLは開く部品を入れていないので、タップでコピーする。

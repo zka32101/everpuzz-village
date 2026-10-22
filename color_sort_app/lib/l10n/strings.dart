@@ -1,9 +1,10 @@
 import 'package:flutter/widgets.dart';
 import 'package:puzzle_core/foundation.dart';
+import 'package:puzzle_core/meta.dart' show AppSettings, commonBundles;
 
 /// 文言は全てここ(翻訳データ)経由で引く。画面コードに文言を直書きしない。
 /// 言語の追加はこの Map にロケールを足すだけ。
-const bundles = <String, Map<String, String>>{
+const _gameBundles = <String, Map<String, String>>{
   'ja': {
     'appTitle': 'Everpuzz',
     'level': 'レベル {n}',
@@ -41,6 +42,14 @@ const bundles = <String, Map<String, String>>{
     'cancel': 'やめる',
     'coinCost': 'コイン {n}',
     'townCells': '町のマス',
+    'language.ja': '日本語',
+    'language.en': 'English',
+    'credit.images': '画像',
+    'credit.imagesBody': 'AI(Leonardo.Ai・Google の画像生成)で作成した画像を含みます。',
+    'credit.engine': '開発',
+    'credit.engineBody': 'Flutter / Dart',
+    'settingsDeleted': '進行・コイン・町を消しました。',
+    'openMenuInfo': '情報',
     'materialJoin': 'と',
     'townPlaced': '{name}を置きました({materials})',
     'townGrown': '{name}を{materials}で育てました',
@@ -175,6 +184,15 @@ const bundles = <String, Map<String, String>>{
     'cancel': 'Cancel',
     'coinCost': '{n} coins',
     'townCells': 'Town plots',
+    'language.ja': '日本語',
+    'language.en': 'English',
+    'credit.images': 'Images',
+    'credit.imagesBody':
+        'Includes images created with AI (Leonardo.Ai and Google image generation).',
+    'credit.engine': 'Built with',
+    'credit.engineBody': 'Flutter / Dart',
+    'settingsDeleted': 'Progress, coins and town were erased.',
+    'openMenuInfo': 'Info',
     'materialJoin': ' and ',
     'townPlaced': 'Placed {name} ({materials})',
     'townGrown': 'Grew {name} with {materials}',
@@ -279,6 +297,12 @@ const bundles = <String, Map<String, String>>{
 
 const supportedLocales = {'ja', 'en'};
 
+/// ゲーム固有の文言に、メニュー(ショップ・設定・情報)の共通文言を足した辞書。
+final bundles = <String, Map<String, String>>{
+  for (final l in _gameBundles.keys)
+    l: {..._gameBundles[l]!, ...?commonBundles[l]},
+};
+
 /// 画面から `L10n.of(context).tr('key')` で引く。
 class L10n extends InheritedWidget {
   const L10n({super.key, required this.translator, required super.child});
@@ -296,5 +320,9 @@ class L10n extends InheritedWidget {
       old.translator.locale != translator.locale;
 }
 
-Translator translatorFor(String deviceLanguageTag) =>
-    Translator(resolveLocale(deviceLanguageTag, supportedLocales), bundles);
+/// 端末の言語から文言を引く。設定で言語を選んでいれば、そちらを優先する。
+Translator translatorFor(String deviceLanguageTag, {AppSettings? settings}) {
+  final locale = (settings ?? AppSettings.defaults)
+      .effectiveLocale(deviceLanguageTag, supportedLocales);
+  return Translator(locale, bundles);
+}
