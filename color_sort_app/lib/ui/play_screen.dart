@@ -116,46 +116,74 @@ class _PlayScreenState extends State<PlayScreen> {
                     child: EconomyBar(app: widget.app),
                   ),
                   Expanded(
-                    // 容器は、使える幅・高さに全部収まる大きさに縮める(下段が切れないように)。
-                    // 縮めても足りない(極端に小さい画面・文字拡大)ときだけ、スクロールで見せる。
+                    // 容器は、使える幅・高さに全部収まる大きさに縮める。縮めても足りない
+                    // (極端に小さい画面・文字拡大・横向き)ときは、盤面ごと縮めて1画面に収める。
+                    // スクロールはしない(横にして戻したときに盤面が見えなくなるのを防ぐ)。
                     child: LayoutBuilder(builder: (context, box) {
-                      final unit = _fitUnit(
-                        count: game.board.tubes.length,
-                        maxWidth: box.maxWidth - 32,
-                        maxHeight: box.maxHeight - 32,
-                        useArt: widget.app.art.has('tube_back') &&
-                            widget.app.art.has('tube_front'),
+                      final count = game.board.tubes.length;
+                      final maxW = box.maxWidth - 32;
+                      final maxH = box.maxHeight - 32;
+                      final useArt = widget.app.art.has('tube_back') &&
+                          widget.app.art.has('tube_front');
+                      final unit = fitUnit(
+                        count: count,
+                        maxWidth: maxW,
+                        maxHeight: maxH,
+                        useArt: useArt,
                       );
-                      return SingleChildScrollView(
+                      final w = TubeWidget.widthFor(unit, useArt: useArt);
+                      final perRow = ((maxW + _tubeGap) / (w + _tubeGap))
+                          .floor()
+                          .clamp(1, count);
+                      Widget tube(int i) => TubeWidget(
+                            key: Key('tube-$i'),
+                            index: i,
+                            tube: game.board.tubes[i],
+                            lock: game.board.locks[i],
+                            usable: game.board.isUsable(i),
+                            selected: game.selected == i,
+                            hintRole: game.hint == null
+                                ? HintRole.none
+                                : game.hint!.$1 == i
+                                    ? HintRole.from
+                                    : game.hint!.$2 == i
+                                        ? HintRole.to
+                                        : HintRole.none,
+                            // ヒント中は、示した2本以外を薄くして、見るところを絞る。
+                            dimmed: game.hint != null &&
+                                game.hint!.$1 != i &&
+                                game.hint!.$2 != i,
+                            art: widget.app.art,
+                            theme: widget.app.art.themeFor(
+                                widget.app.globalLevelIndex(widget.index)),
+                            unit: unit,
+                            onTap: () => game.tap(i),
+                          );
+                      return Padding(
                         padding: const EdgeInsets.all(16),
                         child: Center(
-                          child: Wrap(
-                            alignment: WrapAlignment.center,
-                            spacing: 12,
-                            runSpacing: 12,
-                            children: [
-                              for (var i = 0; i < game.board.tubes.length; i++)
-                                TubeWidget(
-                                  key: Key('tube-$i'),
-                                  index: i,
-                                  tube: game.board.tubes[i],
-                                  lock: game.board.locks[i],
-                                  usable: game.board.isUsable(i),
-                                  selected: game.selected == i,
-                                  hintRole: game.hint == null
-                                      ? HintRole.none
-                                      : game.hint!.$1 == i
-                                          ? HintRole.from
-                                          : game.hint!.$2 == i
-                                              ? HintRole.to
-                                              : HintRole.none,
-                                  art: widget.app.art,
-                                  theme: widget.app.art.themeFor(widget.app
-                                      .globalLevelIndex(widget.index)),
-                                  unit: unit,
-                                  onTap: () => game.tap(i),
-                                ),
-                            ],
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                for (var r = 0; r * perRow < count; r++) ...[
+                                  if (r > 0) const SizedBox(height: _tubeGap),
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      for (var i = r * perRow;
+                                          i < count && i < (r + 1) * perRow;
+                                          i++) ...[
+                                        if (i > r * perRow)
+                                          const SizedBox(width: _tubeGap),
+                                        tube(i),
+                                      ],
+                                    ],
+                                  ),
+                                ],
+                              ],
+                            ),
                           ),
                         ),
                       );
@@ -163,22 +191,20 @@ class _PlayScreenState extends State<PlayScreen> {
                   ),
                   _Message(game: game, lifeLost: _lifeLost),
                   Padding(
-                    padding: const EdgeInsets.all(12),
+                    padding: const EdgeInsets.fromLTRB(8, 4, 8, 8),
                     child: Wrap(
-                      spacing: 12,
-                      runSpacing: 8,
+                      spacing: 8,
+                      runSpacing: 4,
                       alignment: WrapAlignment.center,
                       children: [
-                        FilledButton.tonalIcon(
+                        _ActionButton(
                           key: const Key('undo'),
-                          style: _big,
                           onPressed: game.canUndo ? game.undo : null,
                           icon: const Icon(Icons.undo),
                           label: Text(t.tr('undo')),
                         ),
-                        FilledButton.tonalIcon(
+                        _ActionButton(
                           key: const Key('restart'),
-                          style: _big,
                           onPressed: () {
                             game.restart();
                             _attempt++;
@@ -192,9 +218,8 @@ class _PlayScreenState extends State<PlayScreen> {
                           icon: const Icon(Icons.refresh),
                           label: Text(t.tr('restart')),
                         ),
-                        FilledButton.tonalIcon(
+                        _ActionButton(
                           key: const Key('hint'),
-                          style: _big,
                           onPressed: game.won || game.stuck || _hinting
                               ? null
                               : _showHint,
@@ -205,9 +230,8 @@ class _PlayScreenState extends State<PlayScreen> {
                                 })})',
                           ),
                         ),
-                        FilledButton.tonalIcon(
+                        _ActionButton(
                           key: const Key('extraTube'),
-                          style: _big,
                           onPressed: game.extraTubeUsed || game.won
                               ? null
                               : _buyExtraTube,
@@ -259,13 +283,14 @@ class _PlayScreenState extends State<PlayScreen> {
 
   /// 容器が全部収まる 1スロットの大きさ。標準(46)から、収まるまで縮める(下限 30)。
   /// 横に並べる本数は、幅に入るだけ(標準の幅)で決まり、足りなければ段が増える。
-  static double _fitUnit({
+  @visibleForTesting
+  static double fitUnit({
     required int count,
     required double maxWidth,
     required double maxHeight,
     required bool useArt,
   }) {
-    const spacing = 12.0;
+    const spacing = _tubeGap;
     var unit = TubeWidget.defaultUnit;
     final minUnit = TubeWidget.minUnitFor(useArt: useArt);
     while (unit > minUnit) {
@@ -318,8 +343,7 @@ class _PlayScreenState extends State<PlayScreen> {
     }
   }
 
-  /// タップ領域 44pt 以上。
-  static final _big = FilledButton.styleFrom(minimumSize: const Size(48, 48));
+  static const _tubeGap = 12.0;
 }
 
 /// 失敗の理由・行き詰まりを短い文で見せる。
@@ -440,6 +464,43 @@ class _WinPanel extends StatelessWidget {
                   child: Text(t.tr(nextIsChapter ? 'nextChapter' : 'next')),
                 ),
             ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// 下のボタン。絵を上・文字を下に縦に並べ、4つが1段に収まる幅にする(盤面に高さを譲る)。
+/// タップ領域は 48pt 以上。
+class _ActionButton extends StatelessWidget {
+  const _ActionButton({
+    super.key,
+    required this.onPressed,
+    required this.icon,
+    required this.label,
+  });
+
+  final VoidCallback? onPressed;
+  final Widget icon;
+  final Widget label;
+
+  @override
+  Widget build(BuildContext context) {
+    return FilledButton.tonal(
+      onPressed: onPressed,
+      style: FilledButton.styleFrom(
+        minimumSize: const Size(72, 52),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconTheme.merge(data: const IconThemeData(size: 20), child: icon),
+          DefaultTextStyle.merge(
+            style: const TextStyle(fontSize: 12),
+            textAlign: TextAlign.center,
+            child: label,
           ),
         ],
       ),

@@ -106,8 +106,9 @@ void main() {
       expect(app.coins, 40 - app.hintCost);
       expect(find.byKey(const Key('hint-from')), findsOneWidget);
       expect(find.byKey(const Key('hint-to')), findsOneWidget);
-      expect(find.text('From here'), findsOneWidget);
-      expect(find.text('To here'), findsOneWidget);
+      // 容器の上は色つきの矢印(ここから=上・ここへ=下)。言葉は読み上げと、盤面の下の文で示す。
+      expect(find.bySemanticsLabel(RegExp('From here')), findsOneWidget);
+      expect(find.bySemanticsLabel(RegExp('To here')), findsOneWidget);
       expect(
         find.text('Tube ${expected.$1 + 1} to tube ${expected.$2 + 1}'),
         findsOneWidget,
