@@ -20,7 +20,7 @@ Future<void> clearAll(AppState app, int packIndex) async {
 void main() {
   test('パックの一覧が読め、2つ目は最初は遊べない(前のパックを全部クリアすると解放)', () async {
     final app = await loadApp();
-    expect(app.packs.map((p) => p.id), ['main', 'extra1']);
+    expect(app.packs.map((p) => p.id), ['main', 'extra1', 'extra2']);
     expect(app.packs[0].pack.levels, hasLength(60));
     expect(app.packs[1].pack.levels, hasLength(60));
     expect(app.packs[1].pack.validate(), isEmpty); // 解けない面は無い
@@ -42,7 +42,7 @@ void main() {
   test('面のIDはパックごとに別で、進行は混ざらない', () async {
     final app = await loadApp();
     final ids = [for (final p in app.packs) ...p.pack.levels.map((l) => l.id)];
-    expect(ids.toSet(), hasLength(120));
+    expect(ids.toSet(), hasLength(180));
     await clearAll(app, 0);
     await app.selectPack(1);
     expect(app.clearedIn(0), 60);
@@ -78,6 +78,10 @@ void main() {
     expect(await app.advanceToPlayable(), 0);
     expect(app.activePackIndex, 1);
     await clearAll(app, 1);
+    expect(app.nextAvailablePack, 2);
+    expect(await app.advanceToPlayable(), 0);
+    expect(app.activePackIndex, 2);
+    await clearAll(app, 2);
     expect(app.nextAvailablePack, isNull);
     expect(await app.advanceToPlayable(), 59);
   });
@@ -121,7 +125,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('pack-main')), findsOneWidget);
     expect(find.byKey(const Key('pack-extra1')), findsOneWidget);
-    expect(find.textContaining('Clear the previous chapter'), findsOneWidget);
+    expect(find.textContaining('Clear the previous chapter'), findsNWidgets(2));
     await tester.tap(find.byKey(const Key('pack-extra1')));
     await tester.pumpAndSettle();
     expect(app.activePackIndex, 0); // 押せない

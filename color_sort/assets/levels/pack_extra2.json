@@ -1,0 +1,4547 @@
+{
+ "schemaVersion": 1,
+ "game": "color_sort",
+ "packId": "extra2",
+ "packVersion": 3,
+ "levels": [
+  {
+   "id": "extra2-001",
+   "seed": 20381022,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      3,
+      5,
+      2,
+      5
+     ],
+     [
+      1,
+      0,
+      0,
+      3
+     ],
+     [
+      3,
+      7,
+      4
+     ],
+     [
+      4,
+      7,
+      0
+     ],
+     [
+      1,
+      5,
+      0,
+      2
+     ],
+     [
+      6,
+      2,
+      1,
+      6
+     ],
+     [],
+     [
+      7,
+      3,
+      7,
+      1
+     ],
+     [
+      2,
+      4,
+      4
+     ],
+     [
+      5,
+      6,
+      6
+     ]
+    ],
+    "locks": [
+     {
+      "kind": "key",
+      "color": 7
+     },
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 22,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-002",
+   "seed": 20382019,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      5,
+      6,
+      4,
+      0
+     ],
+     [
+      5,
+      1,
+      3,
+      4
+     ],
+     [
+      6,
+      1,
+      6,
+      7
+     ],
+     [
+      3,
+      1,
+      2,
+      7
+     ],
+     [
+      4,
+      1,
+      2,
+      0
+     ],
+     [],
+     [
+      2,
+      7,
+      2,
+      6
+     ],
+     [
+      3,
+      0,
+      4
+     ],
+     [
+      7,
+      5
+     ],
+     [
+      0,
+      5,
+      3
+     ]
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 25,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-003",
+   "seed": 20383020,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      6,
+      4,
+      1,
+      5
+     ],
+     [
+      0,
+      6,
+      6,
+      0
+     ],
+     [
+      2,
+      7,
+      3
+     ],
+     [
+      1,
+      4,
+      0
+     ],
+     [
+      1,
+      5,
+      2
+     ],
+     [
+      4,
+      0,
+      4,
+      5
+     ],
+     [],
+     [
+      5,
+      7,
+      6
+     ],
+     [
+      7,
+      3,
+      3,
+      2
+     ],
+     [
+      2,
+      7,
+      1,
+      3
+     ]
+    ],
+    "locks": [
+     null,
+     null,
+     null,
+     null,
+     {
+      "kind": "frozen"
+     },
+     null,
+     null,
+     null,
+     null,
+     null
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 23,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-004",
+   "seed": 20384022,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      6,
+      3,
+      5,
+      4
+     ],
+     [
+      5,
+      3,
+      7,
+      0
+     ],
+     [
+      5,
+      6,
+      2,
+      4
+     ],
+     [],
+     [
+      6,
+      1,
+      4
+     ],
+     [
+      0,
+      0,
+      6,
+      1
+     ],
+     [
+      7,
+      7,
+      4,
+      7
+     ],
+     [
+      0
+     ],
+     [
+      1,
+      3,
+      3,
+      2
+     ],
+     [
+      5,
+      2,
+      2,
+      1
+     ]
+    ],
+    "locks": [
+     null,
+     null,
+     {
+      "kind": "frozen"
+     },
+     null,
+     null,
+     {
+      "kind": "key",
+      "color": 7
+     },
+     null,
+     null,
+     null,
+     null
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 23,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-005",
+   "seed": 20385020,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      4,
+      7,
+      3,
+      7
+     ],
+     [
+      0,
+      3
+     ],
+     [
+      6,
+      6
+     ],
+     [
+      2,
+      5,
+      4,
+      1
+     ],
+     [
+      0,
+      3,
+      1
+     ],
+     [
+      0,
+      2,
+      5,
+      5
+     ],
+     [
+      0,
+      5
+     ],
+     [
+      2,
+      6,
+      4,
+      3
+     ],
+     [
+      4,
+      7,
+      6
+     ],
+     [
+      1,
+      2,
+      1,
+      7
+     ]
+    ],
+    "locks": [
+     null,
+     null,
+     null,
+     null,
+     {
+      "kind": "key",
+      "color": 5
+     },
+     null,
+     null,
+     null,
+     null,
+     null
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 26,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-006",
+   "seed": 20386025,
+   "difficulty": 7.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      0,
+      0,
+      2,
+      3
+     ],
+     [
+      1,
+      1,
+      4,
+      6
+     ],
+     [
+      2,
+      2,
+      0
+     ],
+     [
+      3,
+      3,
+      3,
+      4
+     ],
+     [
+      4,
+      4,
+      5,
+      1
+     ],
+     [
+      5,
+      5,
+      0
+     ],
+     [
+      6,
+      6
+     ],
+     [
+      6,
+      2,
+      1,
+      5
+     ]
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 13,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-007",
+   "seed": 20387020,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      0,
+      7,
+      5,
+      4
+     ],
+     [
+      7,
+      5,
+      4,
+      1
+     ],
+     [
+      4,
+      1,
+      1,
+      7
+     ],
+     [
+      0,
+      6
+     ],
+     [
+      4,
+      3,
+      3,
+      5
+     ],
+     [
+      6,
+      1,
+      2,
+      0
+     ],
+     [
+      2,
+      3
+     ],
+     [
+      3,
+      2,
+      7
+     ],
+     [
+      2,
+      6,
+      0,
+      5
+     ],
+     [
+      6
+     ]
+    ],
+    "locks": [
+     null,
+     null,
+     null,
+     null,
+     {
+      "kind": "frozen"
+     },
+     null,
+     null,
+     null,
+     null,
+     null
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 24,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-008",
+   "seed": 20388019,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      0,
+      7,
+      4,
+      5
+     ],
+     [
+      2
+     ],
+     [
+      1,
+      3,
+      7
+     ],
+     [
+      0,
+      3
+     ],
+     [
+      5,
+      7,
+      5
+     ],
+     [
+      1,
+      1,
+      7,
+      5
+     ],
+     [
+      4,
+      1,
+      0,
+      4
+     ],
+     [
+      6,
+      2,
+      2
+     ],
+     [
+      6,
+      3,
+      6,
+      4
+     ],
+     [
+      3,
+      2,
+      0,
+      6
+     ]
+    ],
+    "locks": [
+     null,
+     null,
+     {
+      "kind": "frozen"
+     },
+     {
+      "kind": "key",
+      "color": 2
+     },
+     null,
+     null,
+     null,
+     null,
+     null,
+     null
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 25,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-009",
+   "seed": 20389020,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      0,
+      7,
+      2,
+      6
+     ],
+     [
+      1,
+      7
+     ],
+     [
+      4,
+      3,
+      4,
+      4
+     ],
+     [
+      2,
+      3,
+      2,
+      3
+     ],
+     [
+      4,
+      5,
+      2
+     ],
+     [
+      7,
+      7,
+      5
+     ],
+     [
+      5,
+      0,
+      1
+     ],
+     [
+      1,
+      6,
+      5,
+      1
+     ],
+     [
+      6,
+      6,
+      0
+     ],
+     [
+      3,
+      0
+     ]
+    ],
+    "locks": [
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     {
+      "kind": "key",
+      "color": 3
+     },
+     null
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 21,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-010",
+   "seed": 20390019,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      7,
+      0,
+      4
+     ],
+     [
+      3,
+      7
+     ],
+     [
+      1,
+      2,
+      2,
+      4
+     ],
+     [
+      1,
+      3
+     ],
+     [
+      2,
+      6,
+      0,
+      3
+     ],
+     [
+      7,
+      2,
+      5
+     ],
+     [
+      4,
+      6,
+      6,
+      4
+     ],
+     [
+      5,
+      7
+     ],
+     [
+      1,
+      5,
+      6,
+      0
+     ],
+     [
+      3,
+      1,
+      0,
+      5
+     ]
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 24,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-011",
+   "seed": 20391030,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [],
+     [
+      5,
+      4,
+      4,
+      0
+     ],
+     [
+      2,
+      6,
+      6,
+      6
+     ],
+     [
+      5,
+      3,
+      0,
+      3
+     ],
+     [
+      0,
+      5,
+      2,
+      7
+     ],
+     [
+      0,
+      7,
+      4,
+      7
+     ],
+     [
+      1,
+      6,
+      2
+     ],
+     [
+      1,
+      1,
+      5
+     ],
+     [
+      7,
+      1,
+      3
+     ],
+     [
+      3,
+      4,
+      2
+     ]
+    ],
+    "locks": [
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     {
+      "kind": "frozen"
+     },
+     null,
+     null,
+     null
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 23,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-012",
+   "seed": 20392022,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      4,
+      6,
+      0,
+      6
+     ],
+     [
+      4,
+      5,
+      5,
+      3
+     ],
+     [
+      1,
+      0,
+      3,
+      0
+     ],
+     [
+      2,
+      5,
+      1,
+      1
+     ],
+     [
+      0,
+      3,
+      7
+     ],
+     [
+      1,
+      2,
+      2,
+      3
+     ],
+     [
+      5,
+      7
+     ],
+     [
+      7,
+      6
+     ],
+     [
+      7,
+      2
+     ],
+     [
+      4,
+      6,
+      4
+     ]
+    ],
+    "locks": [
+     {
+      "kind": "frozen"
+     },
+     {
+      "kind": "key",
+      "color": 7
+     },
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 23,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-013",
+   "seed": 20393019,
+   "difficulty": 7.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      0,
+      1,
+      1
+     ],
+     [
+      0
+     ],
+     [
+      2,
+      2,
+      3
+     ],
+     [
+      3,
+      3,
+      0
+     ],
+     [
+      4,
+      4,
+      4,
+      2
+     ],
+     [
+      5,
+      5,
+      5,
+      0
+     ],
+     [
+      6,
+      6,
+      2,
+      3
+     ],
+     [
+      4,
+      6,
+      1
+     ],
+     [
+      1,
+      5,
+      6
+     ]
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 13,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-014",
+   "seed": 20394019,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      0,
+      3,
+      3,
+      3
+     ],
+     [
+      7,
+      7,
+      7,
+      2
+     ],
+     [
+      5,
+      4,
+      2,
+      5
+     ],
+     [
+      2,
+      5,
+      1,
+      0
+     ],
+     [
+      5,
+      4,
+      6
+     ],
+     [
+      2,
+      6,
+      1
+     ],
+     [
+      1,
+      6,
+      0
+     ],
+     [],
+     [
+      0,
+      4,
+      4,
+      6
+     ],
+     [
+      3,
+      7,
+      1
+     ]
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 21,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-015",
+   "seed": 20395019,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      0,
+      6,
+      7
+     ],
+     [
+      0,
+      1,
+      2,
+      5
+     ],
+     [],
+     [
+      5,
+      7,
+      6,
+      5
+     ],
+     [
+      4,
+      5,
+      1,
+      1
+     ],
+     [
+      0,
+      2
+     ],
+     [
+      0,
+      3,
+      3,
+      6
+     ],
+     [
+      3,
+      7,
+      4,
+      4
+     ],
+     [
+      2,
+      6,
+      2,
+      4
+     ],
+     [
+      1,
+      3,
+      7
+     ]
+    ],
+    "locks": [
+     null,
+     null,
+     null,
+     null,
+     null,
+     {
+      "kind": "frozen"
+     },
+     null,
+     null,
+     null,
+     null
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 23,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-016",
+   "seed": 20396020,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      7,
+      4,
+      5,
+      7
+     ],
+     [
+      5,
+      3,
+      3
+     ],
+     [
+      5,
+      1,
+      2
+     ],
+     [
+      1,
+      5,
+      7,
+      7
+     ],
+     [
+      3,
+      0,
+      3,
+      4
+     ],
+     [
+      2,
+      2,
+      1,
+      2
+     ],
+     [
+      0,
+      6,
+      0
+     ],
+     [],
+     [
+      1,
+      4,
+      6
+     ],
+     [
+      0,
+      6,
+      4,
+      6
+     ]
+    ],
+    "locks": [
+     null,
+     null,
+     {
+      "kind": "frozen"
+     },
+     null,
+     null,
+     {
+      "kind": "key",
+      "color": 3
+     },
+     null,
+     null,
+     null,
+     null
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 24,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-017",
+   "seed": 20397021,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      0,
+      1,
+      1,
+      1
+     ],
+     [
+      2,
+      6,
+      3,
+      6
+     ],
+     [
+      7,
+      3,
+      5,
+      4
+     ],
+     [
+      4,
+      7,
+      5,
+      0
+     ],
+     [
+      0,
+      2,
+      2,
+      4
+     ],
+     [
+      5,
+      2,
+      4,
+      0
+     ],
+     [
+      3,
+      6,
+      3,
+      6
+     ],
+     [
+      7
+     ],
+     [],
+     [
+      5,
+      7,
+      1
+     ]
+    ],
+    "locks": [
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     {
+      "kind": "key",
+      "color": 2
+     },
+     null,
+     null,
+     null
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 23,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-018",
+   "seed": 20398095,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      1,
+      2,
+      0,
+      4
+     ],
+     [
+      4,
+      4,
+      4,
+      3
+     ],
+     [
+      5,
+      5,
+      3
+     ],
+     [
+      2,
+      7
+     ],
+     [
+      1,
+      6,
+      5,
+      5
+     ],
+     [
+      2,
+      3,
+      1
+     ],
+     [
+      6,
+      6,
+      3,
+      6
+     ],
+     [
+      0,
+      1,
+      7,
+      7
+     ],
+     [
+      7,
+      0,
+      2,
+      0
+     ]
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 19,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-019",
+   "seed": 20399020,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      2,
+      2,
+      2,
+      5
+     ],
+     [
+      5,
+      6,
+      5
+     ],
+     [
+      6,
+      1,
+      7,
+      6
+     ],
+     [
+      3,
+      1,
+      3,
+      7
+     ],
+     [
+      4,
+      3
+     ],
+     [
+      4,
+      5,
+      7
+     ],
+     [
+      7,
+      6,
+      4
+     ],
+     [
+      0,
+      0,
+      2,
+      3
+     ],
+     [
+      4,
+      0,
+      1,
+      0
+     ],
+     [
+      1
+     ]
+    ],
+    "locks": [
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     {
+      "kind": "frozen"
+     },
+     null,
+     null,
+     null
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 21,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-020",
+   "seed": 20400019,
+   "difficulty": 7.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      4,
+      4,
+      1
+     ],
+     [
+      1,
+      1,
+      0,
+      5
+     ],
+     [
+      2,
+      2
+     ],
+     [
+      3,
+      3,
+      6,
+      0
+     ],
+     [
+      4,
+      3
+     ],
+     [
+      5,
+      1,
+      5,
+      2
+     ],
+     [
+      6,
+      4,
+      0,
+      5
+     ],
+     [
+      6
+     ],
+     [
+      3,
+      6,
+      0,
+      2
+     ]
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 19,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-021",
+   "seed": 20401021,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      6,
+      6,
+      4
+     ],
+     [
+      1,
+      2,
+      5,
+      6
+     ],
+     [
+      7
+     ],
+     [
+      3,
+      1,
+      1,
+      3
+     ],
+     [
+      4,
+      5,
+      0,
+      7
+     ],
+     [
+      4,
+      4,
+      2,
+      3
+     ],
+     [
+      1,
+      2,
+      0
+     ],
+     [
+      2,
+      0
+     ],
+     [
+      0,
+      5,
+      7
+     ],
+     [
+      3,
+      6,
+      5,
+      7
+     ]
+    ],
+    "locks": [
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     {
+      "kind": "key",
+      "color": 5
+     },
+     null,
+     null,
+     null
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 23,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-022",
+   "seed": 20402019,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      5,
+      7,
+      4,
+      5
+     ],
+     [
+      6,
+      2,
+      3
+     ],
+     [
+      2,
+      7,
+      0,
+      6
+     ],
+     [
+      4,
+      3,
+      1,
+      1
+     ],
+     [
+      4
+     ],
+     [
+      2,
+      4,
+      7,
+      6
+     ],
+     [
+      1,
+      3,
+      0
+     ],
+     [
+      2,
+      7,
+      5,
+      5
+     ],
+     [
+      1
+     ],
+     [
+      0,
+      6,
+      3,
+      0
+     ]
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 25,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-023",
+   "seed": 20403019,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      4,
+      5,
+      6,
+      4
+     ],
+     [
+      1,
+      7,
+      3,
+      5
+     ],
+     [
+      5,
+      2,
+      7
+     ],
+     [
+      3,
+      0,
+      0,
+      6
+     ],
+     [
+      4
+     ],
+     [
+      0,
+      3,
+      7,
+      7
+     ],
+     [
+      2,
+      5,
+      6
+     ],
+     [
+      3,
+      1,
+      1,
+      0
+     ],
+     [
+      1,
+      4,
+      2,
+      6
+     ],
+     [
+      2
+     ]
+    ],
+    "locks": [
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     {
+      "kind": "frozen"
+     },
+     null,
+     null
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 23,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-024",
+   "seed": 20404020,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      6,
+      0,
+      6,
+      1
+     ],
+     [
+      4,
+      7,
+      1,
+      5
+     ],
+     [
+      3
+     ],
+     [
+      1,
+      1
+     ],
+     [
+      4,
+      3
+     ],
+     [
+      6,
+      4,
+      2,
+      5
+     ],
+     [
+      3,
+      0,
+      7,
+      7
+     ],
+     [
+      5,
+      2,
+      3,
+      0
+     ],
+     [
+      7,
+      6,
+      2
+     ],
+     [
+      0,
+      2,
+      4,
+      5
+     ]
+    ],
+    "locks": [
+     null,
+     null,
+     null,
+     null,
+     null,
+     {
+      "kind": "key",
+      "color": 1
+     },
+     null,
+     null,
+     null,
+     {
+      "kind": "frozen"
+     }
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 23,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-025",
+   "seed": 20405021,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      2,
+      0,
+      7,
+      0
+     ],
+     [
+      1,
+      4,
+      0
+     ],
+     [
+      5,
+      1,
+      3,
+      2
+     ],
+     [
+      1,
+      5,
+      6,
+      4
+     ],
+     [
+      7,
+      1,
+      2
+     ],
+     [
+      5,
+      4,
+      6
+     ],
+     [
+      0,
+      6,
+      7
+     ],
+     [
+      7,
+      6,
+      3,
+      3
+     ],
+     [
+      4,
+      2,
+      3,
+      5
+     ],
+     []
+    ],
+    "locks": [
+     null,
+     null,
+     null,
+     null,
+     {
+      "kind": "key",
+      "color": 0
+     },
+     null,
+     null,
+     null,
+     null,
+     null
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 25,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-026",
+   "seed": 20406019,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      5,
+      6,
+      4
+     ],
+     [
+      2,
+      6,
+      0
+     ],
+     [
+      2,
+      3,
+      5,
+      0
+     ],
+     [
+      0,
+      1,
+      5
+     ],
+     [
+      7,
+      3,
+      6,
+      4
+     ],
+     [
+      1
+     ],
+     [
+      6,
+      1,
+      1
+     ],
+     [
+      5,
+      7,
+      7,
+      4
+     ],
+     [
+      0,
+      4,
+      3,
+      2
+     ],
+     [
+      2,
+      7,
+      3
+     ]
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 24,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-027",
+   "seed": 20407019,
+   "difficulty": 7.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      0,
+      0,
+      6,
+      2
+     ],
+     [
+      1,
+      1,
+      1,
+      5
+     ],
+     [
+      2,
+      0,
+      3,
+      1
+     ],
+     [
+      3,
+      3,
+      5,
+      4
+     ],
+     [
+      4,
+      4,
+      4
+     ],
+     [
+      5,
+      2,
+      0
+     ],
+     [
+      6,
+      6,
+      6
+     ],
+     [
+      3,
+      2,
+      5
+     ]
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 13,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-028",
+   "seed": 20408020,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      0,
+      2,
+      0,
+      2
+     ],
+     [
+      5,
+      2,
+      3
+     ],
+     [
+      1,
+      4,
+      6
+     ],
+     [
+      5,
+      5,
+      1,
+      7
+     ],
+     [
+      7
+     ],
+     [
+      6,
+      0,
+      7,
+      7
+     ],
+     [
+      1,
+      0,
+      3,
+      5
+     ],
+     [
+      3,
+      1,
+      2,
+      4
+     ],
+     [
+      6,
+      4
+     ],
+     [
+      3,
+      4,
+      6
+     ]
+    ],
+    "locks": [
+     {
+      "kind": "key",
+      "color": 7
+     },
+     null,
+     null,
+     {
+      "kind": "frozen"
+     },
+     null,
+     null,
+     null,
+     null,
+     null,
+     null
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 25,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-029",
+   "seed": 20409021,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [],
+     [
+      3,
+      4,
+      3,
+      1
+     ],
+     [
+      6,
+      2,
+      0,
+      7
+     ],
+     [
+      5,
+      3,
+      6,
+      3
+     ],
+     [
+      2,
+      5,
+      0
+     ],
+     [
+      4,
+      0,
+      5,
+      0
+     ],
+     [
+      7,
+      4,
+      2,
+      7
+     ],
+     [
+      7,
+      1,
+      5,
+      2
+     ],
+     [
+      6,
+      6,
+      4,
+      1
+     ],
+     [
+      1
+     ]
+    ],
+    "locks": [
+     null,
+     null,
+     null,
+     {
+      "kind": "key",
+      "color": 7
+     },
+     null,
+     null,
+     null,
+     null,
+     null,
+     null
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 25,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-030",
+   "seed": 20410034,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      4,
+      1,
+      1
+     ],
+     [
+      5,
+      0,
+      7,
+      7
+     ],
+     [
+      2,
+      0,
+      5,
+      3
+     ],
+     [
+      7,
+      3
+     ],
+     [
+      3,
+      7,
+      4
+     ],
+     [
+      1,
+      6,
+      2,
+      0
+     ],
+     [
+      2,
+      6,
+      6,
+      4
+     ],
+     [
+      2,
+      1,
+      5,
+      3
+     ],
+     [
+      4,
+      5,
+      0,
+      6
+     ]
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 24,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-031",
+   "seed": 20411020,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      2,
+      3,
+      4
+     ],
+     [
+      2,
+      5,
+      0
+     ],
+     [
+      7,
+      1,
+      5
+     ],
+     [
+      4
+     ],
+     [
+      5,
+      0,
+      6
+     ],
+     [
+      6,
+      1,
+      2
+     ],
+     [
+      4,
+      3,
+      6,
+      0
+     ],
+     [
+      7,
+      0,
+      6,
+      3
+     ],
+     [
+      7,
+      1,
+      3,
+      7
+     ],
+     [
+      2,
+      4,
+      1,
+      5
+     ]
+    ],
+    "locks": [
+     {
+      "kind": "frozen"
+     },
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 27,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-032",
+   "seed": 20412020,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      1,
+      7,
+      0,
+      3
+     ],
+     [
+      4,
+      7,
+      7,
+      1
+     ],
+     [
+      5,
+      6
+     ],
+     [
+      3,
+      0
+     ],
+     [
+      6,
+      4,
+      5,
+      7
+     ],
+     [
+      5,
+      2,
+      2
+     ],
+     [
+      2,
+      6,
+      3
+     ],
+     [
+      4,
+      2,
+      0,
+      4
+     ],
+     [
+      1,
+      5,
+      1
+     ],
+     [
+      3,
+      0,
+      6
+     ]
+    ],
+    "locks": [
+     null,
+     null,
+     null,
+     null,
+     {
+      "kind": "key",
+      "color": 0
+     },
+     null,
+     null,
+     null,
+     {
+      "kind": "frozen"
+     },
+     null
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 24,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-033",
+   "seed": 20413020,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      7,
+      0,
+      6,
+      2
+     ],
+     [
+      5,
+      3,
+      2
+     ],
+     [
+      0,
+      4,
+      0,
+      6
+     ],
+     [],
+     [
+      3,
+      0
+     ],
+     [
+      5,
+      2,
+      4,
+      3
+     ],
+     [
+      1,
+      3,
+      1,
+      5
+     ],
+     [
+      1,
+      4,
+      7
+     ],
+     [
+      7,
+      6,
+      5,
+      7
+     ],
+     [
+      4,
+      6,
+      2,
+      1
+     ]
+    ],
+    "locks": [
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     {
+      "kind": "key",
+      "color": 7
+     }
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 26,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-034",
+   "seed": 20414019,
+   "difficulty": 7.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      0,
+      2,
+      0,
+      3
+     ],
+     [
+      1,
+      1,
+      6,
+      0
+     ],
+     [
+      2,
+      2,
+      6,
+      4
+     ],
+     [
+      3
+     ],
+     [
+      4,
+      4,
+      6,
+      3
+     ],
+     [
+      5,
+      4,
+      6,
+      5
+     ],
+     [],
+     [
+      5,
+      5,
+      0
+     ],
+     [
+      1,
+      3,
+      2,
+      1
+     ]
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 18,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-035",
+   "seed": 20415021,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      3,
+      3,
+      6,
+      7
+     ],
+     [
+      7,
+      5,
+      6,
+      0
+     ],
+     [
+      1,
+      6,
+      5,
+      1
+     ],
+     [
+      3,
+      1,
+      7,
+      4
+     ],
+     [
+      3,
+      7,
+      2,
+      5
+     ],
+     [
+      0
+     ],
+     [
+      2
+     ],
+     [
+      4,
+      0,
+      4
+     ],
+     [
+      6,
+      1,
+      5
+     ],
+     [
+      0,
+      4,
+      2,
+      2
+     ]
+    ],
+    "locks": [
+     null,
+     {
+      "kind": "frozen"
+     },
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 23,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-036",
+   "seed": 20416029,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      6,
+      3,
+      4,
+      5
+     ],
+     [
+      6,
+      4,
+      5,
+      1
+     ],
+     [
+      2,
+      1,
+      0
+     ],
+     [
+      2,
+      3,
+      0,
+      7
+     ],
+     [
+      3,
+      7
+     ],
+     [
+      0
+     ],
+     [
+      2,
+      4,
+      3
+     ],
+     [
+      6,
+      5,
+      0,
+      4
+     ],
+     [
+      7,
+      6,
+      5
+     ],
+     [
+      1,
+      2,
+      1,
+      7
+     ]
+    ],
+    "locks": [
+     null,
+     {
+      "kind": "key",
+      "color": 7
+     },
+     null,
+     null,
+     null,
+     null,
+     null,
+     {
+      "kind": "frozen"
+     },
+     null,
+     null
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 26,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-037",
+   "seed": 20417019,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      4,
+      4,
+      7
+     ],
+     [
+      7
+     ],
+     [
+      7,
+      5,
+      4
+     ],
+     [
+      1,
+      5,
+      3,
+      6
+     ],
+     [
+      0,
+      1,
+      0
+     ],
+     [
+      0,
+      3,
+      5,
+      2
+     ],
+     [
+      3,
+      5,
+      1,
+      6
+     ],
+     [
+      0,
+      6,
+      1,
+      7
+     ],
+     [
+      2,
+      6,
+      4
+     ],
+     [
+      2,
+      2,
+      3
+     ]
+    ],
+    "locks": [
+     null,
+     null,
+     null,
+     null,
+     null,
+     {
+      "kind": "key",
+      "color": 4
+     },
+     null,
+     null,
+     null,
+     null
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 24,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-038",
+   "seed": 20418019,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      1,
+      5,
+      4,
+      2
+     ],
+     [
+      0,
+      0,
+      1
+     ],
+     [
+      2,
+      6,
+      3
+     ],
+     [
+      3,
+      5,
+      0,
+      4
+     ],
+     [
+      5
+     ],
+     [
+      7,
+      2,
+      3,
+      6
+     ],
+     [
+      7,
+      4,
+      2,
+      3
+     ],
+     [
+      7,
+      5,
+      6
+     ],
+     [
+      1,
+      7,
+      0
+     ],
+     [
+      1,
+      6,
+      4
+     ]
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 25,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-039",
+   "seed": 20419020,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      1,
+      3,
+      0
+     ],
+     [
+      7,
+      7,
+      0
+     ],
+     [
+      0,
+      0,
+      6
+     ],
+     [
+      5,
+      5,
+      2
+     ],
+     [],
+     [
+      5,
+      4,
+      1,
+      3
+     ],
+     [
+      1,
+      7,
+      3,
+      4
+     ],
+     [
+      2,
+      2,
+      6,
+      5
+     ],
+     [
+      3,
+      6,
+      7,
+      2
+     ],
+     [
+      4,
+      1,
+      4,
+      6
+     ]
+    ],
+    "locks": [
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     {
+      "kind": "frozen"
+     },
+     null
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 21,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-040",
+   "seed": 20420045,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      2,
+      0,
+      6,
+      3
+     ],
+     [
+      4,
+      1,
+      5,
+      3
+     ],
+     [
+      2,
+      0,
+      4,
+      0
+     ],
+     [
+      6,
+      0
+     ],
+     [
+      1,
+      5
+     ],
+     [
+      4,
+      2,
+      7
+     ],
+     [
+      2,
+      7,
+      1
+     ],
+     [
+      3,
+      3,
+      7,
+      4
+     ],
+     [
+      1,
+      5,
+      5,
+      6
+     ],
+     [
+      7,
+      6
+     ]
+    ],
+    "locks": [
+     {
+      "kind": "key",
+      "color": 5
+     },
+     null,
+     null,
+     null,
+     null,
+     {
+      "kind": "frozen"
+     },
+     null,
+     null,
+     null,
+     null
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 24,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-041",
+   "seed": 20421019,
+   "difficulty": 7.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      0,
+      0,
+      2,
+      0
+     ],
+     [],
+     [
+      2,
+      2,
+      5,
+      0
+     ],
+     [
+      3,
+      3,
+      3
+     ],
+     [
+      4,
+      4,
+      6
+     ],
+     [
+      5,
+      2,
+      5,
+      4
+     ],
+     [
+      1,
+      1,
+      1
+     ],
+     [
+      6,
+      1,
+      6,
+      4
+     ],
+     [
+      5,
+      3,
+      6
+     ]
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 16,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-042",
+   "seed": 20422037,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      7,
+      4,
+      0,
+      6
+     ],
+     [
+      5,
+      5,
+      3,
+      0
+     ],
+     [
+      2,
+      2,
+      6,
+      3
+     ],
+     [
+      1,
+      5,
+      1,
+      1
+     ],
+     [
+      0,
+      6,
+      5,
+      4
+     ],
+     [
+      3,
+      0,
+      2,
+      2
+     ],
+     [
+      1,
+      3
+     ],
+     [
+      4,
+      4,
+      7
+     ],
+     [
+      6,
+      7,
+      7
+     ]
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 18,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-043",
+   "seed": 20423019,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      7,
+      3,
+      5,
+      7
+     ],
+     [
+      0,
+      7,
+      0
+     ],
+     [
+      1,
+      1,
+      3,
+      6
+     ],
+     [
+      6,
+      5,
+      4,
+      4
+     ],
+     [
+      3,
+      2,
+      5
+     ],
+     [
+      1,
+      1,
+      2
+     ],
+     [
+      4,
+      2
+     ],
+     [
+      6,
+      6,
+      0,
+      3
+     ],
+     [
+      5,
+      7,
+      0
+     ],
+     [
+      2,
+      4
+     ]
+    ],
+    "locks": [
+     null,
+     null,
+     {
+      "kind": "frozen"
+     },
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 20,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-044",
+   "seed": 20424036,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      3,
+      3,
+      0,
+      1
+     ],
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      4,
+      7,
+      6
+     ],
+     [
+      4,
+      2,
+      6,
+      6
+     ],
+     [],
+     [
+      7,
+      1,
+      5
+     ],
+     [
+      3,
+      5,
+      1,
+      7
+     ],
+     [
+      4,
+      2,
+      5
+     ],
+     [
+      6,
+      5,
+      3,
+      2
+     ],
+     [
+      2,
+      7,
+      0,
+      4
+     ]
+    ],
+    "locks": [
+     null,
+     null,
+     {
+      "kind": "frozen"
+     },
+     null,
+     null,
+     null,
+     {
+      "kind": "key",
+      "color": 6
+     },
+     null,
+     null,
+     null
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 22,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-045",
+   "seed": 20425019,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      6,
+      6,
+      6,
+      3
+     ],
+     [
+      4,
+      5,
+      1
+     ],
+     [
+      4,
+      3,
+      1
+     ],
+     [
+      6,
+      7,
+      4
+     ],
+     [
+      3,
+      7
+     ],
+     [
+      7,
+      5,
+      3
+     ],
+     [
+      0,
+      5,
+      1,
+      4
+     ],
+     [
+      2,
+      1,
+      0,
+      2
+     ],
+     [
+      0,
+      5,
+      0,
+      7
+     ],
+     [
+      2,
+      2
+     ]
+    ],
+    "locks": [
+     null,
+     null,
+     null,
+     null,
+     {
+      "kind": "key",
+      "color": 5
+     },
+     null,
+     null,
+     null,
+     null,
+     null
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 24,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-046",
+   "seed": 20426019,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      2,
+      2,
+      3,
+      4
+     ],
+     [
+      0,
+      2,
+      0,
+      0
+     ],
+     [
+      0,
+      7,
+      6
+     ],
+     [
+      6,
+      7,
+      1
+     ],
+     [
+      4,
+      1
+     ],
+     [
+      5,
+      6,
+      1
+     ],
+     [
+      3,
+      5,
+      3,
+      2
+     ],
+     [
+      4,
+      1,
+      7,
+      5
+     ],
+     [
+      4,
+      5
+     ],
+     [
+      3,
+      6,
+      7
+     ]
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 24,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-047",
+   "seed": 20427019,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      6,
+      1
+     ],
+     [
+      0,
+      0,
+      2,
+      4
+     ],
+     [
+      2,
+      1,
+      3,
+      3
+     ],
+     [
+      6,
+      5,
+      2
+     ],
+     [
+      1,
+      4,
+      4,
+      7
+     ],
+     [
+      1,
+      2,
+      6,
+      7
+     ],
+     [
+      3,
+      6,
+      7,
+      0
+     ],
+     [
+      5,
+      3,
+      0
+     ],
+     [
+      7,
+      5
+     ],
+     [
+      5,
+      4
+     ]
+    ],
+    "locks": [
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     {
+      "kind": "frozen"
+     }
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 22,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-048",
+   "seed": 20428020,
+   "difficulty": 7.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      1,
+      1
+     ],
+     [
+      2,
+      2,
+      2,
+      3
+     ],
+     [
+      3,
+      3,
+      3,
+      2
+     ],
+     [
+      4,
+      4,
+      5
+     ],
+     [
+      5,
+      5,
+      6,
+      1
+     ],
+     [
+      6,
+      1,
+      6
+     ],
+     [
+      4,
+      6,
+      5,
+      4
+     ]
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 12,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-049",
+   "seed": 20429019,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      1,
+      0,
+      7
+     ],
+     [
+      2,
+      5,
+      2
+     ],
+     [
+      6,
+      7,
+      6
+     ],
+     [
+      3,
+      3,
+      1
+     ],
+     [
+      2,
+      2,
+      7,
+      3
+     ],
+     [
+      4,
+      6,
+      7,
+      6
+     ],
+     [
+      5,
+      0,
+      4,
+      1
+     ],
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      4,
+      5,
+      3
+     ],
+     [
+      4,
+      5
+     ]
+    ],
+    "locks": [
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     {
+      "kind": "key",
+      "color": 6
+     },
+     null,
+     null,
+     null
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 23,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-050",
+   "seed": 20430019,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      3,
+      1,
+      3
+     ],
+     [
+      2,
+      6,
+      0,
+      0
+     ],
+     [
+      1,
+      4
+     ],
+     [
+      2,
+      2,
+      4
+     ],
+     [
+      5,
+      3,
+      5,
+      5
+     ],
+     [
+      6
+     ],
+     [
+      4,
+      1,
+      4,
+      3
+     ],
+     [
+      0,
+      1,
+      7
+     ],
+     [
+      7,
+      5,
+      7,
+      0
+     ],
+     [
+      2,
+      6,
+      6,
+      7
+     ]
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 21,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-051",
+   "seed": 20431019,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      4,
+      3
+     ],
+     [
+      6,
+      1,
+      5
+     ],
+     [
+      7,
+      0,
+      3,
+      1
+     ],
+     [
+      5
+     ],
+     [
+      6,
+      2,
+      0,
+      6
+     ],
+     [
+      5,
+      7,
+      6,
+      4
+     ],
+     [
+      2,
+      2,
+      4,
+      3
+     ],
+     [
+      0,
+      0,
+      3,
+      5
+     ],
+     [
+      1,
+      1,
+      2
+     ],
+     [
+      4,
+      7,
+      7
+     ]
+    ],
+    "locks": [
+     null,
+     null,
+     null,
+     null,
+     {
+      "kind": "frozen"
+     },
+     null,
+     null,
+     null,
+     null,
+     null
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 21,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-052",
+   "seed": 20432027,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      2,
+      0,
+      4,
+      6
+     ],
+     [
+      0,
+      6,
+      3
+     ],
+     [
+      1
+     ],
+     [
+      6,
+      2,
+      6,
+      7
+     ],
+     [
+      3,
+      5,
+      4
+     ],
+     [
+      0,
+      7,
+      2,
+      1
+     ],
+     [
+      5
+     ],
+     [
+      0,
+      1,
+      7,
+      5
+     ],
+     [
+      2,
+      3,
+      1,
+      3
+     ],
+     [
+      4,
+      4,
+      5,
+      7
+     ]
+    ],
+    "locks": [
+     null,
+     {
+      "kind": "key",
+      "color": 4
+     },
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     {
+      "kind": "frozen"
+     }
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 25,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-053",
+   "seed": 20433023,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      4,
+      2,
+      1,
+      1
+     ],
+     [
+      3,
+      4,
+      0,
+      2
+     ],
+     [
+      5,
+      5,
+      3
+     ],
+     [
+      0,
+      0,
+      4,
+      3
+     ],
+     [
+      3,
+      1,
+      6,
+      0
+     ],
+     [
+      6,
+      6,
+      7,
+      5
+     ],
+     [
+      7,
+      2,
+      7
+     ],
+     [
+      2
+     ],
+     [
+      5,
+      4,
+      6,
+      1
+     ],
+     [
+      7
+     ]
+    ],
+    "locks": [
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     {
+      "kind": "key",
+      "color": 2
+     },
+     null
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 21,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-054",
+   "seed": 20434071,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      4,
+      5,
+      7,
+      5
+     ],
+     [
+      3,
+      0,
+      3,
+      4
+     ],
+     [
+      3,
+      6,
+      0,
+      3
+     ],
+     [
+      4,
+      1
+     ],
+     [
+      7,
+      1,
+      5,
+      6
+     ],
+     [
+      1,
+      2,
+      0
+     ],
+     [
+      2,
+      4,
+      6
+     ],
+     [
+      6,
+      7,
+      2,
+      1
+     ],
+     [
+      5,
+      0,
+      2,
+      7
+     ]
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 25,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-055",
+   "seed": 20435019,
+   "difficulty": 7.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      0,
+      0,
+      1
+     ],
+     [
+      3
+     ],
+     [
+      2,
+      2,
+      1
+     ],
+     [
+      3
+     ],
+     [
+      4,
+      4,
+      4,
+      2
+     ],
+     [
+      5,
+      5,
+      5,
+      6
+     ],
+     [
+      6,
+      1,
+      2,
+      0
+     ],
+     [
+      5,
+      4,
+      3,
+      1
+     ],
+     [
+      0,
+      3,
+      6,
+      6
+     ]
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 15,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-056",
+   "seed": 20436019,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      2,
+      0,
+      4,
+      6
+     ],
+     [
+      3,
+      2
+     ],
+     [
+      0,
+      6,
+      7
+     ],
+     [
+      4,
+      7
+     ],
+     [
+      3,
+      5,
+      3,
+      6
+     ],
+     [
+      5,
+      7,
+      1,
+      0
+     ],
+     [
+      6,
+      2,
+      1,
+      1
+     ],
+     [
+      5,
+      3,
+      1,
+      5
+     ],
+     [
+      7
+     ],
+     [
+      0,
+      2,
+      4,
+      4
+     ]
+    ],
+    "locks": [
+     {
+      "kind": "frozen"
+     },
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     {
+      "kind": "key",
+      "color": 1
+     }
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 24,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-057",
+   "seed": 20437027,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      3,
+      6,
+      7
+     ],
+     [
+      7,
+      0,
+      2,
+      1
+     ],
+     [
+      2,
+      0,
+      4,
+      5
+     ],
+     [
+      0,
+      7
+     ],
+     [
+      2,
+      0
+     ],
+     [
+      3,
+      6,
+      5,
+      6
+     ],
+     [
+      4,
+      4,
+      1
+     ],
+     [
+      4,
+      6,
+      5
+     ],
+     [
+      1,
+      5,
+      3,
+      7
+     ],
+     [
+      2,
+      3,
+      1
+     ]
+    ],
+    "locks": [
+     null,
+     null,
+     null,
+     {
+      "kind": "key",
+      "color": 4
+     },
+     null,
+     null,
+     null,
+     null,
+     null,
+     null
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 25,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-058",
+   "seed": 20438019,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      5,
+      3,
+      6
+     ],
+     [
+      5,
+      1,
+      2
+     ],
+     [
+      1,
+      4,
+      0,
+      7
+     ],
+     [
+      5,
+      2,
+      3
+     ],
+     [
+      0,
+      7,
+      4,
+      0
+     ],
+     [
+      2,
+      7,
+      6,
+      4
+     ],
+     [
+      6,
+      6,
+      5
+     ],
+     [
+      3
+     ],
+     [
+      0,
+      2,
+      3
+     ],
+     [
+      7,
+      4,
+      1,
+      1
+     ]
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 23,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-059",
+   "seed": 20439022,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      4,
+      6,
+      7,
+      1
+     ],
+     [
+      6,
+      4,
+      5,
+      3
+     ],
+     [
+      2,
+      2,
+      2,
+      0
+     ],
+     [
+      5,
+      1,
+      6,
+      6
+     ],
+     [
+      0,
+      7,
+      3
+     ],
+     [
+      5,
+      3,
+      3
+     ],
+     [],
+     [
+      2,
+      4,
+      5,
+      0
+     ],
+     [
+      1,
+      4
+     ],
+     [
+      7,
+      7,
+      1,
+      0
+     ]
+    ],
+    "locks": [
+     {
+      "kind": "frozen"
+     },
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 23,
+    "solverVersion": "bfs-1"
+   }
+  },
+  {
+   "id": "extra2-060",
+   "seed": 20440024,
+   "difficulty": 8.0,
+   "spec": {
+    "capacity": 4,
+    "tubes": [
+     [
+      0,
+      1
+     ],
+     [
+      5,
+      4,
+      3,
+      7
+     ],
+     [
+      6,
+      2
+     ],
+     [
+      6,
+      4,
+      1,
+      4
+     ],
+     [
+      1,
+      4,
+      3
+     ],
+     [
+      3,
+      0,
+      6,
+      5
+     ],
+     [
+      1,
+      7,
+      7
+     ],
+     [
+      2,
+      2,
+      5
+     ],
+     [
+      7,
+      5,
+      6,
+      2
+     ],
+     [
+      0,
+      0,
+      3
+     ]
+    ],
+    "locks": [
+     null,
+     null,
+     {
+      "kind": "key",
+      "color": 5
+     },
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     {
+      "kind": "frozen"
+     }
+    ]
+   },
+   "verified": {
+    "solvable": true,
+    "minMoves": 22,
+    "solverVersion": "bfs-1"
+   }
+  }
+ ]
+}
