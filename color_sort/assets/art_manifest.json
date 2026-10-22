@@ -1306,6 +1306,24 @@
    "transparent": false,
    "required": false,
    "note": "Androidのアダプティブアイコンの背景(グラデーションのみ・不透明)。主役・バッジは含めない"
+  },
+  {
+   "id": "area_village",
+   "path": "assets/art/area_village.png",
+   "width": 1080,
+   "height": 1920,
+   "transparent": false,
+   "required": false,
+   "note": "町のエリア背景「はじまりの村」。建物が並ぶ地面が主役。上は空、下はやさしい地面。文字は入れない。既存の bg_stage と同じ画風・同じ色調で。"
+  },
+  {
+   "id": "area_meadow",
+   "path": "assets/art/area_meadow.png",
+   "width": 1080,
+   "height": 1920,
+   "transparent": false,
+   "required": false,
+   "note": "町のエリア背景「ひだまりの草原」。建物が並ぶ地面が主役。上は空、下はやさしい地面。文字は入れない。既存の bg_stage と同じ画風・同じ色調で。"
   }
  ]
 }
