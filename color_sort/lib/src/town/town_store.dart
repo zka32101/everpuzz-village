@@ -5,10 +5,14 @@ import 'town_state.dart';
 
 /// 町の保存(版管理つき)。
 class TownStore {
-  const TownStore(this.kv, this.config, {this.cellLimit});
+  const TownStore(this.kv, this.config,
+      {this.cellLimit, this.storageKey = key});
 
   static const key = 'town';
   static const schema = 1;
+
+  /// 保存先のキー。エリアごとに別の町を持つ(最初のエリアは従来の `town` のまま)。
+  final String storageKey;
 
   final KeyValueStore kv;
   final TownConfig config;
@@ -17,11 +21,12 @@ class TownStore {
   final int? cellLimit;
 
   Future<void> save(TownState s) =>
-      VersionedJsonStore(kv).save(key, schema, s.toJson());
+      VersionedJsonStore(kv).save(storageKey, schema, s.toJson());
 
   /// 未保存・破損・将来版は空の町。壊れた項目(未知のID・範囲外・重複)は捨てる。
   Future<TownState> load() async {
-    final j = await VersionedJsonStore(kv).load(key, currentVersion: schema);
+    final j =
+        await VersionedJsonStore(kv).load(storageKey, currentVersion: schema);
     if (j == null) return TownState.empty;
     try {
       final limit = cellLimit ?? config.maxCells;

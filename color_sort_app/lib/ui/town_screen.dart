@@ -30,8 +30,15 @@ class _TownScreenState extends State<TownScreen> {
   AppState get app => widget.app;
 
   /// 町の背景は、いま遊ぶ面の段階に合わせて変わる。
-  String? get _background =>
-      app.art.stageBackground(app.globalLevelIndex(app.nextLevelIndex));
+  String? get _background {
+    // エリアの背景画像があればそれを、無ければ段階の背景を使う。
+    final area = areaArt[app.activePackId];
+    if (area != null && app.art.has(area)) return area;
+    return app.art.stageBackground(app.globalLevelIndex(app.nextLevelIndex));
+  }
+
+  /// エリア(パックID)ごとの背景画像ID。
+  static const areaArt = {'main': 'area_village', 'extra1': 'area_meadow'};
 
   static const _columns = 4;
 
@@ -240,6 +247,35 @@ class _TownScreenState extends State<TownScreen> {
       app.art.has('kobito_03');
 
   /// 町のマス(スクロール可)と、その上を歩くこびと。
+  /// エリア(チャプター)の切り替え。町はエリアごとに別。1つだけなら出さない。
+  Widget _areaBar(Translator t) {
+    if (app.packs.length < 2) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
+      child: Wrap(
+        spacing: 8,
+        runSpacing: 4,
+        children: [
+          for (var i = 0; i < app.packs.length; i++)
+            ChoiceChip(
+              key: Key('area-${app.packs[i].id}'),
+              avatar: app.isPackAvailable(i)
+                  ? null
+                  : const Icon(Icons.lock_outline, size: 16),
+              label: Text(t.tr('area.${app.packs[i].id}')),
+              selected: i == app.activePackIndex,
+              onSelected: app.isPackAvailable(i)
+                  ? (_) {
+                      setState(() => _moving = null);
+                      app.selectPack(i);
+                    }
+                  : null,
+            ),
+        ],
+      ),
+    );
+  }
+
   Widget _townArea(BuildContext context, Translator t, int cells) {
     const pad = 16.0;
     const gap = 8.0;
@@ -533,6 +569,7 @@ class _TownScreenState extends State<TownScreen> {
                   padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
                   child: EconomyBar(app: app),
                 ),
+                _areaBar(t),
                 _extras(context, t),
                 if (_moving != null)
                   MaterialBanner(

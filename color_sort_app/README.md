@@ -125,3 +125,8 @@ flutter run
 - 町が変わるたび(2秒まとめて)、町の絵(PNG)を作って端末側に渡す(`lib/widget/`、チャンネル `everpuzz/home_widget`)。
 - Android: `TownWidgetProvider` が絵を見せ、タップでアプリを開く。ウィジェット一覧に「あなたの町」が出る。**実機未確認**。
 - iOS: 設定が要るためソースのみ(`ios/TownWidget/README.md` の手順)。
+
+## エリア(町は章ごとに別)
+- 1チャプター=1エリア。町(マス・建物・こびと)はエリアごとに別、コインは共通。町の画面で行き来できる(開いたエリアだけ)。
+- 保存: 最初のエリアは従来の `town`、ほかは `town.<パックID>`(移行なし)。進行を初期に戻すと全エリアの町が空になる。
+- 背景: `area_village` / `area_meadow` があればそれを、無ければ段階の背景を使う(`TownScreen.areaArt`)。
