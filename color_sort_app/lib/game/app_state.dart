@@ -158,16 +158,20 @@ class AppState extends ChangeNotifier {
     required this.townConfig,
     this.settings = AppSettings.defaults,
     this.art = ArtCatalog.empty,
-    this.townState = TownState.empty,
+    TownState townState = TownState.empty,
+    Map<String, TownState>? towns,
     this.catalog = ShopCatalog.empty,
     PurchaseState purchaseState = const PurchaseState(),
   })  : assert(pack != null || packs != null),
         packs = packs ?? [PackInfo(id: pack!.packId, pack: pack)],
         economy = Economy(economyConfig, clock),
         townRules = TownRules(townConfig),
+        _towns = {...?towns},
         _eco = economyState,
         _purchases = purchaseState,
-        _progressStore = KeyValueProgressStore(kv);
+        _progressStore = KeyValueProgressStore(kv) {
+    if (townState != TownState.empty) this.townState = townState;
+  }
 
   static const packsAsset = 'packages/color_sort/assets/packs.json';
   static const packAssetDir = 'packages/color_sort/assets/levels/';
@@ -211,7 +215,21 @@ class AppState extends ChangeNotifier {
   /// 配置済みの画像素材。
   final ArtCatalog art;
   final TownRules townRules;
-  TownState townState;
+  final Map<String, TownState> _towns;
+
+  /// いまのエリア(=いま遊ぶパック)の町。エリアごとに別の町を持つ。
+  TownState get townState => _towns[activePackId] ?? TownState.empty;
+  set townState(TownState v) => _towns[activePackId] = v;
+
+  /// いまのエリア(パック)のID。
+  String get activePackId => packs[activePackIndex].id;
+
+  /// 町の保存キー。最初のエリアは従来の `town` のまま(移行なし)、ほかは `town.<id>`。
+  static String townKeyFor(List<PackInfo> packs, int i) =>
+      i == 0 ? TownStore.key : '${TownStore.key}.${packs[i].id}';
+
+  TownStore _townStore() =>
+      TownStore(kv, townConfig, storageKey: townKeyFor(packs, activePackIndex));
 
   final Economy economy;
   final ProgressStore _progressStore;
@@ -272,9 +290,13 @@ class AppState extends ChangeNotifier {
       townConfig: townConfig,
       settings: await SettingsStore(kv).load(),
       art: artOverride ?? await ArtCatalog.load(b),
-      townState: await TownStore(kv, townConfig,
-              cellLimit: TownRules(townConfig).cellCount(clearedNow))
-          .load(),
+      towns: {
+        for (var i = 0; i < packList.length; i++)
+          packList[i].id: await TownStore(kv, townConfig,
+                  cellLimit: TownRules(townConfig).cellCount(clearedNow),
+                  storageKey: townKeyFor(packList, i))
+              .load(),
+      },
       purchaseGate: purchaseGate,
       catalog: catalog,
       purchaseState: purchases,
@@ -443,7 +465,7 @@ class AppState extends ChangeNotifier {
   Future<void> acknowledgeNewBuildings() async {
     townState = townRules.markUnlocksSeen(townState, clearedLevels);
     notifyListeners();
-    await TownStore(kv, townConfig).save(townState);
+    await _townStore().save(townState);
   }
 
   /// いま遊ぶ面の季節(資材・テーマ)。
@@ -460,7 +482,7 @@ class AppState extends ChangeNotifier {
   Future<void> acknowledgeSeasonObjects() async {
     townState = townRules.markSeasonsSeen(townState, clearedLevels);
     notifyListeners();
-    await TownStore(kv, townConfig).save(townState);
+    await _townStore().save(townState);
   }
 
   /// 建物を置く・育てたときに添える資材(いまの季節の2つ。建物と段階で回す)。
@@ -483,11 +505,14 @@ class AppState extends ChangeNotifier {
   Future<void> resetProgress() async {
     progress = const Progress();
     _eco = EconomyState.initial(economyConfig, clock.now());
-    townState = TownState.empty;
+    _towns.clear();
     notifyListeners();
     await _progressStore.save(progress);
     await _saveEconomy();
-    await TownStore(kv, townConfig).save(townState);
+    for (var i = 0; i < packs.length; i++) {
+      await TownStore(kv, townConfig, storageKey: townKeyFor(packs, i))
+          .save(TownState.empty);
+    }
   }
 
   /// 今日の「町の贈り物」を受け取れるか(1日1回。連続は問わない)。
@@ -501,7 +526,7 @@ class AppState extends ChangeNotifier {
     _eco = economy.addCoins(current, townConfig.dailyGift);
     notifyListeners();
     telemetry.log(const TelemetryEvent('town_gift'));
-    await TownStore(kv, townConfig).save(townState);
+    await _townStore().save(townState);
     await _saveEconomy();
     return townConfig.dailyGift;
   }
@@ -521,7 +546,7 @@ class AppState extends ChangeNotifier {
         ? townState.copyWith(completeShown: true)
         : townState.copyWith(bloomShown: true);
     notifyListeners();
-    await TownStore(kv, townConfig).save(townState);
+    await _townStore().save(townState);
   }
 
   Future<TownError?> _applyTown(TownResult r, String event, String id) async {
@@ -538,7 +563,7 @@ class AppState extends ChangeNotifier {
       'cost': r.cost,
       'clearedLevels': clearedLevels,
     }));
-    await TownStore(kv, townConfig).save(townState);
+    await _townStore().save(townState);
     if (r.cost > 0) await _saveEconomy();
     return null;
   }
