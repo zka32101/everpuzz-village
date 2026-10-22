@@ -497,8 +497,11 @@ class _TownScreenState extends State<TownScreen> {
       showNoLivesDialog(context, app);
       return;
     }
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (_) => PlayScreen(app: app, index: app.nextLevelIndex)));
+    Navigator.of(context)
+        .push(MaterialPageRoute(
+            builder: (_) => PlayScreen(app: app, index: app.nextLevelIndex)))
+        // 町に戻ったら、続けてクリアした数を戻す(休憩の案内のため)。
+        .then((_) => app.markRested());
   }
 
   @override

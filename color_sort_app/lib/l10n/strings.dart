@@ -47,6 +47,7 @@ const _gameBundles = <String, Map<String, String>>{
     'packNeedsPrevious': '前のチャプターをクリアすると遊べます',
     'packNeedsPurchase': 'ショップで入手できます',
     'nextChapter': 'つぎのチャプターへ',
+    'restNudge': '続けて{n}面クリアしました。ひと息ついて、町をながめませんか?',
     'language.ja': '日本語',
     'language.en': 'English',
     'credit.images': '画像',
@@ -194,6 +195,8 @@ const _gameBundles = <String, Map<String, String>>{
     'packNeedsPrevious': 'Clear the previous chapter to unlock',
     'packNeedsPurchase': 'Available in the shop',
     'nextChapter': 'Next chapter',
+    'restNudge':
+        'You have cleared {n} levels in a row. How about a breather and a look at your town?',
     'language.ja': '日本語',
     'language.en': 'English',
     'credit.images': 'Images',

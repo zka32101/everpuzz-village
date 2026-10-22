@@ -24,6 +24,7 @@ class _PlayScreenState extends State<PlayScreen> {
   bool _stuckCharged = false; // 行き詰まりでのライフ消費は1回のプレイにつき1回
   bool _lifeLost = false;
   int _reward = 0;
+  bool _restNudge = false;
   bool _hinting = false; // ヒントを計算中(二重に押せない)
   late int _attempt; // 何回目の挑戦か(1始まり。やり直しで増える)
 
@@ -51,7 +52,12 @@ class _PlayScreenState extends State<PlayScreen> {
       widget.app
           .recordWin(widget.index, moves: game.moves, stars: game.stars ?? 1)
           .then((reward) {
-        if (mounted) setState(() => _reward = reward);
+        if (mounted) {
+          setState(() {
+            _reward = reward;
+            _restNudge = widget.app.takeRestNudge();
+          });
+        }
       });
     }
     if (game.stuck && !_stuckCharged) {
@@ -219,6 +225,7 @@ class _PlayScreenState extends State<PlayScreen> {
                     _WinPanel(
                       stars: game.stars ?? 1,
                       reward: _reward,
+                      restNudge: _restNudge ? restNudgeEvery : 0,
                       nextIsChapter: !hasNext,
                       onNext: widget.app.canPlay &&
                               (hasNext || widget.app.nextAvailablePack != null)
@@ -361,6 +368,7 @@ class _WinPanel extends StatelessWidget {
   const _WinPanel({
     required this.stars,
     required this.reward,
+    this.restNudge = 0,
     required this.onNext,
     this.nextIsChapter = false,
     required this.onBack,
@@ -368,6 +376,9 @@ class _WinPanel extends StatelessWidget {
 
   final int stars;
   final int reward;
+
+  /// 0 でなければ、続けてクリアした面数を添えた休憩の案内を出す。
+  final int restNudge;
   final VoidCallback? onNext;
 
   /// 次が同じパックの次の面ではなく、次のチャプターの最初であること。
@@ -401,6 +412,15 @@ class _WinPanel extends StatelessWidget {
           ),
           if (reward > 0)
             Text(t.tr('reward', {'n': reward}), key: const Key('reward')),
+          if (restNudge > 0)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Text(
+                t.tr('restNudge', {'n': restNudge}),
+                key: const Key('restNudge'),
+                textAlign: TextAlign.center,
+              ),
+            ),
           Wrap(
             spacing: 12,
             children: [
