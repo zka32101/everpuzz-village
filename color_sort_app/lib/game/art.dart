@@ -12,10 +12,11 @@ class ArtCatalog {
 
   bool has(String id) => ids.contains(id);
 
-  /// ステージ背景は12面ごとに切り替わる(bg_stage_01〜05)。
-  /// 画像が無い段階は、ある中で一番近い手前の段階にする。無ければ null。
+  /// ステージ背景は12面ごとに切り替わる(bg_stage_01〜05)。画像が無い段階は、ある中で
+  /// 一番近い手前の段階にする。無ければ null。
   String? stageBackground(int levelIndex, {int levelsPerStage = 12}) {
-    var n = (levelIndex ~/ levelsPerStage + 1).clamp(1, 5);
+    // 5段階を超えたら最初から巡る(面が増えても背景が続く)。
+    var n = (levelIndex ~/ levelsPerStage) % 5 + 1;
     for (; n >= 1; n--) {
       final id = 'bg_stage_${n.toString().padLeft(2, '0')}';
       if (has(id)) return id;
@@ -28,7 +29,7 @@ class ArtCatalog {
   static const themes = ['spring', 'autumn', 'winter', 'summer', 'sakura'];
 
   String themeFor(int levelIndex, {int levelsPerStage = 12}) =>
-      themes[(levelIndex ~/ levelsPerStage).clamp(0, themes.length - 1)];
+      themes[(levelIndex ~/ levelsPerStage) % themes.length];
 
   /// テーマ付きの画像ID(`<base>_<theme>`)があればそれ、無ければ共通の [base]。
   String themed(String base, String theme) {

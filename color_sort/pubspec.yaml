@@ -19,6 +19,7 @@ dev_dependencies:
 # Flutter アプリから packages/color_sort/... で読めるようにする(純Dart側は無視する)
 flutter:
   assets:
+    - assets/packs.json
     - assets/levels/
     - assets/town/
     - assets/art/

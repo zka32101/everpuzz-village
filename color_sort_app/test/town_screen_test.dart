@@ -284,7 +284,8 @@ void stageArtTests() {
     expect(all.stageBackground(11), 'bg_stage_01');
     expect(all.stageBackground(12), 'bg_stage_02');
     expect(all.stageBackground(59), 'bg_stage_05');
-    expect(all.stageBackground(999), 'bg_stage_05');
+    expect(all.stageBackground(60), 'bg_stage_01'); // 巡る
+    expect(all.stageBackground(999), 'bg_stage_04');
     const some = ArtCatalog({'bg_stage_01', 'bg_stage_03'});
     expect(some.stageBackground(14), 'bg_stage_01'); // 02 が無い
     expect(some.stageBackground(30), 'bg_stage_03');

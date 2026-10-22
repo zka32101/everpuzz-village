@@ -65,7 +65,8 @@ class _PlayScreenState extends State<PlayScreen> {
     }
   }
 
-  String? get _background => widget.app.art.stageBackground(widget.index);
+  String? get _background =>
+      widget.app.art.stageBackground(widget.app.globalLevelIndex(widget.index));
 
   @override
   Widget build(BuildContext context) {
@@ -143,7 +144,8 @@ class _PlayScreenState extends State<PlayScreen> {
                                               ? HintRole.to
                                               : HintRole.none,
                                   art: widget.app.art,
-                                  theme: widget.app.art.themeFor(widget.index),
+                                  theme: widget.app.art.themeFor(widget.app
+                                      .globalLevelIndex(widget.index)),
                                   unit: unit,
                                   onTap: () => game.tap(i),
                                 ),
@@ -217,15 +219,25 @@ class _PlayScreenState extends State<PlayScreen> {
                     _WinPanel(
                       stars: game.stars ?? 1,
                       reward: _reward,
-                      onNext: hasNext && widget.app.canPlay
-                          ? () => Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                  builder: (_) => PlayScreen(
-                                    app: widget.app,
-                                    index: widget.index + 1,
-                                  ),
+                      nextIsChapter: !hasNext,
+                      onNext: widget.app.canPlay &&
+                              (hasNext || widget.app.nextAvailablePack != null)
+                          ? () async {
+                              final nav = Navigator.of(context);
+                              var next = widget.index + 1;
+                              if (!hasNext) {
+                                // 最後の面: 遊べる次のチャプターへ(行き来は面選択から自由)
+                                await widget.app
+                                    .selectPack(widget.app.nextAvailablePack!);
+                                next = widget.app.nextLevelIndex;
+                              }
+                              nav.pushReplacement(MaterialPageRoute(
+                                builder: (_) => PlayScreen(
+                                  app: widget.app,
+                                  index: next,
                                 ),
-                              )
+                              ));
+                            }
                           : null,
                       onBack: () => Navigator.of(context).pop(),
                     ),
@@ -350,12 +362,16 @@ class _WinPanel extends StatelessWidget {
     required this.stars,
     required this.reward,
     required this.onNext,
+    this.nextIsChapter = false,
     required this.onBack,
   });
 
   final int stars;
   final int reward;
   final VoidCallback? onNext;
+
+  /// 次が同じパックの次の面ではなく、次のチャプターの最初であること。
+  final bool nextIsChapter;
   final VoidCallback onBack;
 
   @override
@@ -401,7 +417,7 @@ class _WinPanel extends StatelessWidget {
                     minimumSize: const Size(48, 48),
                   ),
                   onPressed: onNext,
-                  child: Text(t.tr('next')),
+                  child: Text(t.tr(nextIsChapter ? 'nextChapter' : 'next')),
                 ),
             ],
           ),

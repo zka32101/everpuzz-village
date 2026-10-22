@@ -117,10 +117,32 @@ class PurchaseState {
       );
 }
 
+/// 面のパック(チャプター)。`assets/packs.json` の1件+読み込んだ中身。
+class PackInfo {
+  const PackInfo({
+    required this.id,
+    required this.pack,
+    this.requires,
+    this.unlockAfterPrevious = true,
+  });
+
+  final String id;
+
+  final LevelPack pack;
+
+  /// 遊ぶのに必要な中身(`grants` のID。例 `levels.extra1`)。null なら不要。
+  final String? requires;
+
+  /// 前のパックを全部クリアすると解放される(false なら条件は `requires` だけ)。
+  final bool unlockAfterPrevious;
+}
+
 /// アプリ全体の状態(レベルパック・進行・ライフとコイン)。
 class AppState extends ChangeNotifier {
   AppState({
-    required this.pack,
+    LevelPack? pack,
+    List<PackInfo>? packs,
+    this.activePackIndex = 0,
     required this.kv,
     required this.progress,
     required EconomyState economyState,
@@ -135,13 +157,17 @@ class AppState extends ChangeNotifier {
     this.townState = TownState.empty,
     this.catalog = ShopCatalog.empty,
     PurchaseState purchaseState = const PurchaseState(),
-  })  : economy = Economy(economyConfig, clock),
+  })  : assert(pack != null || packs != null),
+        packs = packs ?? [PackInfo(id: pack!.packId, pack: pack)],
+        economy = Economy(economyConfig, clock),
         townRules = TownRules(townConfig),
         _eco = economyState,
         _purchases = purchaseState,
         _progressStore = KeyValueProgressStore(kv);
 
-  static const packAsset = 'packages/color_sort/assets/levels/pack_main.json';
+  static const packsAsset = 'packages/color_sort/assets/packs.json';
+  static const packAssetDir = 'packages/color_sort/assets/levels/';
+  static const activePackKey = 'activePack';
   static const economyKey = 'economy';
   static const economySchema = 1;
   static const purchasesKey = 'purchases';
@@ -149,7 +175,14 @@ class AppState extends ChangeNotifier {
   static const townAsset = 'packages/color_sort/assets/town/buildings.json';
   static const catalogAsset = 'assets/shop/products.json';
 
-  final LevelPack pack;
+  /// 全部のパック(チャプター)。一覧は `assets/packs.json`。
+  final List<PackInfo> packs;
+
+  /// いま選んでいるパック。面選択・プレイ・次の面は、このパックの中で動く。
+  int activePackIndex;
+
+  LevelPack get pack => packs[activePackIndex].pack;
+
   final KeyValueStore kv;
   final Clock clock;
 
@@ -197,10 +230,9 @@ class AppState extends ChangeNotifier {
     /// テスト用。画像素材の一覧を差し替える(省略時は同梱の画像を読む)。
     ArtCatalog? artOverride,
   }) async {
-    final raw = await (bundle ?? rootBundle).loadString(packAsset);
-    final pack = LevelPack.fromJson(jsonDecode(raw) as Map<String, Object?>);
+    final packList = await _loadPacks(bundle ?? rootBundle);
     // 解けない面を出荷しない(CIで検査済みだが、実行時にも念のため)。
-    assert(pack.validate().isEmpty, pack.validate().join('\n'));
+    assert(packList.every((p) => p.pack.validate().isEmpty));
     final saved = await VersionedJsonStore(kv)
         .load(economyKey, currentVersion: economySchema);
     final b = bundle ?? rootBundle;
@@ -222,10 +254,16 @@ class AppState extends ChangeNotifier {
       }
     }
     final townConfig = TownConfig.fromJson(await b.loadString(townAsset));
-    assert(townConfig.validate(levelCount: pack.levels.length).isEmpty);
+    final totalLevels =
+        packList.fold<int>(0, (a, p) => a + p.pack.levels.length);
+    assert(townConfig.validate(levelCount: totalLevels).isEmpty);
     final progress = await KeyValueProgressStore(kv).load();
-    final clearedNow =
-        pack.levels.where((l) => progress.recordOf(l.id).cleared).length;
+    final clearedNow = packList
+        .expand((p) => p.pack.levels)
+        .where((l) => progress.recordOf(l.id).cleared)
+        .length;
+    final savedActive = await kv.read(activePackKey);
+    final activeIndex = packList.indexWhere((p) => p.id == savedActive);
     return AppState(
       townConfig: townConfig,
       settings: await SettingsStore(kv).load(),
@@ -236,7 +274,8 @@ class AppState extends ChangeNotifier {
       purchaseGate: purchaseGate,
       catalog: catalog,
       purchaseState: purchases,
-      pack: pack,
+      packs: packList,
+      activePackIndex: activeIndex < 0 ? 0 : activeIndex,
       kv: kv,
       clock: clock,
       adGate: adGate,
@@ -247,6 +286,23 @@ class AppState extends ChangeNotifier {
           ? EconomyState.initial(economyConfig, clock.now())
           : EconomyState.fromJson(saved),
     );
+  }
+
+  /// `assets/packs.json` を読み、各パックの面を読み込む。
+  static Future<List<PackInfo>> _loadPacks(AssetBundle bundle) async {
+    final list = (jsonDecode(await bundle.loadString(packsAsset))
+        as Map<String, Object?>)['packs']! as List;
+    return [
+      for (final e in list.cast<Map<String, Object?>>())
+        PackInfo(
+          id: e['id']! as String,
+          pack: LevelPack.fromJson(
+              jsonDecode(await bundle.loadString('$packAssetDir${e['file']}'))
+                  as Map<String, Object?>),
+          requires: e['requires'] as String?,
+          unlockAfterPrevious: (e['unlockAfterPrevious'] as bool?) ?? true,
+        ),
+    ];
   }
 
   /// 経過時間ぶんのライフ回復を反映した現在の経済状態(読むだけで状態は変えない)。
@@ -271,13 +327,88 @@ class AppState extends ChangeNotifier {
 
   bool get canAffordHint => coins >= hintCost;
 
-  /// クリア済みの面数(町の解放・マス数の元)。
-  int get clearedLevels =>
-      pack.levels.where((l) => progress.recordOf(l.id).cleared).length;
+  bool _isCleared(String levelId) => progress.recordOf(levelId).cleared;
 
-  /// 次に遊ぶ面(最初の未クリア。全クリア済みなら最後の面)。
-  int get nextLevelIndex =>
-      progress.currentLevelIndex.clamp(0, pack.levels.length - 1);
+  /// クリア済みの面数(全パックの合計。町の解放・マス数の元)。
+  int get clearedLevels =>
+      packs.expand((p) => p.pack.levels).where((l) => _isCleared(l.id)).length;
+
+  /// パック [i] のクリア済みの面数。
+  int clearedIn(int i) =>
+      packs[i].pack.levels.where((l) => _isCleared(l.id)).length;
+
+  bool isPackComplete(int i) => clearedIn(i) == packs[i].pack.levels.length;
+
+  /// パック [i] を遊べるか(必要な中身を持っていて、前のパックを全部クリア済み)。
+  bool isPackAvailable(int i) {
+    final p = packs[i];
+    if (p.requires != null && !owns(p.requires!)) return false;
+    if (p.unlockAfterPrevious && i > 0 && !isPackComplete(i - 1)) return false;
+    return true;
+  }
+
+  /// パックが遊べない理由(遊べるなら null)。'purchase' か 'previous'。
+  String? packLockReason(int i) {
+    final p = packs[i];
+    if (p.requires != null && !owns(p.requires!)) return 'purchase';
+    if (p.unlockAfterPrevious && i > 0 && !isPackComplete(i - 1)) {
+      return 'previous';
+    }
+    return null;
+  }
+
+  /// パックを切り替える(遊べるパックだけ)。成功なら true。
+  Future<bool> selectPack(int i) async {
+    if (i < 0 || i >= packs.length || !isPackAvailable(i)) return false;
+    activePackIndex = i;
+    notifyListeners();
+    await kv.write(activePackKey, packs[i].id);
+    return true;
+  }
+
+  /// 次に遊ぶ面。いまのパックで最初の未クリア(全部クリア済みなら最後の面)。
+  int get nextLevelIndex {
+    final levels = pack.levels;
+    final i = levels.indexWhere((l) => !_isCleared(l.id));
+    return i < 0 ? levels.length - 1 : i;
+  }
+
+  /// いまのパックの先頭が、全パックを通した何番目の面か(背景・季節の元)。
+  int get activeOffset {
+    var n = 0;
+    for (var i = 0; i < activePackIndex; i++) {
+      n += packs[i].pack.levels.length;
+    }
+    return n;
+  }
+
+  /// 全パックを通した面番号(0始まり)。
+  int globalLevelIndex(int levelIndex) => activeOffset + levelIndex;
+
+  /// 「あそぶ」で進む先。いまのパックに未クリアの面があればそこ。無ければ、遊べる次のパックの
+  /// 最初の未クリア。進めたらそのパックに切り替える。全部クリア済みなら最後の面のまま。
+  Future<int> advanceToPlayable() async {
+    final order = [
+      activePackIndex,
+      for (var i = 0; i < packs.length; i++)
+        if (i != activePackIndex) i,
+    ];
+    for (final i in order) {
+      if (isPackAvailable(i) && !isPackComplete(i)) {
+        if (i != activePackIndex) await selectPack(i);
+        return nextLevelIndex;
+      }
+    }
+    return nextLevelIndex;
+  }
+
+  /// 次のパック(遊べるもの)があるか。最後の面のクリア後に「つぎのチャプターへ」を出す条件。
+  int? get nextAvailablePack {
+    for (var i = activePackIndex + 1; i < packs.length; i++) {
+      if (isPackAvailable(i) && !isPackComplete(i)) return i;
+    }
+    return null;
+  }
 
   /// 次のライフが回復する見込みの時刻。満タンなら null。
   DateTime? get nextLifeAt {
@@ -312,7 +443,8 @@ class AppState extends ChangeNotifier {
   }
 
   /// いま遊ぶ面の季節(資材・テーマ)。
-  SeasonDef? get currentSeason => townRules.seasonAt(nextLevelIndex);
+  SeasonDef? get currentSeason =>
+      townRules.seasonAt(globalLevelIndex(nextLevelIndex));
 
   /// 終えた季節の数(= 町に贈られた季節の飾りの数)。
   int get seasonsDone => townRules.seasonsDone(clearedLevels);
@@ -407,8 +539,9 @@ class AppState extends ChangeNotifier {
     return null;
   }
 
-  /// 順番にだけ進める(現在レベルまで遊べる)。
-  bool isUnlocked(int index) => index <= progress.currentLevelIndex;
+  /// クリア済みの面と、次の面だけ遊べる(戻ってやり直すのは自由)。
+  bool isUnlocked(int index) =>
+      _isCleared(pack.levels[index].id) || index == nextLevelIndex;
 
   /// クリアを記録し、得たコインを返す(`clearReward`。星が増えない繰り返しは0)。
   Future<int> recordWin(

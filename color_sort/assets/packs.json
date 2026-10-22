@@ -1,0 +1,12 @@
+{
+ "packs": [
+  {
+   "id": "main",
+   "file": "pack_main.json"
+  },
+  {
+   "id": "extra1",
+   "file": "pack_extra1.json"
+  }
+ ]
+}

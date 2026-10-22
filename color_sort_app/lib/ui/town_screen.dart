@@ -30,7 +30,8 @@ class _TownScreenState extends State<TownScreen> {
   AppState get app => widget.app;
 
   /// 町の背景は、いま遊ぶ面の段階に合わせて変わる。
-  String? get _background => app.art.stageBackground(app.nextLevelIndex);
+  String? get _background =>
+      app.art.stageBackground(app.globalLevelIndex(app.nextLevelIndex));
 
   static const _columns = 4;
 

@@ -18,7 +18,9 @@ void main() {
     expect(a.themeFor(24), 'winter');
     expect(a.themeFor(36), 'summer');
     expect(a.themeFor(48), 'sakura');
-    expect(a.themeFor(999), 'sakura');
+    // 5段階を超えたら最初から巡る(面が増えても続く)
+    expect(a.themeFor(60), 'spring');
+    expect(a.themeFor(119), 'sakura');
   });
 
   test('テーマ付きの画像があればそれ、無ければ共通の画像・図形', () {
