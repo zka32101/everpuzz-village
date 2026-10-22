@@ -30,6 +30,17 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <!-- ホーム画面ウィジェット(町の絵)。絵はアプリが書き出す。 -->
+        <receiver
+            android:name=".TownWidgetProvider"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/town_widget_info" />
+        </receiver>
         <!-- AdMob のアプリID。下はGoogleのテスト用ID。本番はAdMobで発行したIDに差し替える。 -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
