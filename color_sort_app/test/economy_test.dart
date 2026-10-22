@@ -285,7 +285,9 @@ void main() {
       // 2回目は押せない
       expect(
         tester
-            .widget<FilledButton>(find.byKey(const Key('extraTube')))
+            .widget<FilledButton>(find.descendant(
+                of: find.byKey(const Key('extraTube')),
+                matching: find.byType(FilledButton)))
             .onPressed,
         isNull,
       );

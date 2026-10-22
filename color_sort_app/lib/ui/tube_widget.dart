@@ -20,6 +20,7 @@ class TubeWidget extends StatelessWidget {
     required this.selected,
     required this.onTap,
     this.hintRole = HintRole.none,
+    this.dimmed = false,
     this.art = ArtCatalog.empty,
     this.unit = defaultUnit,
     this.theme = 'spring',
@@ -32,6 +33,9 @@ class TubeWidget extends StatelessWidget {
   final bool selected;
   final VoidCallback onTap;
   final HintRole hintRole;
+
+  /// ヒント中の、示していない容器。薄くして見るところを絞る。
+  final bool dimmed;
 
   /// 配置済みの画像。tube_back / tube_front があれば画像の容器で描く(無ければ従来の図形)。
   final ArtCatalog art;
@@ -47,11 +51,11 @@ class TubeWidget extends StatelessWidget {
   bool get useArt => art.has(_id('tube_back')) && art.has(_id('tube_front'));
 
   static const defaultUnit = 46.0; // 1スロットの標準の大きさ(44pt以上)
-  static const minUnit = 30.0; // 画面に収めるときの下限(これ以上は縮めない)
+  static const minUnit = 22.0; // 画面に収めるときの下限(これ以上は縮めない)
 
   /// 画像の容器は幅が広がる(約1.8倍)ので、下限を少し小さくして、横に並ぶ本数を増やせる
   /// ようにする(幅は 53 以上で、タップの大きさ 44 を保つ)。
-  static const minUnitArt = 26.0;
+  static const minUnitArt = 20.0;
   static double minUnitFor({required bool useArt}) =>
       useArt ? minUnitArt : minUnit;
   static const pad = 4.0;
@@ -113,118 +117,129 @@ class TubeWidget extends StatelessWidget {
         t.tr(hintRole == HintRole.from ? 'hintFrom' : 'hintTo'),
     ].join(' ');
 
-    return Semantics(
-      button: true,
-      label: label,
-      child: GestureDetector(
-        onTap: onTap,
-        behavior: HitTestBehavior.opaque,
-        // 容器の幅に固定する。ヒントの文字(「ここから」など)で幅が広がると、
-        // その容器だけ段から押し出されて、他の容器が画面の外に出てしまうため。
-        child: SizedBox(
-          width: TubeWidget.widthFor(unit, useArt: useArt),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // 特殊容器の種類は容器の上のバッジで示す(中身に重ねない)。
-              SizedBox(
-                height: badgeHeight,
-                child: hintRole != HintRole.none
-                    ? Center(
-                        child: FittedBox(
-                          child: Text(
-                            t.tr(hintRole == HintRole.from
-                                ? 'hintFrom'
-                                : 'hintTo'),
-                            key: Key('hint-${hintRole.name}'),
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: scheme.tertiary,
+    return Opacity(
+        opacity: dimmed ? 0.4 : 1,
+        child: Semantics(
+          button: true,
+          label: label,
+          child: GestureDetector(
+            onTap: onTap,
+            behavior: HitTestBehavior.opaque,
+            // 容器の幅に固定する。ヒントの文字(「ここから」など)で幅が広がると、
+            // その容器だけ段から押し出されて、他の容器が画面の外に出てしまうため。
+            child: SizedBox(
+              width: TubeWidget.widthFor(unit, useArt: useArt),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // 特殊容器の種類は容器の上のバッジで示す(中身に重ねない)。
+                  SizedBox(
+                    height: badgeHeight,
+                    child: hintRole != HintRole.none
+                        ? Center(
+                            // 文字は容器の幅に合わせて縮むと読めなくなるので、色のついた丸に
+                            // 矢印(ここから=上へ・ここへ=下へ)で示す。言葉は盤面の下にも出る。
+                            child: Container(
+                              key: Key('hint-${hintRole.name}'),
+                              width: badgeHeight - 2,
+                              height: badgeHeight - 2,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: hintRole == HintRole.from
+                                    ? scheme.primary
+                                    : scheme.tertiary,
+                              ),
+                              child: Icon(
+                                hintRole == HintRole.from
+                                    ? Icons.arrow_upward
+                                    : Icons.arrow_downward,
+                                size: 18,
+                                color: scheme.onPrimary,
+                              ),
+                            ),
+                          )
+                        : lock != null && !usable
+                            ? LockBadge(lock: lock!)
+                            : null,
+                  ),
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 120),
+                    width: useArt
+                        ? artWidth + border * 2
+                        : unit + pad * 2 + border * 2,
+                    height: height,
+                    margin: EdgeInsets.only(
+                        bottom: selected ? 14 : 0, top: selected ? 0 : 14),
+                    decoration: BoxDecoration(
+                      color: useArt ? null : scheme.surfaceContainerHighest,
+                      border: Border.all(
+                        color: selected
+                            ? scheme.primary
+                            : hintRole != HintRole.none
+                                ? scheme.tertiary
+                                // 画像の容器は縁が絵に含まれるので、枠は選択・ヒントの時だけ。
+                                : useArt
+                                    ? Colors.transparent
+                                    : scheme.outline,
+                        width: selected || hintRole != HintRole.none ? 3 : 1.5,
+                      ),
+                      borderRadius: BorderRadius.vertical(
+                          top: const Radius.circular(6),
+                          bottom: Radius.circular(unit / 2)),
+                    ),
+                    child: Stack(
+                      alignment: Alignment.bottomCenter,
+                      children: [
+                        if (useArt) ...[
+                          Positioned.fill(child: _art(_id('tube_back'))),
+                          Padding(
+                            padding:
+                                EdgeInsets.only(bottom: artHeight * _artBottom),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                for (final c in tube.reversed)
+                                  UnitChip(
+                                      color: c,
+                                      unit: unit,
+                                      ball: art.ballId(theme, c)),
+                              ],
                             ),
                           ),
-                        ),
-                      )
-                    : lock != null && !usable
-                        ? LockBadge(lock: lock!)
-                        : null,
-              ),
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 120),
-                width: useArt
-                    ? artWidth + border * 2
-                    : unit + pad * 2 + border * 2,
-                height: height,
-                margin: EdgeInsets.only(
-                    bottom: selected ? 14 : 0, top: selected ? 0 : 14),
-                decoration: BoxDecoration(
-                  color: useArt ? null : scheme.surfaceContainerHighest,
-                  border: Border.all(
-                    color: selected
-                        ? scheme.primary
-                        : hintRole != HintRole.none
-                            ? scheme.tertiary
-                            // 画像の容器は縁が絵に含まれるので、枠は選択・ヒントの時だけ。
-                            : useArt
-                                ? Colors.transparent
-                                : scheme.outline,
-                    width: selected || hintRole != HintRole.none ? 3 : 1.5,
+                          Positioned.fill(child: _art(_id('tube_front'))),
+                        ] else
+                          Padding(
+                            padding: const EdgeInsets.all(pad),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                for (final c in tube.reversed)
+                                  UnitChip(
+                                      color: c,
+                                      unit: unit,
+                                      ball: art.ballId(theme, c)),
+                              ],
+                            ),
+                          ),
+                        if (done && art.has(_id('tube_done')))
+                          Positioned.fill(
+                              child:
+                                  IgnorePointer(child: _art(_id('tube_done')))),
+                        if (done)
+                          Positioned(
+                            top: 2,
+                            child: Icon(Icons.check_circle,
+                                size: 16, color: scheme.primary),
+                          ),
+                        if (lock != null && !usable) _lockCover(),
+                      ],
+                    ),
                   ),
-                  borderRadius: BorderRadius.vertical(
-                      top: const Radius.circular(6),
-                      bottom: Radius.circular(unit / 2)),
-                ),
-                child: Stack(
-                  alignment: Alignment.bottomCenter,
-                  children: [
-                    if (useArt) ...[
-                      Positioned.fill(child: _art(_id('tube_back'))),
-                      Padding(
-                        padding:
-                            EdgeInsets.only(bottom: artHeight * _artBottom),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            for (final c in tube.reversed)
-                              UnitChip(
-                                  color: c,
-                                  unit: unit,
-                                  ball: art.ballId(theme, c)),
-                          ],
-                        ),
-                      ),
-                      Positioned.fill(child: _art(_id('tube_front'))),
-                    ] else
-                      Padding(
-                        padding: const EdgeInsets.all(pad),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            for (final c in tube.reversed)
-                              UnitChip(
-                                  color: c,
-                                  unit: unit,
-                                  ball: art.ballId(theme, c)),
-                          ],
-                        ),
-                      ),
-                    if (done && art.has(_id('tube_done')))
-                      Positioned.fill(
-                          child: IgnorePointer(child: _art(_id('tube_done')))),
-                    if (done)
-                      Positioned(
-                        top: 2,
-                        child: Icon(Icons.check_circle,
-                            size: 16, color: scheme.primary),
-                      ),
-                    if (lock != null && !usable) _lockCover(),
-                  ],
-                ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 }
 
