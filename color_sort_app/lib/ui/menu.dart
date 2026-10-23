@@ -6,6 +6,7 @@ import 'package:puzzle_core/meta.dart';
 import '../game/app_state.dart';
 import '../l10n/strings.dart';
 import 'shop_screen.dart';
+import 'journey_screen.dart';
 import 'transfer.dart';
 import 'tutorial.dart';
 
@@ -79,6 +80,14 @@ class SettingsScreen extends StatelessWidget {
               title: Text(t.tr('settings.howTo')),
               onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(builder: (_) => TutorialScreen(app: app))),
+            ),
+            ListTile(
+              key: const Key('setting-journey'),
+              minVerticalPadding: 12,
+              leading: const Icon(Icons.auto_stories_outlined),
+              title: Text(t.tr('journey.title')),
+              onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => JourneyScreen(app: app))),
             ),
             ListTile(
               key: const Key('setting-transfer'),

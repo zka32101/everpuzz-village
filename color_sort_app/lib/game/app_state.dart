@@ -18,6 +18,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'art.dart';
 import 'hint.dart';
 import 'purchases.dart';
+import 'journey.dart';
 import 'transfer.dart';
 
 /// SharedPreferences を puzzle_core の保存窓口に合わせるアダプタ。
@@ -593,6 +594,43 @@ class AppState extends ChangeNotifier {
     activePackIndex = active < 0 ? 0 : active;
     notifyListeners();
     return true;
+  }
+
+  /// 「町のあゆみ」用の数字(全エリアの合計と、エリアごと)。
+  Journey get journey {
+    final all = packs.expand((p) => p.pack.levels).toList();
+    var stars = 0;
+    for (final l in all) {
+      stars += progress.recordOf(l.id).stars;
+    }
+    var placed = 0, stages = 0, dwellerSum = 0;
+    for (final t in _towns.values) {
+      placed += t.placements.length;
+      for (final p in t.placements) {
+        stages += p.stage;
+      }
+      dwellerSum += townRules.dwellers(t);
+    }
+    return Journey(
+      levelsCleared: clearedLevels,
+      levelsTotal: all.length,
+      stars: stars,
+      starsMax: all.length * 3,
+      buildingsPlaced: placed,
+      buildingStages: stages,
+      dwellers: dwellerSum,
+      seasonsDone: townRules.seasonsDone(clearedLevels),
+      areas: [
+        for (var i = 0; i < packs.length; i++)
+          AreaJourney(
+            id: packs[i].id,
+            levelsCleared: clearedIn(i),
+            levelsTotal: packs[i].pack.levels.length,
+            buildings: _towns[packs[i].id]?.placements.length ?? 0,
+            available: isPackAvailable(i),
+          ),
+      ],
+    );
   }
 
   /// 進行・コイン・町を初期に戻す(購入した内容・設定は残す)。
