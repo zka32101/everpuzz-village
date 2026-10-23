@@ -29,8 +29,7 @@
    "kind": "unlock",
    "grants": [
     "deco.seasonal1"
-   ],
-   "enabled": false
+   ]
   },
   {
    "id": "skins_pack_1",

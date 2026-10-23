@@ -95,7 +95,8 @@ class _PlayScreenState extends State<PlayScreen> {
   }
 
   String? get _background =>
-      widget.app.art.stageBackground(widget.app.globalLevelIndex(widget.index));
+      widget.app.art.stageBackground(widget.app.globalLevelIndex(widget.index),
+          seasons: widget.app.allSeasons);
 
   @override
   Widget build(BuildContext context) {
@@ -178,7 +179,8 @@ class _PlayScreenState extends State<PlayScreen> {
                                 game.hint!.$2 != i,
                             art: widget.app.art,
                             theme: widget.app.art.themeFor(
-                                widget.app.globalLevelIndex(widget.index)),
+                                widget.app.globalLevelIndex(widget.index),
+                                seasons: widget.app.allSeasons),
                             unit: unit,
                             onTap: () => game.tap(i),
                           );

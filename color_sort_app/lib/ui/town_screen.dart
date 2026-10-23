@@ -48,7 +48,8 @@ class _TownScreenState extends State<TownScreen> {
     // エリアの背景画像があればそれを、無ければ段階の背景を使う。
     final area = app.art.areaBackground(app.activePackId);
     if (area != null) return area;
-    return app.art.stageBackground(app.globalLevelIndex(app.nextLevelIndex));
+    return app.art.stageBackground(app.globalLevelIndex(app.nextLevelIndex),
+        seasons: app.allSeasons);
   }
 
   static const _columns = 4;

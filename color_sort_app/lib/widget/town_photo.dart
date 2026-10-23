@@ -17,7 +17,8 @@ String? _background(AppState app) {
   // 町の画面と同じ背景(エリアの背景があればそれ、無ければ段階の背景)。
   final area = app.art.areaBackground(app.activePackId);
   if (area != null) return area;
-  return app.art.stageBackground(app.globalLevelIndex(app.nextLevelIndex));
+  return app.art.stageBackground(app.globalLevelIndex(app.nextLevelIndex),
+      seasons: app.allSeasons);
 }
 
 /// 共有の窓口(テストで差し替える)。PNG と、添える一言を渡す。

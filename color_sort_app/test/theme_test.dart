@@ -23,6 +23,23 @@ void main() {
     expect(a.themeFor(119), 'sakura');
   });
 
+  test('季節パックが無ければ、いつでも秋だけ', () {
+    const a = ArtCatalog.empty;
+    for (final i in [0, 12, 24, 48, 60, 119]) {
+      expect(a.themeFor(i, seasons: false), 'autumn');
+    }
+    const all = ArtCatalog({
+      'bg_stage_01',
+      'bg_stage_02',
+      'bg_stage_03',
+      'bg_stage_04',
+      'bg_stage_05'
+    });
+    expect(all.stageBackground(0, seasons: false), 'bg_stage_02');
+    expect(all.stageBackground(30, seasons: false), 'bg_stage_02');
+    expect(all.stageBackground(30), 'bg_stage_03');
+  });
+
   test('テーマ付きの画像があればそれ、無ければ共通の画像・図形', () {
     const art = ArtCatalog({
       'tube_back',
