@@ -1,4 +1,5 @@
 import 'package:color_sort_app/game/app_state.dart';
+import 'package:color_sort_app/game/purchases.dart';
 import 'package:color_sort_app/l10n/strings.dart';
 import 'package:color_sort_app/ui/level_select_screen.dart';
 import 'package:flutter/material.dart';
@@ -17,10 +18,33 @@ Future<void> clearAll(AppState app, int packIndex) async {
   app.activePackIndex = saved;
 }
 
+class _Shop implements PurchaseGate {
+  final owned = <String>{};
+
+  @override
+  Future<Map<String, String>> prices(Iterable<String> ids) async =>
+      {for (final id in ids) id: '¥960'};
+
+  @override
+  Future<BuyResult> buy(String productId) async {
+    owned.add(productId);
+    return const BuyResult(BuyStatus.success, transactionId: 'tx-pack');
+  }
+
+  @override
+  Future<bool> restore() async => false;
+
+  @override
+  Future<bool> adsRemoved() async => false;
+
+  @override
+  Future<Set<String>> ownedProducts() async => {...owned};
+}
+
 void main() {
   test('パックの一覧が読め、2つ目は最初は遊べない(前のパックを全部クリアすると解放)', () async {
     final app = await loadApp();
-    expect(app.packs.map((p) => p.id), ['main', 'extra1', 'extra2']);
+    expect(app.packs.map((p) => p.id), ['main', 'extra1', 'extra2', 'extra3']);
     expect(app.packs[0].pack.levels, hasLength(60));
     expect(app.packs[1].pack.levels, hasLength(60));
     expect(app.packs[1].pack.validate(), isEmpty); // 解けない面は無い
@@ -42,7 +66,7 @@ void main() {
   test('面のIDはパックごとに別で、進行は混ざらない', () async {
     final app = await loadApp();
     final ids = [for (final p in app.packs) ...p.pack.levels.map((l) => l.id)];
-    expect(ids.toSet(), hasLength(180));
+    expect(ids.toSet(), hasLength(240));
     await clearAll(app, 0);
     await app.selectPack(1);
     expect(app.clearedIn(0), 60);
@@ -114,6 +138,37 @@ void main() {
     );
     expect(app.isPackAvailable(1), isFalse);
     expect(app.packLockReason(1), 'purchase');
+  });
+
+  test('追加の面パック(チャプター4)は買うまで遊べず、買えば前章を終えていなくても遊べる', () async {
+    final gate = _Shop();
+    final app = await loadApp(purchaseGate: gate);
+    expect(app.packs[3].id, 'extra3');
+    expect(app.packs[3].pack.levels, hasLength(60));
+    expect(app.packs[3].pack.validate(), isEmpty); // 解けない面は無い
+    expect(app.packLockReason(3), 'purchase');
+    expect(app.isPackAvailable(3), isFalse);
+    expect(app.shopProducts.map((p) => p.id), contains('levels_pack_1'));
+    // 買う前は、無料の章を全部クリアしても開かない
+    for (var i = 0; i < 3; i++) {
+      await clearAll(app, i);
+    }
+    expect(app.isPackAvailable(3), isFalse);
+    expect(app.nextAvailablePack, isNull);
+
+    expect(await app.buyProduct('levels_pack_1'), isTrue);
+    expect(app.owns('levels.extra3'), isTrue);
+    expect(app.isPackAvailable(3), isTrue);
+    expect(await app.selectPack(3), isTrue);
+    expect(app.pack.packId, 'extra3');
+  });
+
+  test('買ってすぐ(前の章を遊ぶ前でも)チャプター4を遊べる', () async {
+    final gate = _Shop();
+    final app = await loadApp(purchaseGate: gate);
+    expect(await app.buyProduct('levels_pack_1'), isTrue);
+    expect(app.isPackAvailable(3), isTrue); // 前章の全クリアは求めない
+    expect(app.isPackAvailable(1), isFalse); // 無料の章は従来どおり順番に
   });
 
   testWidgets('面選択にチャプターの切り替えが出る。遊べないものは鍵つきで押せない', (tester) async {

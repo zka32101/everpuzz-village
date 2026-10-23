@@ -52,9 +52,8 @@
    "id": "levels_pack_1",
    "kind": "unlock",
    "grants": [
-    "levels.extra1"
-   ],
-   "enabled": false
+    "levels.extra3"
+   ]
   },
   {
    "id": "starter_pack",

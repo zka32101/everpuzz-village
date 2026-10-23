@@ -138,3 +138,8 @@ flutter run
 ## アイコン(Everpuzz 共通: 窓と帯)
 - 丸い窓(中の絵はゲームごと)+下の帯と白い双葉(共通)。`color_sort_app/tool/make_icon.py` が、窓の絵(`docs/icon/window.png`、Canvaで作成)から、`app_icon.png`(iOS・従来)・`app_icon_fg.png`(Android前景・透過)・`app_icon_bg.png`(Android背景)を作る。
 - アダプティブ(前景)は、円形に切られても欠けないよう、中心から半径約33%の円の内側に収めてある。生成は `dart run flutter_launcher_icons`(`pubspec.yaml` の設定。追加の余白は0)。
+
+## 追加の面パック(有料)
+- チャプター4(`extra3`)は、`packs.json` で `requires: "levels.extra3"`(`unlockAfterPrevious:false`)。商品 `levels_pack_1`(買い切り)を買うと `levels.extra3` が付与され、前の章を終えていなくてもすぐ遊べる。
+- 買う前は面選択・町の画面で鍵つき(「ショップで入手できます」)。復元でも戻る(`ownedProducts` から)。
+- 次の追加パック: `generate_levels.dart --id extraN --offset <直前の合計>` で作り、`packs.json` に `requires` を付け、`products.json` に商品を足し、文言 `pack.extraN` / `area.extraN` / `product.<商品ID>` を ja/en に足す。

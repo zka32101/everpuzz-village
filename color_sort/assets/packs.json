@@ -11,6 +11,12 @@
   {
    "id": "extra2",
    "file": "pack_extra2.json"
+  },
+  {
+   "id": "extra3",
+   "file": "pack_extra3.json",
+   "requires": "levels.extra3",
+   "unlockAfterPrevious": false
   }
  ]
 }

@@ -18,7 +18,7 @@
 - [ ] AdMob: 本番のアプリID・リワード広告ユニットを作る。
   **Google のテスト用アプリIDを本番に差し替える**: `AndroidManifest.xml`(`com.google.android.gms.ads.APPLICATION_ID`)と `Info.plist`(`GADApplicationIdentifier`)。差し替え前の公開は不可。
 - [ ] iOS: `Info.plist` の `SKAdNetworkItems` は、Google の識別子 1 つだけ入れてある。AdMob の公式の一覧(最新)に合わせて、リリース前に全部を足す。
-- [ ] RevenueCat: 商品 `ads_removal` / `coins_small` / `coins_medium` / `coins_large` / `life_refill` と権利 `ads_removed` を作り、`assets/shop/products.json` と一致させる。ストアコンソールでも同じ商品IDを作る。
+- [ ] RevenueCat: 商品 `ads_removal` / `coins_small` / `coins_medium` / `coins_large` / `life_refill` / `levels_pack_1`(追加の面パック。権利は `levels.extra3` を付与)と権利 `ads_removed` を作り、`assets/shop/products.json` と一致させる。ストアコンソールでも同じ商品IDを作る。
 - [ ] 同意(UMP)の文言・地域設定を確認。iOS の追跡の許可(ATT)の説明文は入れてある(`NSUserTrackingUsageDescription`)。
 
 ## 3. ビルド(お手元で)

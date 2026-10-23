@@ -30,13 +30,13 @@ void main() {
     final app = await played();
     final j = app.journey;
     expect(j.levelsCleared, 2);
-    expect(j.levelsTotal, 180);
+    expect(j.levelsTotal, 240);
     expect(j.stars, 4);
-    expect(j.starsMax, 540);
+    expect(j.starsMax, 720);
     expect(j.buildingsPlaced, 1);
     expect(j.buildingStages, 2);
-    expect(j.areas.map((a) => a.id), ['main', 'extra1', 'extra2']);
-    expect(j.areas.map((a) => a.available), [true, false, false]);
+    expect(j.areas.map((a) => a.id), ['main', 'extra1', 'extra2', 'extra3']);
+    expect(j.areas.map((a) => a.available), [true, false, false, false]);
     expect(j.areas[0].levelsCleared, 2);
     expect(j.areas[0].buildings, 1);
   });
@@ -59,9 +59,9 @@ void main() {
       child: MaterialApp(home: JourneyScreen(app: app)),
     ));
     await tester.pump();
-    expect(find.text('2 / 180'), findsOneWidget);
-    expect(find.text('4 / 540'), findsOneWidget);
+    expect(find.text('2 / 240'), findsOneWidget);
+    expect(find.text('4 / 720'), findsOneWidget);
     expect(find.byKey(const Key('journey-buildings')), findsOneWidget);
-    expect(find.text('Not yet'), findsNWidgets(2));
+    expect(find.text('Not yet'), findsNWidgets(3));
   });
 }
