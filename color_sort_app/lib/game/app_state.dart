@@ -18,6 +18,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'art.dart';
 import 'hint.dart';
 import 'purchases.dart';
+import 'transfer.dart';
 
 /// SharedPreferences を puzzle_core の保存窓口に合わせるアダプタ。
 class PrefsKeyValueStore implements KeyValueStore {
@@ -178,6 +179,7 @@ class AppState extends ChangeNotifier {
   static const packAssetDir = 'packages/color_sort/assets/levels/';
   static const activePackKey = 'activePack';
   static const tutorialKey = 'tutorialSeen';
+  static const progressKey = 'progress';
   static const economyKey = 'economy';
   static const economySchema = 1;
   static const purchasesKey = 'purchases';
@@ -512,6 +514,85 @@ class AppState extends ChangeNotifier {
     settings = next;
     notifyListeners();
     await SettingsStore(kv).save(next);
+  }
+
+  /// 引き継ぎコードを作る(進行・コイン・町・遊ぶ章)。購入した内容は、ストアの復元で戻る。
+  Future<String> createTransferCode() async {
+    final keys = [
+      progressKey,
+      economyKey,
+      for (var i = 0; i < packs.length; i++) townKeyFor(packs, i),
+      activePackKey,
+    ];
+    final entries = <String, String>{};
+    for (final k in keys) {
+      final v = await kv.read(k);
+      if (v != null) entries[k] = v;
+    }
+    return TransferCodec.encode(entries);
+  }
+
+  /// 引き継ぎコードを読み込み、いまの進行・コイン・町を置き換える。成功なら true。
+  /// 読めない・壊れている・知らない保存名が入っているときは何も変えずに false。
+  Future<bool> applyTransferCode(String code) async {
+    final entries = TransferCodec.decode(code);
+    if (entries == null || !entries.containsKey(progressKey)) return false;
+    final allowed = {
+      progressKey,
+      economyKey,
+      activePackKey,
+      for (var i = 0; i < packs.length; i++) townKeyFor(packs, i),
+    };
+    if (!allowed.containsAll(entries.keys)) return false;
+    // どの値も、JSONとして読めること。
+    try {
+      for (final v in entries.values) {
+        jsonDecode(v);
+      }
+    } on Object {
+      return false;
+    }
+    // 別の入れ物に書いて、読めることを確かめてから反映する。
+    final probe = MemoryKeyValueStore();
+    for (final e in entries.entries) {
+      await probe.write(e.key, e.value);
+    }
+    final newProgress = await KeyValueProgressStore(probe).load();
+    final savedEco = await VersionedJsonStore(probe)
+        .load(economyKey, currentVersion: economySchema);
+    if (entries.containsKey(economyKey) && savedEco == null) return false;
+    final newTowns = <String, TownState>{};
+    for (var i = 0; i < packs.length; i++) {
+      final key = townKeyFor(packs, i);
+      if (!entries.containsKey(key)) continue;
+      final cleared = [
+        for (final l in packs.expand((p) => p.pack.levels))
+          if (newProgress.recordOf(l.id).cleared) l
+      ].length;
+      newTowns[packs[i].id] = await TownStore(probe, townConfig,
+              cellLimit: townRules.cellCount(cleared), storageKey: key)
+          .load();
+    }
+    // 反映(保存→メモリ)。
+    for (final e in entries.entries) {
+      await kv.write(e.key, e.value);
+    }
+    for (var i = 0; i < packs.length; i++) {
+      if (!entries.containsKey(townKeyFor(packs, i))) {
+        await kv.remove(townKeyFor(packs, i));
+      }
+    }
+    progress = newProgress;
+    _eco = savedEco == null
+        ? EconomyState.initial(economyConfig, clock.now())
+        : EconomyState.fromJson(savedEco);
+    _towns
+      ..clear()
+      ..addAll(newTowns);
+    final active = packs.indexWhere((p) => p.id == entries[activePackKey]);
+    activePackIndex = active < 0 ? 0 : active;
+    notifyListeners();
+    return true;
   }
 
   /// 進行・コイン・町を初期に戻す(購入した内容・設定は残す)。
