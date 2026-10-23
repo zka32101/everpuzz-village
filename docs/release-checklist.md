@@ -3,8 +3,7 @@
 コードで済む作業は終わっている。下は、**お手元(ストア・端末・署名・画像の権利)でしかできないもの**と、決めること。
 
 ## 0. 先に決める(公開後は変えにくい)
-- [ ] **アプリ名・シリーズ名**(仮名「Everpuzz Pastel Village」)。いまの表示名は仮のまま:
-  Android `android/app/src/main/AndroidManifest.xml` の `android:label="color_sort_app"`、iOS `ios/Runner/Info.plist` の `CFBundleDisplayName`("Color Sort App")。決まったら、ここと日本語・英語のストア名を揃える(依頼してくれればこちらで差し替える)。
+- [x] **アプリ名**: 「Everpuzz Village」に決定(表示名は Android `AndroidManifest.xml` / iOS `Info.plist` / アプリ内 `appTitle` に反映済み)。ストア名・言語別の名前は別途。
 - [ ] **アプリID**(一度公開すると変えられない)。いまは食い違っている:
   Android `com.petitworksapps.color_sort_app`(`android/app/build.gradle.kts`)、iOS `com.petitworksapps.colorSortApp`(`project.pbxproj`)。ストアのアプリを作る前に、最終の名前を決めて、両方を揃える(こちらで直せる)。
 - [ ] **価格・コインの数**(`docs/monetization.md` の叩き台)。

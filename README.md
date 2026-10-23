@@ -1,6 +1,6 @@
 # everpuzz-village
 
-Everpuzz シリーズ1本目（色ソート・仮称）のアプリ。共通基盤は別リポジトリの
+Everpuzz シリーズ1本目（色ソート。アプリ名「Everpuzz Village」）のアプリ。共通基盤は別リポジトリの
 [puzzle_core](https://github.com/zka32101/puzzle_core)（非公開）を、**版を固定した git 依存**（コミットのハッシュ。タグを打てるようになったらタグ）で使う。
 
 | ディレクトリ | 内容 |
