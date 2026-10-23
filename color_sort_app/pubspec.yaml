@@ -40,6 +40,11 @@ flutter_launcher_icons:
   android: true
   ios: true
   remove_alpha_ios: true
+  # Androidのアダプティブアイコン(前景と背景を分ける)。前景は中心から半径約66%の円の内側に収めてある。
+  adaptive_icon_background: "../color_sort/assets/art/app_icon_bg.png"
+  adaptive_icon_foreground: "../color_sort/assets/art/app_icon_fg.png"
+  # 前景は、安全域(円形に切られても欠けない範囲)に収めて作ってあるので、ツールの追加の余白(既定16%)は0にする。
+  adaptive_icon_foreground_inset: 0
 
 # shared_preferences_android 2.5.0 は、リリースビルドで起動時に NoSuchMethodError となり、画面が白いまま止まる(実機で確認)。
 # うかラボのアプリと同じ 2.4.x に固定する。

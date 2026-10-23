@@ -134,3 +134,7 @@ flutter run
 ## 効果音
 - `assets/sfx/*.wav`(選ぶ・注ぐ・まちがい・クリア・建物を置く・コイン)。`tool/make_sfx.py` で合成した短いやさしい音。外部の素材は使っていない。
 - 設定の「効果音」でオフにできる(`soundOn`、既定はオン)。鳴らせなくても遊びは止まらない。
+
+## アイコン(Everpuzz 共通: 窓と帯)
+- 丸い窓(中の絵はゲームごと)+下の帯と白い双葉(共通)。`color_sort_app/tool/make_icon.py` が、窓の絵(`docs/icon/window.png`、Canvaで作成)から、`app_icon.png`(iOS・従来)・`app_icon_fg.png`(Android前景・透過)・`app_icon_bg.png`(Android背景)を作る。
+- アダプティブ(前景)は、円形に切られても欠けないよう、中心から半径約33%の円の内側に収めてある。生成は `dart run flutter_launcher_icons`(`pubspec.yaml` の設定。追加の余白は0)。
