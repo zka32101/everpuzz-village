@@ -64,6 +64,9 @@ const _gameBundles = <String, Map<String, String>>{
     'tutorial.t4': '町を育てよう',
     'tutorial.b4': 'クリアするとコインがもらえます。コインで町に建物を置いて、ゆっくり育てましょう。急がなくて大丈夫です。',
     'settings.howTo': 'あそびかた',
+    'townShare': '町の写真をおくる',
+    'townShareEmpty': '建物をひとつ置くと、町の写真をおくれます。',
+    'townShareText': 'わたしの町です。',
     'restNudge': '続けて{n}面クリアしました。ひと息ついて、町をながめませんか?',
     'language.ja': '日本語',
     'language.en': 'English',
@@ -233,6 +236,10 @@ const _gameBundles = <String, Map<String, String>>{
     'tutorial.b4':
         'Clearing levels earns coins. Use them to place buildings and grow your town at your own pace.',
     'settings.howTo': 'How to play',
+    'townShare': 'Share a photo of your town',
+    'townShareEmpty':
+        'Place a building and you can share a photo of your town.',
+    'townShareText': 'This is my town.',
     'restNudge':
         'You have cleared {n} levels in a row. How about a breather and a look at your town?',
     'language.ja': '日本語',

@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import '../game/app_state.dart';
+import 'town_photo.dart';
 import 'town_snapshot.dart';
 
 /// 町が変わったら、ホーム画面ウィジェット用の絵を作って端末側(Android/iOS)へ渡す。
@@ -45,12 +46,7 @@ class HomeWidgetSync {
   /// 絵を作って渡す。同じ中身なら何もしない。渡したら true。
   @visibleForTesting
   Future<bool> sync() async {
-    final snap = TownSnapshot(
-      placements: app.townState.placements,
-      cells: app.townRules.cellCount(app.clearedLevels),
-      background:
-          app.art.stageBackground(app.globalLevelIndex(app.nextLevelIndex)),
-    );
+    final snap = townSnapshotOf(app);
     if (snap.signature == _last) return false;
     try {
       final png = await snap.render(_loadImage, art: app.art);
