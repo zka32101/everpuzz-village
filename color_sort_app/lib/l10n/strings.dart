@@ -80,6 +80,9 @@ const _gameBundles = <String, Map<String, String>>{
     'transfer.done': '引き継ぎました。',
     'transfer.invalid': 'コードを読めませんでした。コピーし直してお試しください。',
     'transfer.purchaseNote': '購入した内容は、設定の「購入の復元」で戻ります。',
+    'townShare': '町の写真をおくる',
+    'townShareEmpty': '建物をひとつ置くと、町の写真をおくれます。',
+    'townShareText': 'わたしの町です。',
     'restNudge': '続けて{n}面クリアしました。ひと息ついて、町をながめませんか?',
     'language.ja': '日本語',
     'language.en': 'English',
@@ -270,6 +273,10 @@ const _gameBundles = <String, Map<String, String>>{
         'The code could not be read. Please copy it again and retry.',
     'transfer.purchaseNote':
         'Purchases come back with "Restore purchases" in Settings.',
+    'townShare': 'Share a photo of your town',
+    'townShareEmpty':
+        'Place a building and you can share a photo of your town.',
+    'townShareText': 'This is my town.',
     'restNudge':
         'You have cleared {n} levels in a row. How about a breather and a look at your town?',
     'language.ja': '日本語',

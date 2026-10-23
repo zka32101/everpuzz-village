@@ -1,11 +1,14 @@
+import 'dart:ui' as ui;
+
 import 'package:color_sort/color_sort.dart'
     show BuildingDef, Placement, TownError;
 import 'package:flutter/material.dart';
-import 'package:puzzle_core/foundation.dart' show Translator;
+import 'package:puzzle_core/foundation.dart' show TelemetryEvent, Translator;
 
 import '../game/app_state.dart';
 import '../game/art.dart';
 import '../l10n/strings.dart';
+import '../widget/town_photo.dart';
 import 'economy_bar.dart';
 import 'level_select_screen.dart';
 import 'play_screen.dart';
@@ -14,9 +17,20 @@ import 'town_walk.dart';
 
 /// ホーム = 町。置く・育てる・動かす。素材が届くまでは、図形+名前で代用する。
 class TownScreen extends StatefulWidget {
-  const TownScreen({super.key, required this.app});
+  const TownScreen({
+    super.key,
+    required this.app,
+    this.sharePhoto = sharePhotoOnDevice,
+    this.loadImage,
+  });
 
   final AppState app;
+
+  /// 町の写真の共有(テストで差し替える)。
+  final PhotoSharer sharePhoto;
+
+  /// 町の写真に使う画像の読み込み(テストで差し替える。省略時は同梱の画像)。
+  final Future<ui.Image?> Function(String id)? loadImage;
 
   @override
   State<TownScreen> createState() => _TownScreenState();
@@ -63,6 +77,18 @@ class _TownScreenState extends State<TownScreen> {
         TownError.notEnoughCoins => t.tr('notEnoughCoins'),
         _ => t.tr('townNothingToPlace'),
       };
+
+  /// 町の写真を作って、端末の共有画面を開く。建物が無いときは案内だけ出す。
+  Future<void> _sharePhoto(Translator t) async {
+    final png = await renderTownPhoto(app, loadImage: widget.loadImage);
+    if (!mounted) return;
+    if (png == null) {
+      _say(t.tr('townShareEmpty'));
+      return;
+    }
+    await widget.sharePhoto(png, t.tr('townShareText'));
+    app.telemetry.log(const TelemetryEvent('town_share'));
+  }
 
   Future<void> _tapCell(int cell) async {
     final t = L10n.of(context);
@@ -546,7 +572,16 @@ class _TownScreenState extends State<TownScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(t.tr('appTitle')),
-        actions: menuActions(context, app),
+        actions: [
+          IconButton(
+            key: const Key('town-share'),
+            tooltip: t.tr('townShare'),
+            constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+            icon: const Icon(Icons.ios_share),
+            onPressed: () => _sharePhoto(t),
+          ),
+          ...menuActions(context, app),
+        ],
       ),
       body: DecoratedBox(
         decoration: BoxDecoration(
