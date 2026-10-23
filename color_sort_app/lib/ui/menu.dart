@@ -6,6 +6,7 @@ import 'package:puzzle_core/meta.dart';
 import '../game/app_state.dart';
 import '../l10n/strings.dart';
 import 'shop_screen.dart';
+import 'transfer.dart';
 import 'tutorial.dart';
 
 /// ビルド時に渡す版の表記(`--dart-define=APP_VERSION=1.0.0`)。無ければ版は出さない。
@@ -78,6 +79,14 @@ class SettingsScreen extends StatelessWidget {
               title: Text(t.tr('settings.howTo')),
               onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(builder: (_) => TutorialScreen(app: app))),
+            ),
+            ListTile(
+              key: const Key('setting-transfer'),
+              minVerticalPadding: 12,
+              leading: const Icon(Icons.swap_horiz),
+              title: Text(t.tr('transfer.title')),
+              onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => TransferScreen(app: app))),
             ),
             for (final section in buildSettings(ctx)) ...[
               Padding(
