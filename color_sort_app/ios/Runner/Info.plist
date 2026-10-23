@@ -5,6 +5,17 @@
 	<!-- AdMob のアプリID。下はGoogleのテスト用ID。本番はAdMobで発行したIDに差し替える。 -->
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-3940256099942544~1458002511</string>
+	<!-- 広告の追跡の許可を求めるときの説明(ATT)。広告を見るかどうかは、ご自身で選べます。 -->
+	<key>NSUserTrackingUsageDescription</key>
+	<string>広告をより合ったものにするために使います。許可しなくても、すべて遊べます。</string>
+	<!-- Google広告の計測用(SKAdNetwork)。AdMobの公式の一覧(最新)に合わせて、リリース前に全部を足す。 -->
+	<key>SKAdNetworkItems</key>
+	<array>
+		<dict>
+			<key>SKAdNetworkIdentifier</key>
+			<string>cstr6suwn9.skadnetwork</string>
+		</dict>
+	</array>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
