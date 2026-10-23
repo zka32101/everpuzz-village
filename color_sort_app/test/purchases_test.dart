@@ -108,9 +108,16 @@ void main() {
 
   test('素材のない商品(enabled:false)は店に出ず、買えない', () async {
     final app = await loadApp(purchaseGate: FakePurchases());
-    expect(app.shopProducts.map((p) => p.id), isNot(contains('deco_pack_1')));
-    expect(await app.buyProduct('deco_pack_1'), isFalse);
-    expect(app.owns('deco.seasonal1'), isFalse);
+    expect(app.shopProducts.map((p) => p.id), isNot(contains('skins_pack_1')));
+    expect(await app.buyProduct('skins_pack_1'), isFalse);
+    expect(app.owns('skins.set1'), isFalse);
+  });
+
+  test('季節パック: 買うまでは秋だけ、買うと全部の季節になる', () async {
+    final app = await loadApp(purchaseGate: FakePurchases());
+    expect(app.allSeasons, isFalse);
+    expect(await app.buyProduct('deco_pack_1'), isTrue);
+    expect(app.allSeasons, isTrue);
   });
 
   test('ライフ全回復: 満タンまで戻る。同じ取引IDは二重に効かない', () async {

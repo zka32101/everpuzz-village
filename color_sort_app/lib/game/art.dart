@@ -14,9 +14,14 @@ class ArtCatalog {
 
   /// ステージ背景は12面ごとに切り替わる(bg_stage_01〜05)。画像が無い段階は、ある中で
   /// 一番近い手前の段階にする。無ければ null。
-  String? stageBackground(int levelIndex, {int levelsPerStage = 12}) {
+  ///
+  /// [seasons] が false(季節パック未購入)のときは、いつでも秋(bg_stage_02)。
+  String? stageBackground(int levelIndex,
+      {int levelsPerStage = 12, bool seasons = true}) {
     // 5段階を超えたら最初から巡る(面が増えても背景が続く)。
-    var n = (levelIndex ~/ levelsPerStage) % 5 + 1;
+    var n = seasons
+        ? (levelIndex ~/ levelsPerStage) % 5 + 1
+        : themes.indexOf(freeTheme) + 1;
     for (; n >= 1; n--) {
       final id = 'bg_stage_${n.toString().padLeft(2, '0')}';
       if (has(id)) return id;
@@ -28,8 +33,15 @@ class ArtCatalog {
   /// 容器と色玉の画像をテーマごとに用意できる(無ければ共通の画像、それも無ければ図形)。
   static const themes = ['spring', 'autumn', 'winter', 'summer', 'sakura'];
 
-  String themeFor(int levelIndex, {int levelsPerStage = 12}) =>
-      themes[(levelIndex ~/ levelsPerStage) % themes.length];
+  /// 最初から使えるテーマ。ほかの季節は追加パック(`deco.seasonal1`)で増える。
+  static const freeTheme = 'autumn';
+
+  /// [seasons] が false(季節パック未購入)のときは、いつでも [freeTheme]。
+  String themeFor(int levelIndex,
+          {int levelsPerStage = 12, bool seasons = true}) =>
+      seasons
+          ? themes[(levelIndex ~/ levelsPerStage) % themes.length]
+          : freeTheme;
 
   /// テーマ付きの画像ID(`<base>_<theme>`)があればそれ、無ければ共通の [base]。
   String themed(String base, String theme) {

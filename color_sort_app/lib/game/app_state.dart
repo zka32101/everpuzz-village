@@ -839,6 +839,9 @@ class AppState extends ChangeNotifier {
   }
 
   /// 中身(飾り・スキン・着せ替え・追加面)を持っているか。
+  /// 季節パック(春・冬・夏・桜の見た目)を持っているか。持っていなければ秋だけ。
+  bool get allSeasons => owns('deco.seasonal1');
+
   bool owns(String grant) => _purchases.grants.contains(grant);
 
   /// 店に出す商品。

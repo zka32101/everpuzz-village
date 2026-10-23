@@ -193,7 +193,7 @@ const _gameBundles = <String, Map<String, String>>{
     'lifeRefill': 'ライフを全回復',
     'lifeRefillNote': 'ライフを最大まで戻します。',
     'product.deco_pack_1': '季節の飾りパック',
-    'product.deco_pack_1.note': '桜・雪・夏祭りなどの飾り。見た目だけです。',
+    'product.deco_pack_1.note': '春・冬・夏・桜の背景と容器・玉の見た目が加わります。見た目だけです。',
     'product.skins_pack_1': '建物の別デザイン',
     'product.skins_pack_1.note': '建物の見た目が変わります。有利にはなりません。',
     'product.outfits_pack_1': 'こびとの着せ替え',
@@ -410,7 +410,7 @@ const _gameBundles = <String, Map<String, String>>{
     'lifeRefillNote': 'Restores your lives to the maximum.',
     'product.deco_pack_1': 'Seasonal decor pack',
     'product.deco_pack_1.note':
-        'Cherry blossoms, snow, summer festival. Cosmetic only.',
+        'Adds spring, winter, summer and sakura backdrops and tube looks. Cosmetic only.',
     'product.skins_pack_1': 'Alternate building looks',
     'product.skins_pack_1.note':
         'Changes how buildings look. No gameplay advantage.',
@@ -612,7 +612,7 @@ const _gameBundles = <String, Map<String, String>>{
     'lifeRefill': '라이프 전부 회복',
     'lifeRefillNote': '라이프를 최대로 되돌려요.',
     'product.deco_pack_1': '계절 장식 팩',
-    'product.deco_pack_1.note': '벚꽃, 눈, 여름 축제 등의 장식이에요. 보기만 달라져요.',
+    'product.deco_pack_1.note': '봄·겨울·여름·벚꽃 배경과 용기·구슬 디자인이 추가돼요. 보기만 달라져요.',
     'product.skins_pack_1': '건물 다른 디자인',
     'product.skins_pack_1.note': '건물의 모습이 바뀌어요. 게임에 유리하지는 않아요.',
     'product.outfits_pack_1': '꼬마 주민 옷 갈아입히기',
@@ -831,7 +831,7 @@ const _gameBundles = <String, Map<String, String>>{
     'lifeRefillNote': 'Devuelve tus vidas al máximo.',
     'product.deco_pack_1': 'Pack de decoración de temporada',
     'product.deco_pack_1.note':
-        'Flores de cerezo, nieve, fiesta de verano… Solo estético.',
+        'Añade fondos y diseños de primavera, invierno, verano y cerezos. Solo estético.',
     'product.skins_pack_1': 'Otros diseños de edificios',
     'product.skins_pack_1.note':
         'Cambia el aspecto de los edificios. No da ventaja en el juego.',
@@ -1036,7 +1036,7 @@ const _gameBundles = <String, Map<String, String>>{
     'lifeRefill': '生命全部恢复',
     'lifeRefillNote': '把生命恢复到最大值。',
     'product.deco_pack_1': '季节装饰包',
-    'product.deco_pack_1.note': '樱花、雪、夏日祭典等装饰。只改变外观。',
+    'product.deco_pack_1.note': '增加春、冬、夏、樱花的背景与容器、珠子外观。只改变外观。',
     'product.skins_pack_1': '建筑的其他样式',
     'product.skins_pack_1.note': '改变建筑的外观。不会带来游戏上的优势。',
     'product.outfits_pack_1': '小居民换装',
@@ -1237,7 +1237,7 @@ const _gameBundles = <String, Map<String, String>>{
     'lifeRefill': '生命全部恢復',
     'lifeRefillNote': '把生命恢復到最大值。',
     'product.deco_pack_1': '季節裝飾包',
-    'product.deco_pack_1.note': '櫻花、雪、夏日祭典等裝飾。只改變外觀。',
+    'product.deco_pack_1.note': '增加春、冬、夏、櫻花的背景與容器、珠子外觀。只改變外觀。',
     'product.skins_pack_1': '建築的其他樣式',
     'product.skins_pack_1.note': '改變建築的外觀。不會帶來遊戲上的優勢。',
     'product.outfits_pack_1': '小居民換裝',
