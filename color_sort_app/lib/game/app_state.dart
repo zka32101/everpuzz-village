@@ -18,6 +18,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'art.dart';
 import 'hint.dart';
 import 'purchases.dart';
+import 'sound.dart';
 import 'journey.dart';
 import 'transfer.dart';
 
@@ -161,6 +162,8 @@ class AppState extends ChangeNotifier {
     this.settings = AppSettings.defaults,
     this.art = ArtCatalog.empty,
     this.tutorialSeen = true,
+    this.soundOn = true,
+    this.sound = const NoSound(),
     TownState townState = TownState.empty,
     Map<String, TownState>? towns,
     this.catalog = ShopCatalog.empty,
@@ -180,6 +183,7 @@ class AppState extends ChangeNotifier {
   static const packAssetDir = 'packages/color_sort/assets/levels/';
   static const activePackKey = 'activePack';
   static const tutorialKey = 'tutorialSeen';
+  static const soundKey = 'soundOn';
   static const progressKey = 'progress';
   static const economyKey = 'economy';
   static const economySchema = 1;
@@ -230,6 +234,21 @@ class AppState extends ChangeNotifier {
     await kv.write(tutorialKey, '1');
   }
 
+  /// 効果音(端末の音の窓口)と、鳴らすかどうか。設定でオフにできる。
+  final SoundPlayer sound;
+  bool soundOn;
+
+  Future<void> setSoundOn(bool on) async {
+    soundOn = on;
+    notifyListeners();
+    await kv.write(soundKey, on ? '1' : '0');
+  }
+
+  /// 効果音を鳴らす(オフのときは何もしない)。
+  void playSound(Sfx sfx) {
+    if (soundOn) sound.play(sfx);
+  }
+
   final Map<String, TownState> _towns;
 
   /// いまのエリア(=いま遊ぶパック)の町。エリアごとに別の町を持つ。
@@ -266,6 +285,9 @@ class AppState extends ChangeNotifier {
 
     /// テスト用。画像素材の一覧を差し替える(省略時は同梱の画像を読む)。
     ArtCatalog? artOverride,
+
+    /// 効果音の窓口(省略時は音なし)。
+    SoundPlayer sound = const NoSound(),
   }) async {
     final packList = await _loadPacks(bundle ?? rootBundle);
     // 解けない面を出荷しない(CIで検査済みだが、実行時にも念のため)。
@@ -304,6 +326,8 @@ class AppState extends ChangeNotifier {
     return AppState(
       townConfig: townConfig,
       tutorialSeen: await kv.read(tutorialKey) != null,
+      soundOn: await kv.read(soundKey) != '0',
+      sound: sound,
       settings: await SettingsStore(kv).load(),
       art: artOverride ?? await ArtCatalog.load(b),
       towns: {
@@ -656,6 +680,7 @@ class AppState extends ChangeNotifier {
     if (r == null) return 0;
     townState = r.state!;
     _eco = economy.addCoins(current, townConfig.dailyGift);
+    playSound(Sfx.coin);
     notifyListeners();
     telemetry.log(const TelemetryEvent('town_gift'));
     await _townStore().save(townState);
@@ -687,6 +712,7 @@ class AppState extends ChangeNotifier {
       _eco = economy.spendCoins(current, r.cost)!;
     }
     townState = r.state!;
+    playSound(Sfx.place);
     notifyListeners();
     // 個人を特定しない値だけ送る(建物ID・段階・使ったコイン・クリア数)。
     telemetry.log(TelemetryEvent(event, {

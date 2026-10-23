@@ -94,6 +94,7 @@ const _gameBundles = <String, Map<String, String>>{
     'journey.areas': 'エリア',
     'journey.buildingsShort': '建物 {n}',
     'journey.notYet': 'まだ先です',
+    'settings.sound': '効果音',
     'restNudge': '続けて{n}面クリアしました。ひと息ついて、町をながめませんか?',
     'language.ja': '日本語',
     'language.en': 'English',
@@ -300,6 +301,7 @@ const _gameBundles = <String, Map<String, String>>{
     'journey.areas': 'Areas',
     'journey.buildingsShort': '{n} buildings',
     'journey.notYet': 'Not yet',
+    'settings.sound': 'Sound effects',
     'restNudge':
         'You have cleared {n} levels in a row. How about a breather and a look at your town?',
     'language.ja': '日本語',

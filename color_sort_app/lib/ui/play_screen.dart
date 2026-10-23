@@ -4,6 +4,7 @@ import 'package:puzzle_core/foundation.dart';
 import '../game/app_state.dart';
 import '../game/art.dart';
 import '../game/game_controller.dart';
+import '../game/sound.dart';
 import '../l10n/strings.dart';
 import 'economy_bar.dart';
 import 'tube_widget.dart';
@@ -44,7 +45,29 @@ class _PlayScreenState extends State<PlayScreen> {
     super.dispose();
   }
 
+  // 効果音のための、前の状態。
+  int _lastMoves = 0;
+  int? _lastSelected;
+  bool _wasWon = false;
+
+  void _playSounds() {
+    final app = widget.app;
+    if (game.won && !_wasWon) {
+      app.playSound(Sfx.win);
+    } else if (game.moves > _lastMoves) {
+      app.playSound(Sfx.pour);
+    } else if (game.lastError != null) {
+      app.playSound(Sfx.error);
+    } else if (game.selected != null && game.selected != _lastSelected) {
+      app.playSound(Sfx.select);
+    }
+    _lastMoves = game.moves;
+    _lastSelected = game.selected;
+    _wasWon = game.won;
+  }
+
   void _onChange() {
+    _playSounds();
     if (game.won && !_recorded) {
       _recorded = true;
       widget.app.telemetry
