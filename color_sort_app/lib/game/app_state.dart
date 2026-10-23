@@ -158,6 +158,7 @@ class AppState extends ChangeNotifier {
     required this.townConfig,
     this.settings = AppSettings.defaults,
     this.art = ArtCatalog.empty,
+    this.tutorialSeen = true,
     TownState townState = TownState.empty,
     Map<String, TownState>? towns,
     this.catalog = ShopCatalog.empty,
@@ -176,6 +177,7 @@ class AppState extends ChangeNotifier {
   static const packsAsset = 'packages/color_sort/assets/packs.json';
   static const packAssetDir = 'packages/color_sort/assets/levels/';
   static const activePackKey = 'activePack';
+  static const tutorialKey = 'tutorialSeen';
   static const economyKey = 'economy';
   static const economySchema = 1;
   static const purchasesKey = 'purchases';
@@ -215,6 +217,16 @@ class AppState extends ChangeNotifier {
   /// 配置済みの画像素材。
   final ArtCatalog art;
   final TownRules townRules;
+
+  /// はじめての案内を見たか。見ていなければ、起動時に案内を出す。
+  bool tutorialSeen;
+
+  Future<void> markTutorialSeen() async {
+    tutorialSeen = true;
+    notifyListeners();
+    await kv.write(tutorialKey, '1');
+  }
+
   final Map<String, TownState> _towns;
 
   /// いまのエリア(=いま遊ぶパック)の町。エリアごとに別の町を持つ。
@@ -288,6 +300,7 @@ class AppState extends ChangeNotifier {
     final activeIndex = packList.indexWhere((p) => p.id == savedActive);
     return AppState(
       townConfig: townConfig,
+      tutorialSeen: await kv.read(tutorialKey) != null,
       settings: await SettingsStore(kv).load(),
       art: artOverride ?? await ArtCatalog.load(b),
       towns: {

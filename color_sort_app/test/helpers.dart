@@ -17,9 +17,13 @@ Future<AppState> loadApp({
   PurchaseGate? purchaseGate,
   ShopCatalog? catalogOverride,
   ArtCatalog? art,
-}) {
+  bool showTutorial = false,
+}) async {
+  // 既定では、はじめての案内は見た扱い(町・面の画面をそのまま検査する)。
+  kv ??= MemoryKeyValueStore();
+  if (!showTutorial) await kv.write(AppState.tutorialKey, '1');
   return AppState.load(
-    kv ?? MemoryKeyValueStore(),
+    kv,
     bundle: rootBundle,
     clock: clock ?? FakeClock(DateTime.utc(2026, 1, 1, 12)),
     adGate: adGate,

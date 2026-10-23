@@ -6,6 +6,7 @@ import 'package:puzzle_core/meta.dart';
 import '../game/app_state.dart';
 import '../l10n/strings.dart';
 import 'shop_screen.dart';
+import 'tutorial.dart';
 
 /// ビルド時に渡す版の表記(`--dart-define=APP_VERSION=1.0.0`)。無ければ版は出さない。
 const appVersion = String.fromEnvironment('APP_VERSION');
@@ -70,6 +71,14 @@ class SettingsScreen extends StatelessWidget {
         listenable: app,
         builder: (context, _) => ListView(
           children: [
+            ListTile(
+              key: const Key('setting-tutorial'),
+              minVerticalPadding: 12,
+              leading: const Icon(Icons.help_outline),
+              title: Text(t.tr('settings.howTo')),
+              onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => TutorialScreen(app: app))),
+            ),
             for (final section in buildSettings(ctx)) ...[
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),

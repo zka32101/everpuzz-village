@@ -13,6 +13,7 @@ import 'game/revenuecat_gate.dart';
 import 'l10n/strings.dart';
 import 'ui/level_select_screen.dart';
 import 'ui/town_screen.dart';
+import 'ui/tutorial.dart';
 import 'widget/home_widget_sync.dart';
 
 Future<void> main() async {
@@ -76,7 +77,9 @@ class ColorSortApp extends StatelessWidget {
             ),
             home: startOnLevels
                 ? LevelSelectScreen(app: app)
-                : TownScreen(app: app),
+                : app.tutorialSeen
+                    ? TownScreen(app: app)
+                    : TutorialScreen(app: app, firstRun: true),
           ),
         );
       },
