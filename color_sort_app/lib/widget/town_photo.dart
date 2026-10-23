@@ -15,9 +15,8 @@ TownSnapshot townSnapshotOf(AppState app) => TownSnapshot(
 
 String? _background(AppState app) {
   // 町の画面と同じ背景(エリアの背景があればそれ、無ければ段階の背景)。
-  const areaArt = {'main': 'area_village', 'extra1': 'area_meadow'};
-  final area = areaArt[app.activePackId];
-  if (area != null && app.art.has(area)) return area;
+  final area = app.art.areaBackground(app.activePackId);
+  if (area != null) return area;
   return app.art.stageBackground(app.globalLevelIndex(app.nextLevelIndex));
 }
 

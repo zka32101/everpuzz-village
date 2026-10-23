@@ -99,7 +99,7 @@ const _gameBundles = <String, Map<String, String>>{
     'language.ja': '日本語',
     'language.en': 'English',
     'credit.images': '画像',
-    'credit.imagesBody': 'AI(Leonardo.Ai・Google の画像生成)で作成した画像を含みます。',
+    'credit.imagesBody': 'AI(Leonardo.Ai・Google の画像生成・Canva)で作成した画像を含みます。',
     'credit.engine': '開発',
     'credit.engineBody': 'Flutter / Dart',
     'settingsDeleted': '進行・コイン・町を消しました。',
@@ -308,7 +308,7 @@ const _gameBundles = <String, Map<String, String>>{
     'language.en': 'English',
     'credit.images': 'Images',
     'credit.imagesBody':
-        'Includes images created with AI (Leonardo.Ai and Google image generation).',
+        'Includes images created with AI (Leonardo.Ai, Google image generation and Canva).',
     'credit.engine': 'Built with',
     'credit.engineBody': 'Flutter / Dart',
     'settingsDeleted': 'Progress, coins and town were erased.',
