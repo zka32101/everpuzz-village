@@ -46,13 +46,10 @@ class _TownScreenState extends State<TownScreen> {
   /// 町の背景は、いま遊ぶ面の段階に合わせて変わる。
   String? get _background {
     // エリアの背景画像があればそれを、無ければ段階の背景を使う。
-    final area = areaArt[app.activePackId];
-    if (area != null && app.art.has(area)) return area;
+    final area = app.art.areaBackground(app.activePackId);
+    if (area != null) return area;
     return app.art.stageBackground(app.globalLevelIndex(app.nextLevelIndex));
   }
-
-  /// エリア(パックID)ごとの背景画像ID。
-  static const areaArt = {'main': 'area_village', 'extra1': 'area_meadow'};
 
   static const _columns = 4;
 

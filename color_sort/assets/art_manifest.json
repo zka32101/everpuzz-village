@@ -1324,6 +1324,15 @@
    "transparent": false,
    "required": false,
    "note": "町のエリア背景「ひだまりの草原」。建物が並ぶ地面が主役。上は空、下はやさしい地面。文字は入れない。既存の bg_stage と同じ画風・同じ色調で。"
+  },
+  {
+   "id": "area_hill",
+   "path": "assets/art/area_hill.png",
+   "width": 1080,
+   "height": 1920,
+   "transparent": false,
+   "required": false,
+   "note": "町のエリア背景「そよかぜの丘」。建物が並ぶ平らな草地が主役。文字は入れない。"
   }
  ]
 }

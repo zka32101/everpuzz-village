@@ -43,6 +43,19 @@ class ArtCatalog {
     return has(id) ? id : null;
   }
 
+  /// エリア(パックID)ごとの背景画像ID。町の画面・町の写真・ウィジェットで共通。
+  static const areaBackgrounds = {
+    'main': 'area_village',
+    'extra1': 'area_meadow',
+    'extra2': 'area_hill',
+  };
+
+  /// そのエリアの背景(画像があれば)。無ければ null。
+  String? areaBackground(String packId) {
+    final id = areaBackgrounds[packId];
+    return id != null && has(id) ? id : null;
+  }
+
   /// Image.asset に渡すパス。
   static String assetOf(String id) => '$prefix$id.png';
 
