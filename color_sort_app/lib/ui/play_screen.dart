@@ -149,13 +149,20 @@ class _PlayScreenState extends State<PlayScreen> {
                       final maxH = box.maxHeight - 32;
                       final useArt = widget.app.art.has('tube_back') &&
                           widget.app.art.has('tube_front');
+                      final theme = widget.app.art.themeFor(
+                          widget.app.globalLevelIndex(widget.index),
+                          seasons: widget.app.allSeasons);
+                      final themed =
+                          TubeWidget.hasThemedTube(widget.app.art, theme);
                       final unit = fitUnit(
                         count: count,
                         maxWidth: maxW,
                         maxHeight: maxH,
                         useArt: useArt,
+                        themed: themed,
                       );
-                      final w = TubeWidget.widthFor(unit, useArt: useArt);
+                      final w = TubeWidget.widthFor(unit,
+                          useArt: useArt, themed: themed);
                       final perRow = ((maxW + _tubeGap) / (w + _tubeGap))
                           .floor()
                           .clamp(1, count);
@@ -178,9 +185,7 @@ class _PlayScreenState extends State<PlayScreen> {
                                 game.hint!.$1 != i &&
                                 game.hint!.$2 != i,
                             art: widget.app.art,
-                            theme: widget.app.art.themeFor(
-                                widget.app.globalLevelIndex(widget.index),
-                                seasons: widget.app.allSeasons),
+                            theme: theme,
                             unit: unit,
                             onTap: () => game.tap(i),
                           );
@@ -314,16 +319,17 @@ class _PlayScreenState extends State<PlayScreen> {
     required double maxWidth,
     required double maxHeight,
     required bool useArt,
+    bool themed = false,
   }) {
     const spacing = _tubeGap;
     var unit = TubeWidget.defaultUnit;
     final minUnit = TubeWidget.minUnitFor(useArt: useArt);
     while (unit > minUnit) {
-      final w = TubeWidget.widthFor(unit, useArt: useArt);
+      final w = TubeWidget.widthFor(unit, useArt: useArt, themed: themed);
       final perRow =
           ((maxWidth + spacing) / (w + spacing)).floor().clamp(1, count);
       final rows = (count / perRow).ceil();
-      final h = TubeWidget.heightFor(unit, useArt: useArt);
+      final h = TubeWidget.heightFor(unit, useArt: useArt, themed: themed);
       if (rows * h + (rows - 1) * spacing <= maxHeight) return unit;
       unit -= 1;
     }

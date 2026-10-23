@@ -40,6 +40,17 @@ void main() {
     expect(all.stageBackground(30), 'bg_stage_03');
   });
 
+  test('テーマ専用の容器画像は、別の寸法(底の縁が厚い分、少し大きく描く)', () {
+    const art = ArtCatalog(
+        {'tube_back', 'tube_front', 'tube_back_autumn', 'tube_front_autumn'});
+    expect(TubeWidget.hasThemedTube(art, 'autumn'), isTrue);
+    expect(TubeWidget.hasThemedTube(art, 'winter'), isFalse);
+    expect(TubeWidget.heightFor(46, useArt: true, themed: true),
+        greaterThan(TubeWidget.heightFor(46, useArt: true)));
+    expect(TubeWidget.widthFor(46, useArt: true, themed: true),
+        greaterThan(TubeWidget.widthFor(46, useArt: true)));
+  });
+
   test('テーマ付きの画像があればそれ、無ければ共通の画像・図形', () {
     const art = ArtCatalog({
       'tube_back',

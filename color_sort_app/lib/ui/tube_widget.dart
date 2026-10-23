@@ -63,24 +63,38 @@ class TubeWidget extends StatelessWidget {
   static const border = 3.0; // 選択時の枠線の太さ(最大)を常に見込む
 
   /// 容器1本の高さ(バッジ・余白を含む)。面の画面が、収まる大きさを決めるのに使う。
-  static double heightFor(double unit, {required bool useArt}) {
+  static double heightFor(double unit,
+      {required bool useArt, bool themed = false}) {
     final glass = useArt
-        ? unit * ColorSortRules.capacity / _artGlassHeight + border * 2
+        ? unit * ColorSortRules.capacity / _glassFor(themed) + border * 2
         : unit * ColorSortRules.capacity + pad * 2 + border * 2;
     return badgeHeight + 14 + glass; // 上の余白14は選択時の持ち上がり分
   }
 
   /// 容器1本の幅。
-  static double widthFor(double unit, {required bool useArt}) => useArt
-      ? unit * ColorSortRules.capacity / _artGlassHeight * _artAspect +
-          border * 2
-      : unit + pad * 2 + border * 2;
+  static double widthFor(double unit,
+          {required bool useArt, bool themed = false}) =>
+      useArt
+          ? unit * ColorSortRules.capacity / _glassFor(themed) * _artAspect +
+              border * 2
+          : unit + pad * 2 + border * 2;
 
   // 容器画像(256x640)。ガラスの内側は縦は約88%・横は約59%なので、
   // 色玉の積み(unit x capacity)がちょうど収まる大きさに合わせて描く。
   static const _artGlassHeight = 0.88;
   static const _artAspect = 256 / 640;
   static const _artBottom = 0.04; // 下の余白(高さに対する割合)
+
+  // テーマ付きの容器画像は、底の縁が厚く(約9%)、内側が少し低い(約83%)ので、
+  // 色玉の積みが縁に隠れないよう、別の寸法で合わせる。
+  static const _themedGlassHeight = 0.83;
+  static const _themedBottom = 0.094;
+  static double _glassFor(bool themed) =>
+      themed ? _themedGlassHeight : _artGlassHeight;
+
+  /// このテーマ専用の容器画像(`tube_back_<theme>` と `tube_front_<theme>`)が両方あるか。
+  static bool hasThemedTube(ArtCatalog art, String theme) =>
+      art.has('tube_back_$theme') && art.has('tube_front_$theme');
 
   /// 使えない容器の覆い。画像があれば画像(鍵=南京錠、凍結=氷)、無ければ従来の膜。
   /// 中身が見えないと手が読めないので、鍵の覆いは半透明にする。
@@ -102,7 +116,9 @@ class TubeWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = L10n.of(context);
     final scheme = Theme.of(context).colorScheme;
-    final artHeight = unit * ColorSortRules.capacity / _artGlassHeight; // 画像の高さ
+    final themed = hasThemedTube(art, theme);
+    final artHeight =
+        unit * ColorSortRules.capacity / _glassFor(themed); // 画像の高さ
     final artWidth = artHeight * _artAspect;
     final height = useArt
         ? artHeight + border * 2
@@ -128,7 +144,7 @@ class TubeWidget extends StatelessWidget {
             // 容器の幅に固定する。ヒントの文字(「ここから」など)で幅が広がると、
             // その容器だけ段から押し出されて、他の容器が画面の外に出てしまうため。
             child: SizedBox(
-              width: TubeWidget.widthFor(unit, useArt: useArt),
+              width: TubeWidget.widthFor(unit, useArt: useArt, themed: themed),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -193,8 +209,9 @@ class TubeWidget extends StatelessWidget {
                         if (useArt) ...[
                           Positioned.fill(child: _art(_id('tube_back'))),
                           Padding(
-                            padding:
-                                EdgeInsets.only(bottom: artHeight * _artBottom),
+                            padding: EdgeInsets.only(
+                                bottom: artHeight *
+                                    (themed ? _themedBottom : _artBottom)),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
