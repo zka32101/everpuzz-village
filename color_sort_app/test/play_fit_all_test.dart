@@ -94,4 +94,32 @@ void main() {
       expectAllInside(tester, n, size, '$size x$scale');
     }
   });
+
+  testWidgets('どの言語でも(文言が長くても)、小さい画面で盤面が1画面に収まる', (tester) async {
+    final art = (await tester.runAsync(() => ArtCatalog.load(rootBundle)))!;
+    final app = (await tester.runAsync(() => loadApp(art: art)))!;
+    app.activePackIndex = 2;
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+    const size = Size(360, 640);
+    tester.view.physicalSize = size;
+    for (final lang in supportedLocales) {
+      await tester.pumpWidget(L10n(
+        translator: translatorFor(lang),
+        child: MaterialApp(home: PlayScreen(app: app, index: 59)),
+      ));
+      await tester.pump();
+      final n = await tubeCount(tester);
+      expectAllInside(tester, n, size, lang);
+      // 下のボタン(4つ)も、画面の中に収まる
+      for (final key in ['undo', 'restart', 'hint', 'extraTube']) {
+        final r = tester.getRect(find.byKey(Key(key)));
+        expect(
+            (Offset.zero & size).contains(r.topLeft) &&
+                (Offset.zero & size).contains(r.bottomRight),
+            isTrue,
+            reason: '$lang: ボタン $key が画面外 $r');
+      }
+    }
+  });
 }
