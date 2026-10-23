@@ -73,6 +73,13 @@ class SettingsScreen extends StatelessWidget {
         listenable: app,
         builder: (context, _) => ListView(
           children: [
+            SwitchListTile(
+              key: const Key('setting-sound'),
+              secondary: const Icon(Icons.volume_up_outlined),
+              title: Text(t.tr('settings.sound')),
+              value: app.soundOn,
+              onChanged: app.setSoundOn,
+            ),
             ListTile(
               key: const Key('setting-tutorial'),
               minVerticalPadding: 12,

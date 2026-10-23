@@ -10,6 +10,7 @@ import 'game/admob_gate.dart';
 import 'game/app_state.dart';
 import 'game/purchases.dart';
 import 'game/revenuecat_gate.dart';
+import 'game/sound.dart';
 import 'l10n/strings.dart';
 import 'ui/level_select_screen.dart';
 import 'ui/town_screen.dart';
@@ -37,7 +38,7 @@ Future<void> main() async {
         unitId: adUnit, adsRemoved: () => app.adsRemoved);
   }
   app = await AppState.load(PrefsKeyValueStore(prefs),
-      purchaseGate: gate, adGate: ads);
+      purchaseGate: gate, adGate: ads, sound: AudioPlayersSound());
   HomeWidgetSync(app).start(); // ホーム画面ウィジェットに町を見せる
   runApp(ColorSortApp(app: app));
 }

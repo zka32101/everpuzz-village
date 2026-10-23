@@ -19,6 +19,7 @@ dependencies:
   purchases_flutter: ^10.17.0
   google_mobile_ads: ^9.1.0
   share_plus: ^13.3.1
+  audioplayers: ^6.8.1
 
 dev_dependencies:
   flutter_test:
@@ -30,6 +31,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/shop/products.json
+    - assets/sfx/
 
 # アプリアイコン(`dart run flutter_launcher_icons` で ios/ android/ に書き出す)。
 # 元画像は台帳の app_icon(1024・不透明)。
