@@ -12,7 +12,7 @@ void main() {
     expect(app.pack.levels, hasLength(60));
     expect(app.pack.validate(), isEmpty);
     await tester.pumpWidget(appWidget(app));
-    expect(find.text('Everpuzz'), findsOneWidget);
+    expect(find.text('Everpuzz Village'), findsOneWidget);
     expect(app.isUnlocked(0), isTrue);
     expect(app.isUnlocked(1), isFalse);
     // 未解放の面を押しても進まない

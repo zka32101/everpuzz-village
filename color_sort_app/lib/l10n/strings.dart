@@ -6,7 +6,7 @@ import 'package:puzzle_core/meta.dart' show AppSettings, commonBundles;
 /// 言語の追加はこの Map にロケールを足すだけ。
 const _gameBundles = <String, Map<String, String>>{
   'ja': {
-    'appTitle': 'Everpuzz',
+    'appTitle': 'Everpuzz Village',
     'level': 'レベル {n}',
     'moves': '{count, plural, other{#手}}',
     'undo': 'ひとつ戻す',
@@ -207,7 +207,7 @@ const _gameBundles = <String, Map<String, String>>{
     'openShop': 'ショップを開く',
   },
   'en': {
-    'appTitle': 'Everpuzz',
+    'appTitle': 'Everpuzz Village',
     'level': 'Level {n}',
     'moves': '{count, plural, one{# move} other{# moves}}',
     'undo': 'Undo',
@@ -427,7 +427,7 @@ const _gameBundles = <String, Map<String, String>>{
     'openShop': 'Open shop',
   },
   'ko': {
-    'appTitle': 'Everpuzz',
+    'appTitle': 'Everpuzz Village',
     'level': '레벨 {n}',
     'moves': '{count, plural, other{#번}}',
     'undo': '되돌리기',
@@ -633,7 +633,7 @@ const _gameBundles = <String, Map<String, String>>{
     'language.zh-Hant': '繁體中文',
   },
   'es': {
-    'appTitle': 'Everpuzz',
+    'appTitle': 'Everpuzz Village',
     'level': 'Nivel {n}',
     'moves': '{count, plural, one{# movimiento} other{# movimientos}}',
     'undo': 'Deshacer',
@@ -855,7 +855,7 @@ const _gameBundles = <String, Map<String, String>>{
     'language.zh-Hant': '繁體中文',
   },
   'zh-Hans': {
-    'appTitle': 'Everpuzz',
+    'appTitle': 'Everpuzz Village',
     'level': '第 {n} 关',
     'moves': '{count, plural, other{#步}}',
     'undo': '撤销',
@@ -1056,7 +1056,7 @@ const _gameBundles = <String, Map<String, String>>{
     'language.zh-Hant': '繁體中文',
   },
   'zh-Hant': {
-    'appTitle': 'Everpuzz',
+    'appTitle': 'Everpuzz Village',
     'level': '第 {n} 關',
     'moves': '{count, plural, other{#步}}',
     'undo': '復原',
