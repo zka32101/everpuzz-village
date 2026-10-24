@@ -6,10 +6,10 @@
 - [x] **アプリ名**: 「Everpuzz Village」に決定(表示名は Android `AndroidManifest.xml` / iOS `Info.plist` / アプリ内 `appTitle` に反映済み)。ストア名・言語別の名前は別途。
 - [x] **アプリID(Android)**: `com.yourwish.everpuzz.village` に決定(`android/app/build.gradle.kts` の applicationId。namespace とコードのパッケージは内部名 `com.petitworksapps.color_sort_app` のまま)。
 - [ ] **アプリID(iOS)**: 未対応。いまは `com.petitworksapps.colorSortApp`(`project.pbxproj`)。iOS を出すときに、Android に合わせて揃える(保留中)。
-- [ ] **価格・コインの数**(`docs/monetization.md` の叩き台)。
+- [x] **価格**: Play に商品7つを作成済み(2026-10-24。`ads_removal` 480円・`coins_small` 160円・`coins_medium` 480円・`coins_large` 960円・`life_refill` 160円・`levels_pack_1` 480円・`deco_pack_1` 3ドル(米国は 2.99ドルに丸められる))。コインの数は `assets/shop/products.json`。
 
 ## 1. 署名
-- [ ] Android: アップロード鍵(キーストア)を作り、`android/key.properties` に置く(リポジトリには入れない。`.gitignore` 済み)。
+- [x] Android: アップロード鍵を作成済み(鍵は Drive の key フォルダ。リポジトリには入れない)。AAB 0.1.0+1 を署名してビルドし、Play の内部テストにアップロード済み。(旧メモ: `android/key.properties` に置く(リポジトリには入れない。`.gitignore` 済み)。)
   中身: `storeFile=<キーストアのパス>` / `storePassword=` / `keyAlias=` / `keyPassword=`。無いとデバッグ鍵で署名される(公開不可)。Google Play のアプリ署名を使う。
 - [ ] iOS: Apple Developer の登録、証明書とプロビジョニング、App Store Connect にアプリを作る。
 
@@ -19,7 +19,7 @@
   **Google のテスト用アプリIDを本番に差し替える**: `AndroidManifest.xml`(`com.google.android.gms.ads.APPLICATION_ID`)と `Info.plist`(`GADApplicationIdentifier`)。差し替え前の公開は不可。
 - [ ] iOS: `Info.plist` の `SKAdNetworkItems` は、Google の識別子 1 つだけ入れてある。AdMob の公式の一覧(最新)に合わせて、リリース前に全部を足す。
 - [x] RevenueCat: プロジェクト「Everpuzz」・Play アプリ(`com.yourwish.everpuzz.village`)・権利 `ads_removed` は作成済み。残り: サービスアカウント JSON のアップロード、商品(下記)と Offering。
-- [ ] RevenueCat: 商品 `ads_removal` / `coins_small` / `coins_medium` / `coins_large` / `life_refill` / `levels_pack_1`(追加の面パック。権利は `levels.extra3` を付与)と権利 `ads_removed` を作り、`assets/shop/products.json` と一致させる。ストアコンソールでも同じ商品IDを作る。
+- [x] RevenueCat: 商品7つと権利 `ads_removed` を作成済み(`ads_removal` を `ads_removed` に紐付け。`levels.extra3` と `deco.seasonal1` はアプリ内で付与するため権利は不要。Offering は不要: アプリは `Purchases.getProducts` を商品IDで直接呼ぶ)。**残り: サービスアカウント JSON のアップロード**。(旧メモ: 商品 `ads_removal` / `coins_small` / `coins_medium` / `coins_large` / `life_refill` / `levels_pack_1`(追加の面パック。権利は `levels.extra3` を付与)と権利 `ads_removed` を作り、`assets/shop/products.json` と一致させる。ストアコンソールでも同じ商品IDを作る。)
 - [ ] 同意(UMP)の文言・地域設定を確認。iOS の追跡の許可(ATT)の説明文は入れてある(`NSUserTrackingUsageDescription`)。
 
 ## 3. ビルド(お手元で)
@@ -42,9 +42,10 @@ flutter build ipa --release  (同じ --dart-define を付ける)
 
 ## 5. ストアの提出物
 - [ ] プライバシーポリシー・利用規約の URL(アプリ内のリンクに使う)。
-- [ ] Google Play のデータセーフティ、App Store のプライバシー(広告・購入・端末ID/広告ID)。計測(telemetry)は、既定では何も送らない(`NoopTelemetry`)。
+- [x] (Google Play のデータセーフティは下書き保存済み。広告=位置(おおよそ)・クラッシュ・診断・操作数・デバイスID、購入=購入履歴。**審査前に確認**)
+- [ ] (旧) Google Play のデータセーフティ、App Store のプライバシー(広告・購入・端末ID/広告ID)。計測(telemetry)は、既定では何も送らない(`NoopTelemetry`)。
 - [ ] 年齢区分(ガチャ・確率報酬なし、広告あり、アプリ内課金あり)。
-- [ ] 説明文・スクリーンショット(縦)。アイコンは入っている(共通 C案)。
+- [x] 説明文(英・日)・スクリーンショット4枚・機能グラフィック・アイコン512は、Play に下書き保存済み(素材は Drive の images\everpuzz\ストア掲載_2026-10-24)。ショップの金額が出る画面は、サービスアカウント JSON のあと撮り直す。
 
 ## 6. 実機で確認
 - [ ] 起動(白画面にならない)、面を遊ぶ、ヒント(丸と矢印)の見やすさ、効果音、横向き→縦に戻す、小さい画面・文字拡大で盤面が1画面に収まる。
