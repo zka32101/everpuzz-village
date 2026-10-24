@@ -41,7 +41,7 @@ flutter run
 
 - 広告SDK・課金(広告削除・コインパック)の接続。`AdGate` の実装は未着手
 - 画像素材(`../color_sort/assets/art_manifest.json`)。未配置の間は図形で描画
-- アプリID・アプリ名・アイコンは仮(`com.petitworksapps.color_sort_app`)
+- アプリID: Android `com.yourwish.everpuzz.village`(決定)。iOS は未対応(下記の checklist 参照)。アプリ名「Everpuzz Village」・アイコンは決定済み
 - 効果音・演出(注ぎアニメ等)、チュートリアル、設定画面、日替わり報酬
 
 ## 課金(RevenueCat)

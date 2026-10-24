@@ -28,8 +28,8 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.petitworksapps.color_sort_app"
+        // ストアのアプリID(公開後は変えられない)。コードのパッケージ(namespace)は内部名のままでよい。
+        applicationId = "com.yourwish.everpuzz.village"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion

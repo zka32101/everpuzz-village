@@ -4,8 +4,8 @@
 
 ## 0. 先に決める(公開後は変えにくい)
 - [x] **アプリ名**: 「Everpuzz Village」に決定(表示名は Android `AndroidManifest.xml` / iOS `Info.plist` / アプリ内 `appTitle` に反映済み)。ストア名・言語別の名前は別途。
-- [ ] **アプリID**(一度公開すると変えられない)。いまは食い違っている:
-  Android `com.petitworksapps.color_sort_app`(`android/app/build.gradle.kts`)、iOS `com.petitworksapps.colorSortApp`(`project.pbxproj`)。ストアのアプリを作る前に、最終の名前を決めて、両方を揃える(こちらで直せる)。
+- [x] **アプリID(Android)**: `com.yourwish.everpuzz.village` に決定(`android/app/build.gradle.kts` の applicationId。namespace とコードのパッケージは内部名 `com.petitworksapps.color_sort_app` のまま)。
+- [ ] **アプリID(iOS)**: 未対応。いまは `com.petitworksapps.colorSortApp`(`project.pbxproj`)。iOS を出すときに、Android に合わせて揃える(保留中)。
 - [ ] **価格・コインの数**(`docs/monetization.md` の叩き台)。
 
 ## 1. 署名
