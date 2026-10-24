@@ -14,9 +14,11 @@
 - [ ] iOS: Apple Developer の登録、証明書とプロビジョニング、App Store Connect にアプリを作る。
 
 ## 2. 広告・課金の本番設定
-- [ ] AdMob: 本番のアプリID・リワード広告ユニットを作る。
+- [x] AdMob(Android): アプリとリワード広告ユニットを作成済み(アプリID `ca-app-pub-5058227312086483~7715479034`、リワード `ca-app-pub-5058227312086483/8090135120`)。マニフェストのアプリIDは本番に差し替え済み(広告ユニットIDは `--dart-define=ADMOB_REWARDED_ID` で渡す)。iOS は保留。
+- [ ] (旧) AdMob: 本番のアプリID・リワード広告ユニットを作る。
   **Google のテスト用アプリIDを本番に差し替える**: `AndroidManifest.xml`(`com.google.android.gms.ads.APPLICATION_ID`)と `Info.plist`(`GADApplicationIdentifier`)。差し替え前の公開は不可。
 - [ ] iOS: `Info.plist` の `SKAdNetworkItems` は、Google の識別子 1 つだけ入れてある。AdMob の公式の一覧(最新)に合わせて、リリース前に全部を足す。
+- [x] RevenueCat: プロジェクト「Everpuzz」・Play アプリ(`com.yourwish.everpuzz.village`)・権利 `ads_removed` は作成済み。残り: サービスアカウント JSON のアップロード、商品(下記)と Offering。
 - [ ] RevenueCat: 商品 `ads_removal` / `coins_small` / `coins_medium` / `coins_large` / `life_refill` / `levels_pack_1`(追加の面パック。権利は `levels.extra3` を付与)と権利 `ads_removed` を作り、`assets/shop/products.json` と一致させる。ストアコンソールでも同じ商品IDを作る。
 - [ ] 同意(UMP)の文言・地域設定を確認。iOS の追跡の許可(ATT)の説明文は入れてある(`NSUserTrackingUsageDescription`)。
 
